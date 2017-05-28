@@ -1,0 +1,9 @@
+{
+    "id" : "Scenario",
+    "version" : "0.1.0-SNAPSHOT",
+    "author" : "",
+    "displayName" : "Scenario",
+    "description" : "",
+    "dependencies" : [],
+    "serverSideOnly" : false
+}
