@@ -1,0 +1,219 @@
+{
+  "type": "HubToolScreen",
+  "contents": {
+    "type": "relativeLayout",
+    "contents": [
+      {
+        "type": "UIBox",
+        "layoutInfo": {
+          "width": 700,
+          "height": 600,
+          "position-horizontal-center": {},
+          "position-vertical-center": {}
+        },
+        "content": {
+          "type": "relativeLayout",
+          "contents": [
+            {
+              "type": "UILabel",
+              "id": "HubToolLabel",
+              "text": "Hub Tool",
+              "layoutInfo": {
+                "use-content-width": true,
+                "position-horizontal-center": {},
+                "height": 30
+              }
+            },
+            {
+              "type": "RelativeLayout",
+              "id": "ButtonLayout",
+              "layoutInfo": {
+                "position-top": {
+                  "target": "BOTTOM",
+                  "widget": "HubToolLabel"
+                },
+                "height": 50
+              },
+              "contents": [
+                {
+                  "type": "UIButton",
+                  "id": "Overview",
+                  "layoutInfo": {
+                    "width": 234
+                  },
+                  "text": "Overview"
+                },
+                {
+                  "type": "UIButton",
+                  "id": "Logic",
+                  "layoutInfo": {
+                    "position-left": {
+                      "widget": "Overview",
+                      "target": "RIGHT"
+                    },
+                    "position-right": {
+                      "widget": "Regions",
+                      "target": "LEFT"
+                    },
+                    "width": 233
+                  },
+                  "text": "Logic"
+                },
+                {
+                  "type": "UIButton",
+                  "id": "Regions",
+                  "layoutInfo": {
+                    "position-right": {},
+                    "width": 233
+                  },
+                  "text": "Regions"
+                }
+              ]
+            },
+            {
+              "type": "RelativeLayout",
+              "id": "mainView",
+              "layoutInfo": {
+                "position-top": {
+                  "widget": "ButtonLayout",
+                  "target": "BOTTOM"
+                }
+              },
+              "contents": [
+                {
+                  "type": "UIBox",
+                  "id": "overviewBox",
+                  "layoutInfo": {},
+                  "visible": false,
+                  "content": {
+                    "type": "RelativeLayout",
+                    "layoutInfo": {},
+                    "contents": [
+                      {
+                        "type": "RowLayout",
+                        "layoutInfo": {
+                          "position-top": {},
+                          "use-content-height": true
+                        },
+                        "contents": [
+                          {
+                            "type": "UISpace",
+                            "layoutInfo": {
+                              "relativeWidth": 0.15
+                            }
+                          },
+                          {
+                            "type": "UILabel",
+                            "id": "newWidget",
+                            "layoutInfo": {},
+                            "text": "Scenario Name:"
+                          },
+                          {
+                            "type": "UIText",
+                            "id": "newWidget",
+                            "layoutInfo": {},
+                            "text": "New Scenario"
+                          },
+                          {
+                            "type": "UISpace",
+                            "layoutInfo": {
+                              "relativeWidth": 0.15
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "UIBox",
+                  "id": "logicBox",
+                  "layoutInfo": {},
+                  "visible": true,
+                  "content": {
+                    "type": "RelativeLayout",
+                    "layoutInfo": {
+                        "position-top": {
+                            "widget": "ButtonLayout",
+                            "target": "BOTTOM"
+                        }
+                    },
+                    "contents": [
+                      {
+                        "type": "ScrollableArea",
+                        "id": "scrollWindow",
+                        "content": {
+                          "type": "Scenario:LogicTreeView",
+                          "id": "logicTree",
+                          "layoutInfo": {}
+                        },
+                        "layoutInfo": {
+                            "position-top":{}
+                        }
+                      },
+                      {
+                        "type": "RowLayout",
+                        "layoutInfo": {
+                          "position-top": {
+                            "widget": "scrollWindow",
+                            "target": "BOTTOM"
+                          },
+                          "position-bottom": {},
+                          "height":50
+                        },
+                        "contents": [
+                          {
+                            "type": "UIButton",
+                            "id": "addEventButton",
+                            "text": "Add Event",
+                            "layoutInfo": {
+                              "position-left": {}
+                            }
+                          },
+                          {
+                            "type": "UIButton",
+                            "id": "addActionButton",
+                            "text": "Add Action",
+                            "layoutInfo": {
+                              "position-left": {
+                                "widget": "addEventButton",
+                                "target": "RIGHT"
+                              }
+                            }
+                          },
+                          {
+                            "type": "UIButton",
+                            "id": "deleteButton",
+                            "text": "Delete",
+                            "layoutInfo": {
+                              "position-left": {
+                                "widget": "addActionButton",
+                                "target": "RIGHT"
+                              }
+                            }
+                          }
+                        ],
+                        "id": "logicButtons"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "UIBox",
+                  "id": "regionBox",
+                  "layoutInfo": {},
+                  "visible": false,
+                  "content": {
+                    "type": "RelativeLayout",
+                    "layoutInfo": {},
+                    "contents": []
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
