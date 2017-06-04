@@ -15,7 +15,11 @@
  */
 package org.terasology.scenario.internal.ui;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.terasology.assets.management.AssetManager;
+import org.terasology.entitySystem.entity.EntityManager;
+import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.registry.In;
 import org.terasology.rendering.assets.texture.Texture;
 import org.terasology.rendering.nui.CoreScreenLayer;
@@ -24,6 +28,16 @@ import org.terasology.rendering.nui.databinding.ReadOnlyBinding;
 import org.terasology.rendering.nui.widgets.UIBox;
 import org.terasology.rendering.nui.widgets.UIButton;
 import org.terasology.rendering.nui.widgets.treeView.Tree;
+import org.terasology.scenario.components.ActionComponent;
+import org.terasology.scenario.components.ActionListComponent;
+import org.terasology.scenario.components.EventNameComponent;
+import org.terasology.scenario.components.ScenarioComponent;
+import org.terasology.scenario.internal.events.LogicTreeAddActionEvent;
+import org.terasology.scenario.internal.events.LogicTreeAddEventEvent;
+import org.terasology.scenario.internal.events.LogicTreeDeleteEvent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HubToolScreen extends CoreScreenLayer {
     private UIBox overviewBox;
@@ -37,10 +51,17 @@ public class HubToolScreen extends CoreScreenLayer {
     private UIButton addActionButton;
     private UIButton deleteButton;
 
+    private EntityRef scenarioEntity;
+
     private LogicTreeView treeView;
 
     @In
     private AssetManager assetManager;
+
+    @In
+    private EntityManager entityManager;
+
+    private Logger logger = LoggerFactory.getLogger(HubToolScreen.class);
 
     @Override
     public void initialise() {
@@ -116,13 +137,14 @@ public class HubToolScreen extends CoreScreenLayer {
             );
         }
 
+
         if (treeView != null){
            treeView.setContextMenuTreeProducer(node -> {
                 LogicTreeMenuTreeBuilder logicTreeMenuTreeBuilder = new LogicTreeMenuTreeBuilder();
                 logicTreeMenuTreeBuilder.setManager(getManager());
-                logicTreeMenuTreeBuilder.putConsumer(LogicTreeMenuTreeBuilder.OPTION_DELETE, getEditor()::deleteNode);
-               logicTreeMenuTreeBuilder.putConsumer(LogicTreeMenuTreeBuilder.OPTION_ADD_EVENT, getEditor()::addEvent);
-               logicTreeMenuTreeBuilder.putConsumer(LogicTreeMenuTreeBuilder.OPTION_ADD_ACTION, getEditor()::addAction);
+                logicTreeMenuTreeBuilder.putConsumer(LogicTreeMenuTreeBuilder.OPTION_DELETE, this::delete);
+                logicTreeMenuTreeBuilder.putConsumer(LogicTreeMenuTreeBuilder.OPTION_ADD_EVENT, this::addEvent);
+                logicTreeMenuTreeBuilder.putConsumer(LogicTreeMenuTreeBuilder.OPTION_ADD_ACTION, this::addAction);
                 logicTreeMenuTreeBuilder.subscribeAddContextMenu(n -> {
                     getEditor().fireUpdateListeners();
                 });
@@ -130,27 +152,63 @@ public class HubToolScreen extends CoreScreenLayer {
                 return logicTreeMenuTreeBuilder.createPrimaryContextMenu(node);
             });
 
-            LogicTree tree = new LogicTree(new LogicTreeValue("Scenario", false, assetManager.getAsset("Scenario:scenarioText", Texture.class).get(), true));
-            //LogicTreeValue temp = new LogicTreeValue("Sample Event", true, assetManager.getAsset("Scenario:eventText", Texture.class).get(), false);
-            //tree.addChild(temp);
-            treeView.setModel(tree);
-            //Tree<LogicTreeValue> tempTree = treeView.getModel().getNodeByValue(temp);
-            //LogicTreeValue temp2 = new LogicTreeValue("Sample Action", false, assetManager.getAsset("Scenario:actionText", Texture.class).get(), false);
-            //tempTree.addChild(temp2);
+            Iterable<EntityRef> scenario = entityManager.getEntitiesWith(ScenarioComponent.class); // Checks for existing Scenario
+
+            if (scenario.iterator().hasNext()) { //If scenario exists
+                EntityRef main = scenario.iterator().next();
+                if (scenarioEntity == null || !scenarioEntity.equals(main)) {
+                    scenarioEntity = main;
+                }
+                LogicTree tempTree = constructTree(main);
+                if (tempTree != null) {
+                    treeView.setModel(tempTree);
+                }
+            }
+            else { //Create a new scenario if none exists
+                ScenarioComponent tempComponent = new ScenarioComponent();
+                scenarioEntity = entityManager.create(tempComponent);
+            }
+
+            ScenarioComponent tempScenComponent = scenarioEntity.getComponent(ScenarioComponent.class);
+            if (tempScenComponent.triggerEntities == null) {  //Makes sure list isn't null, causes problems when building treeView
+                tempScenComponent.triggerEntities = new ArrayList<EntityRef>();
+                scenarioEntity.saveComponent(tempScenComponent);
+            }
 
             treeView.setEditor(getManager());
             treeView.setAssetManager(assetManager);
         }
     }
 
+    /**
+     * Function for when button is triggered to add an event.
+     */
     private void onAddEventButton(UIWidget button) {
+        onAddEvent();
+    }
+
+    /**
+     * Function for when context is hit to add an event.
+     */
+    private void addEvent(LogicTree node) {
+        onAddEvent();
+    }
+
+    /**
+     * Function to actually add an event to the selected index. Both button and context act the same currently.
+     */
+    private void onAddEvent() {
         Integer selectedIndex = treeView.getSelectedIndex();
 
         Tree<LogicTreeValue> tree = treeView.getModel().getNode(selectedIndex);
         tree.setExpanded(true);
-        tree.addChild(new LogicTreeValue("Sample Event", true, assetManager.getAsset("Scenario:eventText", Texture.class).get(), false));
+        scenarioEntity.send(new LogicTreeAddEventEvent("new event", this));
     }
 
+    /**
+     * Identification on if an event can be added from the selected index, currently it's if scenario root is selected
+     * @return If add event button should be allowed.
+     */
     private boolean checkCanAddEvent() {
         Integer selectedIndex = treeView.getSelectedIndex();
         if (selectedIndex == null) {
@@ -162,12 +220,24 @@ public class HubToolScreen extends CoreScreenLayer {
         return value.isRoot();
     }
 
+    /**
+     * Action and delete follow same as the above detailed event functions.
+     */
     private void onAddActionButton(UIWidget button) {
+        onAddAction();
+    }
+
+    private void addAction(LogicTree node) {
+        onAddAction();
+    }
+
+    private void onAddAction() {
         Integer selectedIndex = treeView.getSelectedIndex();
 
         Tree<LogicTreeValue> tree = treeView.getModel().getNode(selectedIndex);
         tree.setExpanded(true);
-        tree.addChild(new LogicTreeValue("Sample Action", false, assetManager.getAsset("Scenario:actionText", Texture.class).get(), false));
+
+        scenarioEntity.send(new LogicTreeAddActionEvent("new action", this, tree.getValue().getEntity()));
     }
 
     private boolean checkCanAddAction() {
@@ -182,10 +252,18 @@ public class HubToolScreen extends CoreScreenLayer {
     }
 
     private void onDeleteButton(UIWidget button) {
+        onDelete();
+    }
+
+    private void delete(LogicTree node) {
+        onDelete();
+    }
+
+    private void onDelete() {
         Integer selectedIndex = treeView.getSelectedIndex();
 
-        treeView.getModel().removeNode(selectedIndex);
-        treeView.setSelectedIndex(0);
+        Tree<LogicTreeValue> tree = treeView.getModel().getNode(selectedIndex);
+        scenarioEntity.send(new LogicTreeDeleteEvent(tree.getValue().getEntity(), tree.getParent().getValue().getEntity(), this));
     }
 
     private boolean checkCanDelete() {
@@ -200,5 +278,96 @@ public class HubToolScreen extends CoreScreenLayer {
 
     private LogicTreeView getEditor() {
         return this.treeView;
+    }
+
+    /**
+     * When the hub tool screen is opened then rebuild the tree. Eventually the scenario structure will include a
+     * clean/dirty design to prevent having to rebuild the entire tree every time.
+     */
+    @Override
+    public void onOpened() {
+        super.onOpened();
+        Iterable<EntityRef> scenario = entityManager.getEntitiesWith(ScenarioComponent.class);
+
+        if (scenario.iterator().hasNext()) {
+            EntityRef main = scenario.iterator().next();
+            if (scenarioEntity == null || !scenarioEntity.equals(main)) {
+                scenarioEntity = main;
+            }
+            LogicTree tempTree = constructTree(main);
+            if (tempTree != null) {
+                treeView.setModel(tempTree);
+            }
+        }
+        else {
+            ScenarioComponent tempComponent = new ScenarioComponent();
+            scenarioEntity = entityManager.create(tempComponent);
+        }
+
+        ScenarioComponent tempScenComponent = scenarioEntity.getComponent(ScenarioComponent.class);
+        if (tempScenComponent.triggerEntities == null) {
+            tempScenComponent.triggerEntities = new ArrayList<EntityRef>();
+            scenarioEntity.saveComponent(tempScenComponent);
+        }
+    }
+
+    /**
+     * Function for updating the currently displayed tree with a new root for the scenario tree.
+     *
+     * @param newScenario must have a ScenarioComponent in order to build the tree detailed from it.
+     */
+    public void updateTree(EntityRef newScenario) {
+        if (newScenario.getComponent(ScenarioComponent.class) != null) {
+            scenarioEntity = newScenario;
+            LogicTree tempTree = constructTree(scenarioEntity);
+            if (tempTree != null) {
+                treeView.setModel(tempTree);
+            }
+        }
+    }
+
+
+    /**
+     * Constructs the treeView version of the tree detailed in the entity/component tree structure for logic
+     * @param entity The root entity (EntityRef with a ScenarioComponent)
+     * @return LogicTree built from the given entityRef.
+     */
+    public LogicTree constructTree(EntityRef entity) {
+        if (!entity.hasComponent(ScenarioComponent.class)) {
+            return null;
+        }
+        ScenarioComponent scenario = entity.getComponent(ScenarioComponent.class);
+        LogicTreeView tempTreeView = new LogicTreeView();
+        LogicTree returnTree = new LogicTree(new LogicTreeValue("Scenario", false, assetManager.getAsset("Scenario:scenarioText", Texture.class).get(), true, entity));
+        tempTreeView.setModel(returnTree.getRoot());
+        if (scenario.triggerEntities != null) {
+            List<EntityRef> events = scenario.triggerEntities;
+            for (EntityRef e : events) {
+                EventNameComponent name = e.getComponent(EventNameComponent.class);
+                ActionListComponent actions = e.getComponent(ActionListComponent.class);
+                LogicTreeValue e2;
+                if (name == null) {
+                    e2 = new LogicTreeValue("Event", true, assetManager.getAsset("Scenario:eventText", Texture.class).get(), false, e);
+                } else {
+                    e2 = new LogicTreeValue(name.name, true, assetManager.getAsset("Scenario:eventText", Texture.class).get(), false, e);
+                }
+
+                LogicTree tempEventTree = new LogicTree(e2);
+
+                if (actions != null) {
+                    for (EntityRef a : actions.actions) {
+                        ActionComponent a2 = a.getComponent(ActionComponent.class);
+                        if (a2 == null) {
+                            tempEventTree.addChild(new LogicTreeValue("Action", false, assetManager.getAsset("Scenario:actionText", Texture.class).get(), false, a));
+                        } else {
+                            tempEventTree.addChild(new LogicTreeValue(a2.name, false, assetManager.getAsset("Scenario:actionText", Texture.class).get(), false, a));
+                        }
+                    }
+                }
+
+                returnTree.addChild(tempEventTree);
+            }
+        }
+        return returnTree;
     }
 }

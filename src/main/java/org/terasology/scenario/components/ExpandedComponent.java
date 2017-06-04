@@ -13,27 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.internal.ui;
+package org.terasology.scenario.components;
 
-import org.terasology.rendering.nui.widgets.treeView.Tree;
+import org.terasology.entitySystem.Component;
 
-
-public class LogicTree extends Tree<LogicTreeValue> {
-    public LogicTree() {
-
-    }
-
-    public LogicTree(LogicTreeValue value) {
-        setValue(value);
-    }
-
-    @Override
-    public void addChild(LogicTreeValue childValue){
-        addChild(new LogicTree(childValue));
-    }
-
-    @Override
-    public Tree<LogicTreeValue> copy(){
-        throw new UnsupportedOperationException();
-    }
+public class ExpandedComponent implements Component{
+    public boolean isExpanded;
 }

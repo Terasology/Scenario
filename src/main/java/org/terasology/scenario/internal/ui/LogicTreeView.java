@@ -17,8 +17,6 @@ package org.terasology.scenario.internal.ui;
 
 import org.terasology.assets.management.AssetManager;
 import org.terasology.input.MouseInput;
-import org.terasology.registry.In;
-import org.terasology.rendering.assets.texture.Texture;
 import org.terasology.rendering.nui.NUIManager;
 import org.terasology.rendering.nui.contextMenu.ContextMenuUtils;
 import org.terasology.rendering.nui.contextMenu.MenuTree;
@@ -26,6 +24,9 @@ import org.terasology.rendering.nui.widgets.UITreeView;
 
 import java.util.function.Function;
 
+/**
+ * Class the details the actual displaying portion of the logicTree
+ */
 public final class LogicTreeView extends UITreeView<LogicTreeValue> {
     AssetManager assetManager;
 
@@ -39,21 +40,6 @@ public final class LogicTreeView extends UITreeView<LogicTreeValue> {
     public LogicTreeView(String id){
         super(id);
         setItemRenderer(new LogicItemRenderer());
-    }
-
-    public void deleteNode(LogicTree node) {
-        delete(node);
-        setSelectedIndex(null);
-    }
-
-    public void addEvent(LogicTree node) {
-        node.addChild(new LogicTreeValue("Sample Event", true, assetManager.getAsset("Scenario:eventText", Texture.class).get(), false));
-        node.setExpanded(true);
-    }
-
-    public void addAction(LogicTree node) {
-        node.addChild(new LogicTreeValue("Sample Action", false, assetManager.getAsset("Scenario:actionText", Texture.class).get(), false));
-        node.setExpanded(true);
     }
 
     public void setContextMenuTreeProducer(Function<LogicTree, MenuTree> contextMenuTreeProducer) {

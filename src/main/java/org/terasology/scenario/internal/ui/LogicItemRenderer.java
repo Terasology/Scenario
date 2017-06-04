@@ -25,6 +25,11 @@ import org.terasology.rendering.nui.itemRendering.AbstractItemRenderer;
 
 import java.util.List;
 
+/**
+ * Renderer for the treeview represention of a logicTreeValue.
+ * Currently it doesn't do much, just attach an image prior to the name of the trigger.
+ * Will eventually have some complexities for visual help for the user interface and then it will be more usefull.
+ */
 public class LogicItemRenderer extends AbstractItemRenderer<LogicTreeValue> {
     private final int marginTop;
     private final int marginBottom;

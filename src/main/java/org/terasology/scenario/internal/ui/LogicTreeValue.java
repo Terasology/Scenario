@@ -15,19 +15,34 @@
  */
 package org.terasology.scenario.internal.ui;
 
+import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.rendering.assets.texture.TextureRegion;
 
+/**
+ * Value for the logic tree, currently it entails the text to display, the image attached,
+ * if it is an event or root (Used to denote which buttons/context options are available),
+ * and the entity that is attached to the value allowing for easy reference with out traversing the entity tree structure
+ */
 public class LogicTreeValue {
     private String text;
     private TextureRegion textureRegion;
     private boolean isEvent;
     private boolean isRoot;
+    private EntityRef entity;
 
     public LogicTreeValue(String text, boolean isEvent, TextureRegion textureRegion, boolean isRoot) {
         this.text = text;
         this.isEvent = isEvent;
         this.textureRegion = textureRegion;
         this.isRoot = isRoot;
+    }
+
+    public LogicTreeValue(String text, boolean isEvent, TextureRegion textureRegion, boolean isRoot, EntityRef entity) {
+        this.text = text;
+        this.isEvent = isEvent;
+        this.textureRegion = textureRegion;
+        this.isRoot = isRoot;
+        this.entity = entity;
     }
 
     public String getText() {
@@ -40,6 +55,14 @@ public class LogicTreeValue {
 
     public boolean isRoot() {
         return isRoot;
+    }
+
+    public void setEntity (EntityRef entity) {
+        this.entity = entity;
+    }
+
+    public EntityRef getEntity() {
+        return entity;
     }
 
     public TextureRegion getTextureRegion() {

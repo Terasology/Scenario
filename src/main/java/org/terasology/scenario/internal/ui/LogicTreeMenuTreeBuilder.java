@@ -26,6 +26,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+/**
+ * Reference for Flo:
+ * Currently builder doesn't do a whole lot, also not entirely sure about translations and such later, will have to do
+ * some research later on about it for setting it up with the UI and integrating it.
+ *
+ * Currently builder is just here because it's how it was done in the section I used for reference for the context menu.
+ * If it doesn't end up becoming more complex and being required then I will definitely take it out and construct
+ * it in a way that makes more sense logically.
+ */
 public class LogicTreeMenuTreeBuilder {
     public static final String OPTION_ADD_ACTION = "Add Action";
     public static final String OPTION_ADD_EVENT = "Add Event";
