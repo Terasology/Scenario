@@ -1,0 +1,13 @@
+{
+    "parent": "engine:iconItem",
+    "DisplayName": {
+        "name": "Hub Tool"
+    },
+    "Item": {
+        "icon": "Scenario:Hubtool"
+    },
+    "InteractionTarget": {},
+    "InteractionScreen": {
+        "screen": "Scenario:HubToolScreen"
+    }
+}
