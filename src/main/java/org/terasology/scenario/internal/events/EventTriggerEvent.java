@@ -13,21 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.components;
+package org.terasology.scenario.internal.events;
 
-import org.terasology.entitySystem.Component;
+import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.entitySystem.event.Event;
 
-/**
- * Component that denotes an action. Currently only includes a name for the action.
- */
-public class ActionComponent implements Component {
-    public ActionType type;
-    public short itemId = 10;
-    public int numItems = 1;
-    public String itemIdName;
+public class EventTriggerEvent implements Event {
+    public EntityRef triggeringEntity;
 
-
-    public enum ActionType {
-        GIVE_ITEM
+    public EventTriggerEvent(EntityRef triggeringEntity) {
+        this.triggeringEntity = triggeringEntity;
     }
 }

@@ -28,7 +28,7 @@ import java.util.function.Function;
  * Class the details the actual displaying portion of the logicTree
  */
 public final class LogicTreeView extends UITreeView<LogicTreeValue> {
-    AssetManager assetManager;
+    private AssetManager assetManager;
 
     private Function<LogicTree, MenuTree> contextMenuTreeProducer;
 
@@ -45,6 +45,8 @@ public final class LogicTreeView extends UITreeView<LogicTreeValue> {
     public void setContextMenuTreeProducer(Function<LogicTree, MenuTree> contextMenuTreeProducer) {
         this.contextMenuTreeProducer = contextMenuTreeProducer;
     }
+
+
 
     public void setEditor(NUIManager manager) {
         subscribeNodeClick((event, node) -> {

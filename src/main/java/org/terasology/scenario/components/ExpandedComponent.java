@@ -18,5 +18,5 @@ package org.terasology.scenario.components;
 import org.terasology.entitySystem.Component;
 
 public class ExpandedComponent implements Component{
-    public boolean isExpanded;
+    public boolean isExpanded = true;
 }

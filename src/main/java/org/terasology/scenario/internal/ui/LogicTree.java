@@ -15,16 +15,34 @@
  */
 package org.terasology.scenario.internal.ui;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.terasology.rendering.nui.widgets.treeView.Tree;
+import org.terasology.scenario.components.ExpandedComponent;
 
 
 public class LogicTree extends Tree<LogicTreeValue> {
+
+    private static final Logger logger = LoggerFactory.getLogger(LogicTree.class);
     public LogicTree() {
 
     }
 
     public LogicTree(LogicTreeValue value) {
         setValue(value);
+    }
+
+    @Override
+    public void setExpanded(boolean expanded) {
+        super.setExpanded(expanded);
+        ExpandedComponent exp = getValue().getEntity().getComponent(ExpandedComponent.class);
+        if (exp != null) {
+            exp.isExpanded = expanded;
+        }
+    }
+
+    public void setExpandedNoEntity(boolean expanded) {
+        super.setExpanded(expanded);
     }
 
     @Override

@@ -27,10 +27,13 @@ import org.terasology.registry.In;
 import org.terasology.scenario.components.ActionComponent;
 import org.terasology.scenario.components.ActionListComponent;
 import org.terasology.scenario.components.EventNameComponent;
+import org.terasology.scenario.components.EventTypeComponent;
+import org.terasology.scenario.components.ExpandedComponent;
 import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.internal.events.LogicTreeAddActionEvent;
 import org.terasology.scenario.internal.events.LogicTreeAddEventEvent;
 import org.terasology.scenario.internal.events.LogicTreeDeleteEvent;
+import org.terasology.world.block.BlockManager;
 
 import java.util.ArrayList;
 
@@ -44,6 +47,9 @@ public class EntityTreeSystem extends BaseComponentSystem{
     @In
     private EntityManager entityManager;
 
+    @In
+    private BlockManager blockManager;
+
     /**
      * Adding event, attaches to the scenarioComponent.actions in the Scenario root and then adds a new empty list
      * for eventually adding actions to that event. Updates the hub tool's screen if it was passed with the event.
@@ -51,8 +57,11 @@ public class EntityTreeSystem extends BaseComponentSystem{
     @ReceiveEvent
     public void onLogicTreeAddEventEvent(LogicTreeAddEventEvent event, EntityRef entity, ScenarioComponent component) {
         EventNameComponent eventName = new EventNameComponent();
+        ExpandedComponent exp = new ExpandedComponent();
+        EventTypeComponent type = new EventTypeComponent();
+        type.type = EventTypeComponent.eventType.PLAYER_SPAWN;
         eventName.name = event.getEventName();
-        EntityRef newEventEntity = entityManager.create(new ActionListComponent(), eventName);
+        EntityRef newEventEntity = entityManager.create(new ActionListComponent(), eventName, exp, type);
         ActionListComponent actionsList = newEventEntity.getComponent(ActionListComponent.class);
         actionsList.actions = new ArrayList<EntityRef>();
         newEventEntity.saveComponent(actionsList);
@@ -72,7 +81,12 @@ public class EntityTreeSystem extends BaseComponentSystem{
     @ReceiveEvent
     public void onLogicTreeAddActionEvent(LogicTreeAddActionEvent event, EntityRef entity, ScenarioComponent component) {
         ActionComponent actionName = new ActionComponent();
-        actionName.name = event.getActionName();
+        actionName.type = event.getActionType();
+
+        //REMOVE THIS ONCE EDITABLE FROM CONTEXT MENU
+        actionName.itemIdName = blockManager.getBlock(actionName.itemId).getDisplayName();
+        //END REMOVE
+
         EntityRef newActionEntity = entityManager.create(actionName);
         ActionListComponent actionsList = event.getEventEntity().getComponent(ActionListComponent.class);
         actionsList.actions.add(newActionEntity);

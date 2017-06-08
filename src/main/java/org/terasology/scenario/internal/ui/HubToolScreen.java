@@ -31,13 +31,16 @@ import org.terasology.rendering.nui.widgets.treeView.Tree;
 import org.terasology.scenario.components.ActionComponent;
 import org.terasology.scenario.components.ActionListComponent;
 import org.terasology.scenario.components.EventNameComponent;
+import org.terasology.scenario.components.ExpandedComponent;
 import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.internal.events.LogicTreeAddActionEvent;
 import org.terasology.scenario.internal.events.LogicTreeAddEventEvent;
 import org.terasology.scenario.internal.events.LogicTreeDeleteEvent;
+import org.terasology.world.block.BlockManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class HubToolScreen extends CoreScreenLayer {
     private UIBox overviewBox;
@@ -60,6 +63,9 @@ public class HubToolScreen extends CoreScreenLayer {
 
     @In
     private EntityManager entityManager;
+
+    @In
+    private BlockManager blockManager;
 
     private Logger logger = LoggerFactory.getLogger(HubToolScreen.class);
 
@@ -200,8 +206,7 @@ public class HubToolScreen extends CoreScreenLayer {
     private void onAddEvent() {
         Integer selectedIndex = treeView.getSelectedIndex();
 
-        Tree<LogicTreeValue> tree = treeView.getModel().getNode(selectedIndex);
-        tree.setExpanded(true);
+        //Tree<LogicTreeValue> tree = treeView.getModel().getNode(selectedIndex);
         scenarioEntity.send(new LogicTreeAddEventEvent("new event", this));
     }
 
@@ -235,9 +240,7 @@ public class HubToolScreen extends CoreScreenLayer {
         Integer selectedIndex = treeView.getSelectedIndex();
 
         Tree<LogicTreeValue> tree = treeView.getModel().getNode(selectedIndex);
-        tree.setExpanded(true);
-
-        scenarioEntity.send(new LogicTreeAddActionEvent("new action", this, tree.getValue().getEntity()));
+        scenarioEntity.send(new LogicTreeAddActionEvent(ActionComponent.ActionType.GIVE_ITEM, this, tree.getValue().getEntity()));
     }
 
     private boolean checkCanAddAction() {
@@ -300,8 +303,9 @@ public class HubToolScreen extends CoreScreenLayer {
             }
         }
         else {
+            ExpandedComponent tempExpComponent = new ExpandedComponent();
             ScenarioComponent tempComponent = new ScenarioComponent();
-            scenarioEntity = entityManager.create(tempComponent);
+            scenarioEntity = entityManager.create(tempComponent, tempExpComponent);
         }
 
         ScenarioComponent tempScenComponent = scenarioEntity.getComponent(ScenarioComponent.class);
@@ -318,6 +322,9 @@ public class HubToolScreen extends CoreScreenLayer {
      */
     public void updateTree(EntityRef newScenario) {
         if (newScenario.getComponent(ScenarioComponent.class) != null) {
+            if (!scenarioEntity.equals(newScenario)) {
+                scenarioEntity.destroy();
+            }
             scenarioEntity = newScenario;
             LogicTree tempTree = constructTree(scenarioEntity);
             if (tempTree != null) {
@@ -336,10 +343,17 @@ public class HubToolScreen extends CoreScreenLayer {
         if (!entity.hasComponent(ScenarioComponent.class)) {
             return null;
         }
+        if (!entity.hasComponent(ExpandedComponent.class)) {
+            ExpandedComponent newExp = new ExpandedComponent();
+            entity.addOrSaveComponent(newExp);
+        }
         ScenarioComponent scenario = entity.getComponent(ScenarioComponent.class);
         LogicTreeView tempTreeView = new LogicTreeView();
         LogicTree returnTree = new LogicTree(new LogicTreeValue("Scenario", false, assetManager.getAsset("Scenario:scenarioText", Texture.class).get(), true, entity));
         tempTreeView.setModel(returnTree.getRoot());
+        if (entity.hasComponent(ExpandedComponent.class)) {
+            returnTree.setExpandedNoEntity(entity.getComponent(ExpandedComponent.class).isExpanded);
+        }
         if (scenario.triggerEntities != null) {
             List<EntityRef> events = scenario.triggerEntities;
             for (EntityRef e : events) {
@@ -347,25 +361,31 @@ public class HubToolScreen extends CoreScreenLayer {
                 ActionListComponent actions = e.getComponent(ActionListComponent.class);
                 LogicTreeValue e2;
                 if (name == null) {
-                    e2 = new LogicTreeValue("Event", true, assetManager.getAsset("Scenario:eventText", Texture.class).get(), false, e);
+                    e2 = new LogicTreeValue(true, assetManager.getAsset("Scenario:eventText", Texture.class).get(), false, e);
                 } else {
-                    e2 = new LogicTreeValue(name.name, true, assetManager.getAsset("Scenario:eventText", Texture.class).get(), false, e);
+                    e2 = new LogicTreeValue(true, assetManager.getAsset("Scenario:eventText", Texture.class).get(), false, e);
                 }
 
                 LogicTree tempEventTree = new LogicTree(e2);
 
                 if (actions != null) {
+                    if (actions.actions == null) {
+                        actions.actions = new ArrayList<EntityRef>();
+                    }
                     for (EntityRef a : actions.actions) {
                         ActionComponent a2 = a.getComponent(ActionComponent.class);
                         if (a2 == null) {
-                            tempEventTree.addChild(new LogicTreeValue("Action", false, assetManager.getAsset("Scenario:actionText", Texture.class).get(), false, a));
+                            tempEventTree.addChild(new LogicTreeValue(false, assetManager.getAsset("Scenario:actionText", Texture.class).get(), false, a));
                         } else {
-                            tempEventTree.addChild(new LogicTreeValue(a2.name, false, assetManager.getAsset("Scenario:actionText", Texture.class).get(), false, a));
+                            tempEventTree.addChild(new LogicTreeValue(false, assetManager.getAsset("Scenario:actionText", Texture.class).get(), false, a));
                         }
                     }
                 }
 
                 returnTree.addChild(tempEventTree);
+                if (e2.getEntity().hasComponent(ExpandedComponent.class)) {
+                    tempEventTree.setExpandedNoEntity(e2.getEntity().getComponent(ExpandedComponent.class).isExpanded);
+                }
             }
         }
         return returnTree;

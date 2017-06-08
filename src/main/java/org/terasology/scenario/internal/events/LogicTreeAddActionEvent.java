@@ -17,6 +17,7 @@ package org.terasology.scenario.internal.events;
 
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
+import org.terasology.scenario.components.ActionComponent;
 import org.terasology.scenario.internal.ui.HubToolScreen;
 
 /**
@@ -27,18 +28,18 @@ import org.terasology.scenario.internal.ui.HubToolScreen;
  * eventEntity: The entity of the event that the action will be attached to
  */
 public class LogicTreeAddActionEvent implements Event {
-    private String actionName;
+    private ActionComponent.ActionType actionType;
     private EntityRef eventEntity;
     private HubToolScreen hubScreen;
 
-    public LogicTreeAddActionEvent(String actionName, HubToolScreen hubScreen, EntityRef eventEntity) {
-        this.actionName = actionName;
+    public LogicTreeAddActionEvent(ActionComponent.ActionType type, HubToolScreen hubScreen, EntityRef eventEntity) {
+        this.actionType = type;
         this.hubScreen = hubScreen;
         this.eventEntity = eventEntity;
     }
 
-    public String getActionName() {
-        return actionName;
+    public ActionComponent.ActionType getActionType() {
+        return actionType;
     }
 
     public HubToolScreen getHubScreen() {
