@@ -17,41 +17,35 @@ package org.terasology.scenario.internal.ui;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.rendering.nui.widgets.treeView.Tree;
-
-import java.util.HashSet;
-import java.util.Set;
+import org.terasology.scenario.components.ExpandedComponent;
 
 
 public class LogicTree extends Tree<LogicTreeValue> {
 
-    public Set<EntityRef> expandedList;
+    private HubToolScreen hubToolScreen;
 
     private static final Logger logger = LoggerFactory.getLogger(LogicTree.class);
-    public LogicTree() {
-
+    public LogicTree(HubToolScreen hubToolScreen) {
+        this.hubToolScreen = hubToolScreen;
     }
 
-    public LogicTree(LogicTreeValue value) {
+    public LogicTree(LogicTreeValue value, HubToolScreen hubToolScreen) {
         setValue(value);
-        expandedList = new HashSet<EntityRef>();
+        this.hubToolScreen = hubToolScreen;
     }
 
     @Override
     public void setExpanded(boolean expanded) {
         super.setExpanded(expanded);
-        //ExpandedComponent exp = getValue().getEntity().getComponent(ExpandedComponent.class);
         if (expanded) {
-            expandedList.add(getValue().getEntity());
+            hubToolScreen.getEntity().getComponent(ExpandedComponent.class).expandedList.add(this.getValue().getEntity());
+            hubToolScreen.getEntity().saveComponent(hubToolScreen.getEntity().getComponent(ExpandedComponent.class));
         }
         else {
-            expandedList.remove(getValue().getEntity());
+            hubToolScreen.getEntity().getComponent(ExpandedComponent.class).expandedList.remove(this.getValue().getEntity());
+            hubToolScreen.getEntity().saveComponent(hubToolScreen.getEntity().getComponent(ExpandedComponent.class));
         }
-        /*if (exp != null) {
-            exp.isExpanded = expanded;
-
-        }*/
     }
 
     public void setExpandedNoEntity(boolean expanded) {
@@ -60,7 +54,7 @@ public class LogicTree extends Tree<LogicTreeValue> {
 
     @Override
     public void addChild(LogicTreeValue childValue){
-        addChild(new LogicTree(childValue));
+        addChild(new LogicTree(childValue, hubToolScreen));
     }
 
     @Override

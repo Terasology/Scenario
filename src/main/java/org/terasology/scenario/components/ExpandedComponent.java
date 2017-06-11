@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*package org.terasology.scenario.components;
+package org.terasology.scenario.components;
 
 import org.terasology.entitySystem.Component;
+import org.terasology.entitySystem.entity.EntityRef;
+
+import java.util.Set;
 
 public class ExpandedComponent implements Component{
-    public boolean isExpanded = true;
+    public Set<EntityRef> expandedList;
 }
-*/

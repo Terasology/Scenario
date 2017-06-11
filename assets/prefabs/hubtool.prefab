@@ -9,5 +9,6 @@
     "InteractionTarget": {},
     "InteractionScreen": {
         "screen": "Scenario:HubToolScreen"
-    }
+    },
+    "Expanded": {}
 }

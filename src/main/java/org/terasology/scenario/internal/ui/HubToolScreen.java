@@ -31,6 +31,7 @@ import org.terasology.rendering.nui.widgets.treeView.Tree;
 import org.terasology.scenario.components.ActionComponent;
 import org.terasology.scenario.components.ActionListComponent;
 import org.terasology.scenario.components.EventNameComponent;
+import org.terasology.scenario.components.ExpandedComponent;
 import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.internal.events.LogicTreeAddActionEvent;
 import org.terasology.scenario.internal.events.LogicTreeAddEventEvent;
@@ -40,7 +41,6 @@ import org.terasology.world.block.BlockManager;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class HubToolScreen extends BaseInteractionScreen {
     private UIBox overviewBox;
@@ -69,11 +69,14 @@ public class HubToolScreen extends BaseInteractionScreen {
 
     private Logger logger = LoggerFactory.getLogger(HubToolScreen.class);
 
-    public Set<EntityRef> expandedList;
 
     @Override
     protected void initializeWithInteractionTarget(EntityRef interactionTarget) {
 
+    }
+
+    public EntityRef getEntity() {
+        return getInteractionTarget();
     }
 
     @Override
@@ -87,9 +90,15 @@ public class HubToolScreen extends BaseInteractionScreen {
         addEventButton = find("addEventButton", UIButton.class);
         addActionButton = find("addActionButton", UIButton.class);
         deleteButton = find("deleteButton", UIButton.class);
-        expandedList = new HashSet<>();
 
         treeView = find("logicTree", LogicTreeView.class);
+
+        ExpandedComponent exp = getInteractionTarget().getComponent(ExpandedComponent.class);
+
+        if (exp.expandedList == null) {
+            exp.expandedList = new HashSet<>();
+            getInteractionTarget().saveComponent(exp);
+        }
 
         if (overviewButton != null) {
             overviewButton.subscribe(button -> {
@@ -215,7 +224,6 @@ public class HubToolScreen extends BaseInteractionScreen {
     private void onAddEvent() {
         Integer selectedIndex = treeView.getSelectedIndex();
 
-        //Tree<LogicTreeValue> tree = treeView.getModel().getNode(selectedIndex);
         scenarioEntity.send(new LogicTreeAddEventEvent("new event", this));
     }
 
@@ -322,8 +330,6 @@ public class HubToolScreen extends BaseInteractionScreen {
             tempScenComponent.triggerEntities = new ArrayList<EntityRef>();
             scenarioEntity.saveComponent(tempScenComponent);
         }
-
-        expandedList.add(scenarioEntity);
     }
 
     /**
@@ -354,18 +360,11 @@ public class HubToolScreen extends BaseInteractionScreen {
         if (!entity.hasComponent(ScenarioComponent.class)) {
             return null;
         }
-        /*if (!entity.hasComponent(ExpandedComponent.class)) {
-            ExpandedComponent newExp = new ExpandedComponent();
-            entity.addOrSaveComponent(newExp);
-        }*/
         ScenarioComponent scenario = entity.getComponent(ScenarioComponent.class);
         LogicTreeView tempTreeView = new LogicTreeView();
-        LogicTree returnTree = new LogicTree(new LogicTreeValue("Scenario", false, assetManager.getAsset("Scenario:scenarioText", Texture.class).get(), true, entity));
+        LogicTree returnTree = new LogicTree(new LogicTreeValue("Scenario", false, assetManager.getAsset("Scenario:scenarioText", Texture.class).get(), true, entity), this);
         tempTreeView.setModel(returnTree.getRoot());
         returnTree.setExpandedNoEntity(true);
-        /*if (entity.hasComponent(ExpandedComponent.class)) {
-            returnTree.setExpandedNoEntity(entity.getComponent(ExpandedComponent.class).isExpanded);
-        }*/
         if (scenario.triggerEntities != null) {
             List<EntityRef> events = scenario.triggerEntities;
             for (EntityRef e : events) {
@@ -378,7 +377,7 @@ public class HubToolScreen extends BaseInteractionScreen {
                     e2 = new LogicTreeValue(true, assetManager.getAsset("Scenario:eventText", Texture.class).get(), false, e);
                 }
 
-                LogicTree tempEventTree = new LogicTree(e2);
+                LogicTree tempEventTree = new LogicTree(e2, this);
 
                 if (actions != null) {
                     if (actions.actions == null) {
@@ -395,12 +394,7 @@ public class HubToolScreen extends BaseInteractionScreen {
                 }
 
                 returnTree.addChild(tempEventTree);
-                /*if (e2.getEntity().hasComponent(ExpandedComponent.class)) {
-                    tempEventTree.setExpandedNoEntity(e2.getEntity().getComponent(ExpandedComponent.class).isExpanded);
-                }*/
-                logger.info(expandedList.toString());
-                logger.info("Single: " + e2.getEntity());
-                tempEventTree.setExpandedNoEntity(expandedList.contains(e));
+                tempEventTree.setExpandedNoEntity(getInteractionTarget().getComponent(ExpandedComponent.class).expandedList.contains(e));
             }
         }
         return returnTree;

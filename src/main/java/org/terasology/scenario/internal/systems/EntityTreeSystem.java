@@ -28,6 +28,7 @@ import org.terasology.scenario.components.ActionComponent;
 import org.terasology.scenario.components.ActionListComponent;
 import org.terasology.scenario.components.EventNameComponent;
 import org.terasology.scenario.components.EventTypeComponent;
+import org.terasology.scenario.components.ExpandedComponent;
 import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.internal.events.LogicTreeAddActionEvent;
 import org.terasology.scenario.internal.events.LogicTreeAddEventEvent;
@@ -69,7 +70,8 @@ public class EntityTreeSystem extends BaseComponentSystem{
         entity.saveComponent(component);
 
         if (event.getHubScreen() != null) {
-            event.getHubScreen().expandedList.add(entity);
+            event.getHubScreen().getEntity().getComponent(ExpandedComponent.class).expandedList.add(entity);
+            event.getHubScreen().getEntity().saveComponent(event.getHubScreen().getEntity().getComponent(ExpandedComponent.class));
             event.getHubScreen().updateTree(entity);
         }
     }
@@ -95,7 +97,8 @@ public class EntityTreeSystem extends BaseComponentSystem{
         entity.saveComponent(component);
 
         if (event.getHubScreen() != null) {
-            event.getHubScreen().expandedList.add(event.getEventEntity());
+            event.getHubScreen().getEntity().getComponent(ExpandedComponent.class).expandedList.add(event.getEventEntity());
+            event.getHubScreen().getEntity().saveComponent(event.getHubScreen().getEntity().getComponent(ExpandedComponent.class));
             event.getHubScreen().updateTree(entity);
         }
     }
