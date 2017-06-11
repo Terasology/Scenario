@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.components;
+/*package org.terasology.scenario.components;
 
 import org.terasology.entitySystem.Component;
 
 public class ExpandedComponent implements Component{
     public boolean isExpanded = true;
 }
+*/

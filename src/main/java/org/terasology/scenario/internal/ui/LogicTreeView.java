@@ -16,12 +16,14 @@
 package org.terasology.scenario.internal.ui;
 
 import org.terasology.assets.management.AssetManager;
+import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.input.MouseInput;
 import org.terasology.rendering.nui.NUIManager;
 import org.terasology.rendering.nui.contextMenu.ContextMenuUtils;
 import org.terasology.rendering.nui.contextMenu.MenuTree;
 import org.terasology.rendering.nui.widgets.UITreeView;
 
+import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -29,6 +31,8 @@ import java.util.function.Function;
  */
 public final class LogicTreeView extends UITreeView<LogicTreeValue> {
     private AssetManager assetManager;
+
+    public Set<EntityRef> expandedList;
 
     private Function<LogicTree, MenuTree> contextMenuTreeProducer;
 
