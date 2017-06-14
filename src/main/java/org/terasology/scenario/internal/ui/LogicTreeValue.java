@@ -18,12 +18,9 @@ package org.terasology.scenario.internal.ui;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.registry.In;
 import org.terasology.rendering.assets.texture.TextureRegion;
 import org.terasology.scenario.components.ActionComponent;
-import org.terasology.scenario.components.EventTypeComponent;
-import org.terasology.world.block.BlockManager;
-
+import org.terasology.scenario.components.events.OnSpawnComponent;
 
 /**
  * Value for the logic tree, currently it entails the text to display, the image attached,
@@ -76,15 +73,8 @@ public class LogicTreeValue {
         }
 
         //Check for event
-        if (entity.hasComponent(EventTypeComponent.class)) {
-            EventTypeComponent comp = entity.getComponent(EventTypeComponent.class);
-            switch (comp.type) {
-                case PLAYER_SPAWN:
-                    text = "On player spawn";
-                    break;
-                default:
-                    break;
-            }
+        if (entity.hasComponent(OnSpawnComponent.class)) {
+            text = "On player spawn";
         }
 
     }

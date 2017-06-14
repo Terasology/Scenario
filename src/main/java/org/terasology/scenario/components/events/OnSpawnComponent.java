@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.components;
+package org.terasology.scenario.components.events;
 
 import org.terasology.entitySystem.Component;
 
-public class EventTypeComponent implements Component {
-    public eventType type;
-
-    public enum eventType {
-        PLAYER_SPAWN,
-    }
+/**
+ * Component attached to an event entity that indicates the tracked event is a player spawning
+ */
+public class OnSpawnComponent implements Component {
 }

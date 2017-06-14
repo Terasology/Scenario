@@ -27,9 +27,9 @@ import org.terasology.registry.In;
 import org.terasology.scenario.components.ActionComponent;
 import org.terasology.scenario.components.ActionListComponent;
 import org.terasology.scenario.components.EventNameComponent;
-import org.terasology.scenario.components.EventTypeComponent;
 import org.terasology.scenario.components.ExpandedComponent;
 import org.terasology.scenario.components.ScenarioComponent;
+import org.terasology.scenario.components.events.OnSpawnComponent;
 import org.terasology.scenario.internal.events.LogicTreeAddActionEvent;
 import org.terasology.scenario.internal.events.LogicTreeAddEventEvent;
 import org.terasology.scenario.internal.events.LogicTreeDeleteEvent;
@@ -57,11 +57,9 @@ public class EntityTreeSystem extends BaseComponentSystem{
     @ReceiveEvent
     public void onLogicTreeAddEventEvent(LogicTreeAddEventEvent event, EntityRef entity, ScenarioComponent component) {
         EventNameComponent eventName = new EventNameComponent();
-        //ExpandedComponent exp = new ExpandedComponent();
-        EventTypeComponent type = new EventTypeComponent();
-        type.type = EventTypeComponent.eventType.PLAYER_SPAWN;
+        OnSpawnComponent spawn = new OnSpawnComponent();
         eventName.name = event.getEventName();
-        EntityRef newEventEntity = entityManager.create(new ActionListComponent(), eventName, type);
+        EntityRef newEventEntity = entityManager.create(new ActionListComponent(), eventName, spawn);
         ActionListComponent actionsList = newEventEntity.getComponent(ActionListComponent.class);
         actionsList.actions = new ArrayList<EntityRef>();
         newEventEntity.saveComponent(actionsList);

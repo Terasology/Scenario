@@ -25,12 +25,11 @@ import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.registry.In;
 import org.terasology.scenario.components.ActionListComponent;
-import org.terasology.scenario.components.EventTypeComponent;
 import org.terasology.scenario.components.ScenarioComponent;
+import org.terasology.scenario.components.events.OnSpawnComponent;
 import org.terasology.scenario.internal.events.EventTriggerEvent;
 import org.terasology.scenario.internal.events.PlayerSpawnScenarioEvent;
 
-import java.util.List;
 
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class ScenarioRootManagementSystem extends BaseComponentSystem {
@@ -52,18 +51,7 @@ public class ScenarioRootManagementSystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void onPlayerSpawnScenarioEvent(PlayerSpawnScenarioEvent event, EntityRef entity, ScenarioComponent component) {
-        List<EntityRef> entities = component.triggerEntities;
-        for (EntityRef e : entities) {
-            //Currently just passing immediately to matching entities, no checking yet
-            if (e.hasComponent(EventTypeComponent.class)) {
-                switch (e.getComponent(EventTypeComponent.class).type) {
-                    case PLAYER_SPAWN:
-                        e.send(new EventTriggerEvent(event.getSpawningEntity()));
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
+        Iterable<EntityRef> entityList = entityManager.getEntitiesWith(OnSpawnComponent.class);
+        entityList.forEach(e -> e.send(new EventTriggerEvent(event.getSpawningEntity())));
     }
 }
