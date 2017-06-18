@@ -62,7 +62,25 @@ public class LogicItemRenderer extends AbstractItemRenderer<LogicTreeValue> {
             }
         }
 
-        String text = value.getText();
+
+        String text;
+
+        // Names and scenarios don't need text, just icon
+        switch (value.getValueType()) {
+            case ACTION_NAME:
+            case CONDITIONAL_NAME:
+            case EVENT_NAME:
+            case SCENARIO:
+                text = "";
+                break;
+            default:
+            case TRIGGER:
+            case ACTION:
+            case CONDITIONAL:
+            case EVENT:
+                text = value.getText();
+                break;
+        }
 
         int iconWidth;
         if (texture != null){
@@ -79,7 +97,24 @@ public class LogicItemRenderer extends AbstractItemRenderer<LogicTreeValue> {
     @Override
     public Vector2i getPreferredSize(LogicTreeValue value, Canvas canvas) {
         Font font = canvas.getCurrentStyle().getFont();
-        String text = value.getText();
+        String text;
+
+        // Names and scenarios don't need text, just icon
+        switch (value.getValueType()) {
+            case ACTION_NAME:
+            case CONDITIONAL_NAME:
+            case EVENT_NAME:
+            case SCENARIO:
+                text = "";
+                break;
+            default:
+            case TRIGGER:
+            case ACTION:
+            case CONDITIONAL:
+            case EVENT:
+                text = value.getText();
+                break;
+        }
 
         TextureRegion texture = value.getTextureRegion();
         if (texture != null) {

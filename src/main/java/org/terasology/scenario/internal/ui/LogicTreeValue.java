@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.rendering.assets.texture.TextureRegion;
 import org.terasology.scenario.components.ActionComponent;
+import org.terasology.scenario.components.ConditionComponent;
 import org.terasology.scenario.components.events.OnSpawnComponent;
 
 /**
@@ -32,50 +33,67 @@ public class LogicTreeValue {
 
     private String text;
     private TextureRegion textureRegion;
-    private boolean isEvent;
-    private boolean isRoot;
     private EntityRef entity;
+    private Type valueType;
 
-    public LogicTreeValue(String text, boolean isEvent, TextureRegion textureRegion, boolean isRoot) {
-        this.text = text;
-        this.isEvent = isEvent;
-        this.textureRegion = textureRegion;
-        this.isRoot = isRoot;
+    public enum Type {
+        SCENARIO,
+        TRIGGER,
+        EVENT_NAME,
+        CONDITIONAL_NAME,
+        ACTION_NAME,
+        EVENT,
+        CONDITIONAL,
+        ACTION
     }
 
-    public LogicTreeValue(String text, boolean isEvent, TextureRegion textureRegion, boolean isRoot, EntityRef entity) {
+    public LogicTreeValue(String text, TextureRegion textureRegion, Type valueType) {
         this.text = text;
-        this.isEvent = isEvent;
         this.textureRegion = textureRegion;
-        this.isRoot = isRoot;
+        this.valueType = valueType;
+    }
+
+    public LogicTreeValue(String text, TextureRegion textureRegion, Type valueType, EntityRef entity) {
+        this.text = text;
+        this.textureRegion = textureRegion;
+        this.valueType = valueType;
         this.entity = entity;
     }
 
-    //Constructor if creating an event or an action and text should be built upon what the actual action/event is
-    public LogicTreeValue(boolean isEvent, TextureRegion textureRegion, boolean isRoot, EntityRef entity) {
-        this.isEvent = isEvent;
+    //Constructor if creating an event, action, or conditional and text should be built upon what the actual action/event is
+    public LogicTreeValue(TextureRegion textureRegion, Type valueType, EntityRef entity) {
         this.textureRegion = textureRegion;
-        this.isRoot = isRoot;
+        this.valueType = valueType;
         this.entity = entity;
 
         this.text = "Generic trigger";
 
         //Check for action
-        if (entity.hasComponent(ActionComponent.class)) {
-            ActionComponent comp = entity.getComponent(ActionComponent.class);
-            switch (comp.type) {
-                case GIVE_ITEM:
-                    text = "Give player " + comp.numItems + " " + comp.itemIdName;
-                    break;
-                default:
-                    break;
+        if (valueType == Type.ACTION) {
+            if (entity.hasComponent(ActionComponent.class)) {
+                ActionComponent comp = entity.getComponent(ActionComponent.class);
+                switch (comp.type) {
+                    case GIVE_ITEM:
+                        text = "Give player " + comp.numItems + " " + comp.itemIdName;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
         //Check for event
-        if (entity.hasComponent(OnSpawnComponent.class)) {
-            text = "On player spawn";
+        else if (valueType == Type.EVENT) {
+            if (entity.hasComponent(OnSpawnComponent.class)) {
+                text = "On player spawn";
+            }
         }
+
+        //Check for conditional
+        else if (valueType == Type.CONDITIONAL) {
+            text = entity.getComponent(ConditionComponent.class).name;
+        }
+        //Other types are handled with item renderer
 
     }
 
@@ -83,12 +101,8 @@ public class LogicTreeValue {
         return text;
     }
 
-    public boolean isEvent(){
-        return isEvent;
-    }
-
-    public boolean isRoot() {
-        return isRoot;
+    public Type getValueType() {
+        return valueType;
     }
 
     public void setEntity (EntityRef entity) {
@@ -103,8 +117,4 @@ public class LogicTreeValue {
         return textureRegion;
     }
 
-    @Override
-    public final String toString() {
-        return text + " " + Boolean.toString(isEvent);
-    }
 }

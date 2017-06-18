@@ -15,29 +15,30 @@
  */
 package org.terasology.scenario.internal.events;
 
+import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 import org.terasology.scenario.internal.ui.HubToolScreen;
 
 /**
  * Event for adding an event to the logic tree. Sent to the root entity.
- * eventName: Event name, currently this is all that is needed for constructing an event.
  * hubScreen: The hub tool's screen, if this is passed then after adding the event it will update the tree on this hubScreen,
  *            if not passed(null) then it will not update immediately.
+ * triggerEntity: The entity of the trigger that the action will be attached to
  */
 public class LogicTreeAddEventEvent implements Event {
-    private String eventName;
+    private EntityRef triggerEntity;
     private HubToolScreen hubScreen;
 
-    public LogicTreeAddEventEvent(String eventName, HubToolScreen hubScreen) {
-        this.eventName = eventName;
+    public LogicTreeAddEventEvent(HubToolScreen hubScreen, EntityRef triggerEntity) {
         this.hubScreen = hubScreen;
-    }
-
-    public String getEventName() {
-        return eventName;
+        this.triggerEntity = triggerEntity;
     }
 
     public HubToolScreen getHubScreen() {
         return hubScreen;
+    }
+
+    public EntityRef getTriggerEntity() {
+        return triggerEntity;
     }
 }

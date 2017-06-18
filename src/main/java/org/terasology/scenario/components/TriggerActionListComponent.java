@@ -18,11 +18,12 @@ package org.terasology.scenario.components;
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * Component attached to event entities that allows for a list of actions to be attached
+ * List for actions in a trigger
  */
-public class ActionListComponent implements Component {
-    public List<EntityRef> actions;
+public class TriggerActionListComponent implements Component {
+    public Set<EntityRef> actions = new HashSet<>();
 }

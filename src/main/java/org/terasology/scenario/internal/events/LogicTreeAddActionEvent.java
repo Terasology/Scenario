@@ -22,31 +22,24 @@ import org.terasology.scenario.internal.ui.HubToolScreen;
 
 /**
  * Event for adding an action to the logic tree. Sent to the root entity.
- * actionName: Action name, currently this is all that is needed for constructing an action.
  * hubScreen: The hub tool's screen, if this is passed then after adding the event it will update the tree on this hubScreen,
  *            if not passed(null) then it will not update immediately.
- * eventEntity: The entity of the event that the action will be attached to
+ * triggerEntity: The entity of the trigger that the action will be attached to
  */
 public class LogicTreeAddActionEvent implements Event {
-    private ActionComponent.ActionType actionType;
-    private EntityRef eventEntity;
+    private EntityRef triggerEntity;
     private HubToolScreen hubScreen;
 
-    public LogicTreeAddActionEvent(ActionComponent.ActionType type, HubToolScreen hubScreen, EntityRef eventEntity) {
-        this.actionType = type;
+    public LogicTreeAddActionEvent(HubToolScreen hubScreen, EntityRef triggerEntity) {
         this.hubScreen = hubScreen;
-        this.eventEntity = eventEntity;
-    }
-
-    public ActionComponent.ActionType getActionType() {
-        return actionType;
+        this.triggerEntity = triggerEntity;
     }
 
     public HubToolScreen getHubScreen() {
         return hubScreen;
     }
 
-    public EntityRef getEventEntity() {
-        return eventEntity;
+    public EntityRef getTriggerEntity() {
+        return triggerEntity;
     }
 }

@@ -18,6 +18,9 @@ package org.terasology.scenario.internal.events;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 
+/**
+ * An event that is called when an event is triggered by an entity
+ */
 public class EventTriggerEvent implements Event {
     public EntityRef triggeringEntity;
 

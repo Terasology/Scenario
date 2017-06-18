@@ -18,7 +18,8 @@ package org.terasology.scenario.components;
 import org.terasology.entitySystem.Component;
 
 /**
- * Component that denotes an action. Currently only includes a name for the action.
+ * Component that denotes an action.
+ * Will eventually be abstracted like events are into their own components based on action type
  */
 public class ActionComponent implements Component {
     public ActionType type;

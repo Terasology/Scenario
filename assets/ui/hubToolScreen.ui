@@ -150,50 +150,6 @@
                         "layoutInfo": {
                             "position-top":{}
                         }
-                      },
-                      {
-                        "type": "RowLayout",
-                        "layoutInfo": {
-                          "position-top": {
-                            "widget": "scrollWindow",
-                            "target": "BOTTOM"
-                          },
-                          "position-bottom": {},
-                          "height":50
-                        },
-                        "contents": [
-                          {
-                            "type": "UIButton",
-                            "id": "addEventButton",
-                            "text": "Add Event",
-                            "layoutInfo": {
-                              "position-left": {}
-                            }
-                          },
-                          {
-                            "type": "UIButton",
-                            "id": "addActionButton",
-                            "text": "Add Action",
-                            "layoutInfo": {
-                              "position-left": {
-                                "widget": "addEventButton",
-                                "target": "RIGHT"
-                              }
-                            }
-                          },
-                          {
-                            "type": "UIButton",
-                            "id": "deleteButton",
-                            "text": "Delete",
-                            "layoutInfo": {
-                              "position-left": {
-                                "widget": "addActionButton",
-                                "target": "RIGHT"
-                              }
-                            }
-                          }
-                        ],
-                        "id": "logicButtons"
                       }
                     ]
                   }

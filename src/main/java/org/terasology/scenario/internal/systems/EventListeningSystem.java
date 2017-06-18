@@ -28,6 +28,9 @@ import org.terasology.registry.In;
 import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.internal.events.PlayerSpawnScenarioEvent;
 
+/**
+ * System that listened for terasology events and converts them into scenario events and sends them to the active scenario
+ */
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class EventListeningSystem extends BaseComponentSystem {
     @In

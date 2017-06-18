@@ -29,6 +29,9 @@ import org.terasology.world.block.BlockManager;
 import org.terasology.world.block.family.BlockFamily;
 import org.terasology.world.block.items.BlockItemFactory;
 
+/**
+ * System that responds and triggers the actions of a logic event
+ */
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class ActionEventSystem extends BaseComponentSystem {
     @In

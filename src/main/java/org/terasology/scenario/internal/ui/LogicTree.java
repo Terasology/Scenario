@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.rendering.nui.widgets.treeView.Tree;
 import org.terasology.scenario.components.ExpandedComponent;
+import org.terasology.scenario.components.TriggerNameComponent;
 
 
 public class LogicTree extends Tree<LogicTreeValue> {
@@ -39,12 +40,51 @@ public class LogicTree extends Tree<LogicTreeValue> {
     public void setExpanded(boolean expanded) {
         super.setExpanded(expanded);
         if (expanded) {
-            hubToolScreen.getEntity().getComponent(ExpandedComponent.class).expandedList.add(this.getValue().getEntity());
-            hubToolScreen.getEntity().saveComponent(hubToolScreen.getEntity().getComponent(ExpandedComponent.class));
+            if (value.getEntity() != null) {
+                switch (value.getValueType()) {
+                    //If it is a name(event/conditional/action) then it needs to find the matching entity from the trigger
+                    case EVENT_NAME:
+                        hubToolScreen.getEntity().getComponent(ExpandedComponent.class).expandedList.add(this.getValue().getEntity().getComponent(TriggerNameComponent.class).entityForEvent);
+                        hubToolScreen.getEntity().saveComponent(hubToolScreen.getEntity().getComponent(ExpandedComponent.class));
+                        break;
+                    case CONDITIONAL_NAME:
+                        hubToolScreen.getEntity().getComponent(ExpandedComponent.class).expandedList.add(this.getValue().getEntity().getComponent(TriggerNameComponent.class).entityForCondition);
+                        hubToolScreen.getEntity().saveComponent(hubToolScreen.getEntity().getComponent(ExpandedComponent.class));
+                        break;
+                    case ACTION_NAME:
+                        hubToolScreen.getEntity().getComponent(ExpandedComponent.class).expandedList.add(this.getValue().getEntity().getComponent(TriggerNameComponent.class).entityForAction);
+                        hubToolScreen.getEntity().saveComponent(hubToolScreen.getEntity().getComponent(ExpandedComponent.class));
+                        break;
+                    default:
+                        hubToolScreen.getEntity().getComponent(ExpandedComponent.class).expandedList.add(this.getValue().getEntity());
+                        hubToolScreen.getEntity().saveComponent(hubToolScreen.getEntity().getComponent(ExpandedComponent.class));
+                        break;
+                }
+
+            }
         }
         else {
-            hubToolScreen.getEntity().getComponent(ExpandedComponent.class).expandedList.remove(this.getValue().getEntity());
-            hubToolScreen.getEntity().saveComponent(hubToolScreen.getEntity().getComponent(ExpandedComponent.class));
+            if (value.getEntity() != null) {
+                switch (value.getValueType()) {
+                    //If it is a name(event/conditional/action) then it needs to find the matching entity from the trigger
+                    case EVENT_NAME:
+                        hubToolScreen.getEntity().getComponent(ExpandedComponent.class).expandedList.remove(this.getValue().getEntity().getComponent(TriggerNameComponent.class).entityForEvent);
+                        hubToolScreen.getEntity().saveComponent(hubToolScreen.getEntity().getComponent(ExpandedComponent.class));
+                        break;
+                    case CONDITIONAL_NAME:
+                        hubToolScreen.getEntity().getComponent(ExpandedComponent.class).expandedList.remove(this.getValue().getEntity().getComponent(TriggerNameComponent.class).entityForCondition);
+                        hubToolScreen.getEntity().saveComponent(hubToolScreen.getEntity().getComponent(ExpandedComponent.class));
+                        break;
+                    case ACTION_NAME:
+                        hubToolScreen.getEntity().getComponent(ExpandedComponent.class).expandedList.remove(this.getValue().getEntity().getComponent(TriggerNameComponent.class).entityForAction);
+                        hubToolScreen.getEntity().saveComponent(hubToolScreen.getEntity().getComponent(ExpandedComponent.class));
+                        break;
+                    default:
+                        hubToolScreen.getEntity().getComponent(ExpandedComponent.class).expandedList.remove(this.getValue().getEntity());
+                        hubToolScreen.getEntity().saveComponent(hubToolScreen.getEntity().getComponent(ExpandedComponent.class));
+                        break;
+                }
+            }
         }
     }
 

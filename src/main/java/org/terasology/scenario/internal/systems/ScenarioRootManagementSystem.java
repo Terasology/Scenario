@@ -26,6 +26,7 @@ import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.registry.In;
 import org.terasology.scenario.components.ActionListComponent;
 import org.terasology.scenario.components.ScenarioComponent;
+import org.terasology.scenario.components.TriggerActionListComponent;
 import org.terasology.scenario.components.events.OnSpawnComponent;
 import org.terasology.scenario.internal.events.EventTriggerEvent;
 import org.terasology.scenario.internal.events.PlayerSpawnScenarioEvent;
@@ -39,7 +40,7 @@ public class ScenarioRootManagementSystem extends BaseComponentSystem {
     private Logger logger = LoggerFactory.getLogger(ScenarioRootManagementSystem.class);
 
     @ReceiveEvent
-    public void onEventTrigger(EventTriggerEvent event, EntityRef entity, ActionListComponent actions) {
+    public void onEventTrigger(EventTriggerEvent event, EntityRef entity, TriggerActionListComponent actions) {
         //Check Condition
         //Send to actions
         for(EntityRef a : actions.actions) {
@@ -52,6 +53,6 @@ public class ScenarioRootManagementSystem extends BaseComponentSystem {
     @ReceiveEvent
     public void onPlayerSpawnScenarioEvent(PlayerSpawnScenarioEvent event, EntityRef entity, ScenarioComponent component) {
         Iterable<EntityRef> entityList = entityManager.getEntitiesWith(OnSpawnComponent.class);
-        entityList.forEach(e -> e.send(new EventTriggerEvent(event.getSpawningEntity())));
+        entityList.forEach(e -> e.getOwner().send(new EventTriggerEvent(event.getSpawningEntity())));
     }
 }

@@ -13,22 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.internal.events;
+package org.terasology.scenario.components;
 
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.event.Event;
+import org.terasology.entitySystem.Component;
 
 /**
- * Scenario event for when a player spawns
+ * Component that denotes a conditional.
+ * Will eventually be replaced with multiple components to denote type(like events are currently)
  */
-public class PlayerSpawnScenarioEvent implements Event {
-    private EntityRef spawningEntity;
-
-    public PlayerSpawnScenarioEvent(EntityRef spawningEntity) {
-        this.spawningEntity = spawningEntity;
-    }
-
-    public EntityRef getSpawningEntity() {
-        return spawningEntity;
-    }
+public class ConditionComponent implements Component {
+    public String name;
 }

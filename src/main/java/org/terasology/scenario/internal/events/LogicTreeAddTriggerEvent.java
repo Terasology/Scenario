@@ -15,20 +15,22 @@
  */
 package org.terasology.scenario.internal.events;
 
-import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
+import org.terasology.scenario.internal.ui.HubToolScreen;
 
 /**
- * Scenario event for when a player spawns
+ * Event for adding a trigger to the logic tree. Sent to the root entity.
+ * hubScreen: The hub tool's screen, if this is passed then after adding the event it will update the tree on this hubScreen,
+ *            if not passed(null) then it will not update immediately.
  */
-public class PlayerSpawnScenarioEvent implements Event {
-    private EntityRef spawningEntity;
+public class LogicTreeAddTriggerEvent implements Event {
+    private HubToolScreen hubScreen;
 
-    public PlayerSpawnScenarioEvent(EntityRef spawningEntity) {
-        this.spawningEntity = spawningEntity;
+    public LogicTreeAddTriggerEvent(HubToolScreen hubScreen) {
+        this.hubScreen = hubScreen;
     }
 
-    public EntityRef getSpawningEntity() {
-        return spawningEntity;
+    public HubToolScreen getHubScreen() {
+        return hubScreen;
     }
 }

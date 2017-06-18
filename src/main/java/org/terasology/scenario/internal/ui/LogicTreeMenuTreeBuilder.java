@@ -39,6 +39,9 @@ public class LogicTreeMenuTreeBuilder {
     public static final String OPTION_ADD_ACTION = "Add Action";
     public static final String OPTION_ADD_EVENT = "Add Event";
     public static final String OPTION_DELETE = "Delete";
+    public static final String OPTION_ADD_CONDITIONAL = "Add Conditional";
+    public static final String OPTION_ADD_TRIGGER = "Add Trigger";
+
 
     private NUIManager nuiManager;
 
@@ -65,16 +68,29 @@ public class LogicTreeMenuTreeBuilder {
 
         LogicTreeValue value = node.getValue();
 
-        if (value.isRoot()) {
-            primaryTree.addOption(OPTION_ADD_EVENT, externalConsumers.get(OPTION_ADD_EVENT), node);
-        }
-
-        if (value.isEvent()) {
-            primaryTree.addOption(OPTION_ADD_ACTION, externalConsumers.get(OPTION_ADD_ACTION), node);
-        }
-
-        if (!node.isRoot()) {
-            primaryTree.addOption(OPTION_DELETE, externalConsumers.get(OPTION_DELETE), node);
+        switch (value.getValueType()) {
+            case SCENARIO:
+                primaryTree.addOption(OPTION_ADD_TRIGGER, externalConsumers.get(OPTION_ADD_TRIGGER), node);
+                break;
+            case TRIGGER:
+                primaryTree.addOption(OPTION_ADD_EVENT, externalConsumers.get(OPTION_ADD_EVENT), node);
+                primaryTree.addOption(OPTION_ADD_CONDITIONAL, externalConsumers.get(OPTION_ADD_CONDITIONAL), node);
+                primaryTree.addOption(OPTION_ADD_ACTION, externalConsumers.get(OPTION_ADD_ACTION), node);
+                primaryTree.addOption(OPTION_DELETE, externalConsumers.get(OPTION_DELETE), node);
+                break;
+            case EVENT_NAME:
+                primaryTree.addOption(OPTION_ADD_EVENT, externalConsumers.get(OPTION_ADD_EVENT), node);
+                break;
+            case CONDITIONAL_NAME:
+                primaryTree.addOption(OPTION_ADD_CONDITIONAL, externalConsumers.get(OPTION_ADD_CONDITIONAL), node);
+                break;
+            case ACTION_NAME:
+                primaryTree.addOption(OPTION_ADD_ACTION, externalConsumers.get(OPTION_ADD_ACTION), node);
+                break;
+            case ACTION:
+            case CONDITIONAL:
+            case EVENT:
+                primaryTree.addOption(OPTION_DELETE, externalConsumers.get(OPTION_DELETE), node);
         }
 
         return primaryTree;
