@@ -18,12 +18,12 @@ package org.terasology.scenario.components;
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * List for conditions in a trigger
  */
 public class TriggerConditionListComponent implements Component {
-    public Set<EntityRef> conditions = new HashSet<>();
+    public List<EntityRef> conditions = new ArrayList<>();
 }

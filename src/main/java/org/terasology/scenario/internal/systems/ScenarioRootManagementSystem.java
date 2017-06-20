@@ -24,7 +24,6 @@ import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.registry.In;
-import org.terasology.scenario.components.ActionListComponent;
 import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.components.TriggerActionListComponent;
 import org.terasology.scenario.components.events.OnSpawnComponent;
@@ -38,6 +37,8 @@ public class ScenarioRootManagementSystem extends BaseComponentSystem {
     EntityManager entityManager;
 
     private Logger logger = LoggerFactory.getLogger(ScenarioRootManagementSystem.class);
+
+
 
     @ReceiveEvent
     public void onEventTrigger(EventTriggerEvent event, EntityRef entity, TriggerActionListComponent actions) {

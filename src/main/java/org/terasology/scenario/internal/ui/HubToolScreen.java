@@ -44,7 +44,6 @@ import org.terasology.world.block.BlockManager;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class HubToolScreen extends BaseInteractionScreen {
     private UIBox overviewBox;
@@ -83,6 +82,9 @@ public class HubToolScreen extends BaseInteractionScreen {
         return getInteractionTarget();
     }
 
+    public EntityRef getScenarioEntity() {
+        return scenarioEntity;
+    }
     @Override
     public void initialise() {
         overviewBox = find("overviewBox", UIBox.class);
@@ -202,7 +204,7 @@ public class HubToolScreen extends BaseInteractionScreen {
 
             ScenarioComponent tempScenComponent = scenarioEntity.getComponent(ScenarioComponent.class);
             if (tempScenComponent.triggerEntities == null) {  //Makes sure list isn't null, causes problems when building treeView
-                tempScenComponent.triggerEntities = new HashSet<>();
+                tempScenComponent.triggerEntities = new ArrayList<>();
                 scenarioEntity.saveComponent(tempScenComponent);
             }
 
@@ -356,7 +358,7 @@ public class HubToolScreen extends BaseInteractionScreen {
 
         ScenarioComponent tempScenComponent = scenarioEntity.getComponent(ScenarioComponent.class);
         if (tempScenComponent.triggerEntities == null) {
-            tempScenComponent.triggerEntities = new HashSet<EntityRef>();
+            tempScenComponent.triggerEntities = new ArrayList<>();
             scenarioEntity.saveComponent(tempScenComponent);
         }
     }
@@ -396,7 +398,7 @@ public class HubToolScreen extends BaseInteractionScreen {
         returnTree.setExpandedNoEntity(true);
 
         if (scenario.triggerEntities != null) {
-            Set<EntityRef> triggers = scenario.triggerEntities;
+            List<EntityRef> triggers = scenario.triggerEntities;
             for (EntityRef t : triggers) {
                 TriggerNameComponent name = t.getComponent(TriggerNameComponent.class);
                 TriggerEventListComponent events = t.getComponent(TriggerEventListComponent.class);

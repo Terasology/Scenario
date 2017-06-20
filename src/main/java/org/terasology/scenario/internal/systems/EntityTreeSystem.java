@@ -41,9 +41,10 @@ import org.terasology.scenario.internal.events.LogicTreeAddConditionEvent;
 import org.terasology.scenario.internal.events.LogicTreeAddEventEvent;
 import org.terasology.scenario.internal.events.LogicTreeAddTriggerEvent;
 import org.terasology.scenario.internal.events.LogicTreeDeleteEvent;
+import org.terasology.scenario.internal.events.LogicTreeMoveEntityEvent;
 import org.terasology.world.block.BlockManager;
 
-import java.util.HashSet;
+import java.util.List;
 
 /**
  * The system that handles all of the events for the entity version of the tree structure.
@@ -141,13 +142,10 @@ public class EntityTreeSystem extends BaseComponentSystem{
     public void onLogicTreeAddTriggerEvent(LogicTreeAddTriggerEvent event, EntityRef entity, ScenarioComponent component) {
         EntityRef trigger = entityManager.create(assetManager.getAsset("Scenario:trigger", Prefab.class).get());
         TriggerEventListComponent events = trigger.getComponent(TriggerEventListComponent.class);
-        events.events = new HashSet<>();
         trigger.saveComponent(events);
         TriggerConditionListComponent conds = trigger.getComponent(TriggerConditionListComponent.class);
-        conds.conditions = new HashSet<>();
         trigger.saveComponent(conds);
         TriggerActionListComponent actions = trigger.getComponent(TriggerActionListComponent.class);
-        actions.actions = new HashSet<>();
         trigger.saveComponent(actions);
 
         TriggerNameComponent temp = trigger.getComponent(TriggerNameComponent.class);
@@ -206,4 +204,61 @@ public class EntityTreeSystem extends BaseComponentSystem{
             event.getHubScreen().updateTree(entity);
         }
     }
+
+    @ReceiveEvent
+    public void onLogicTreeMoveEntityEvent(LogicTreeMoveEntityEvent event, EntityRef entity, ScenarioComponent component) {
+        List<EntityRef> list;
+        switch (event.getElementType()) {
+            case EVENT:
+                list = event.getTriggerEntity().getComponent(TriggerEventListComponent.class).events;
+                break;
+            case CONDITIONAL:
+                list = event.getTriggerEntity().getComponent(TriggerConditionListComponent.class).conditions;
+                break;
+            case ACTION:
+                list = event.getTriggerEntity().getComponent(TriggerActionListComponent.class).actions;
+                break;
+            case TRIGGER:
+                list = component.triggerEntities;
+                break;
+            default:
+                return;
+        }
+        int startIndex = list.indexOf(event.getMoveEntity());
+        int endIndex = event.getIndex();
+        if (startIndex < endIndex) {
+            list.add(endIndex, list.get(startIndex));
+            list.remove(startIndex);
+        }
+        else {
+            list.add(endIndex, list.get(startIndex));
+            list.remove(startIndex + 1);
+        }
+
+        switch (event.getElementType()) {
+            case EVENT:
+                event.getTriggerEntity().saveComponent(event.getTriggerEntity().getComponent(TriggerEventListComponent.class));
+                entity.saveComponent(component);
+                break;
+            case CONDITIONAL:
+                event.getTriggerEntity().saveComponent(event.getTriggerEntity().getComponent(TriggerConditionListComponent.class));
+                entity.saveComponent(component);
+                break;
+            case ACTION:
+                event.getTriggerEntity().saveComponent(event.getTriggerEntity().getComponent(TriggerActionListComponent.class));
+                entity.saveComponent(component);
+                break;
+            case TRIGGER:
+                entity.saveComponent(component);
+                break;
+            default:
+                return;
+        }
+
+        if (event.getHubScreen() != null) {
+            event.getHubScreen().updateTree(entity);
+        }
+    }
+
+
 }

@@ -18,12 +18,12 @@ package org.terasology.scenario.components;
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Component attached to a scenario entity. Denotes the "root" of the logic structure.
  */
 public class ScenarioComponent implements Component {
-    public Set<EntityRef> triggerEntities  = new HashSet<>();
+    public List<EntityRef> triggerEntities  = new ArrayList<>();
 }

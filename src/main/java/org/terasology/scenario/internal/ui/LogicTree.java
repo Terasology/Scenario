@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.terasology.rendering.nui.widgets.treeView.Tree;
 import org.terasology.scenario.components.ExpandedComponent;
 import org.terasology.scenario.components.TriggerNameComponent;
+import org.terasology.scenario.internal.events.LogicTreeMoveEntityEvent;
 
 
 public class LogicTree extends Tree<LogicTreeValue> {
@@ -88,6 +89,41 @@ public class LogicTree extends Tree<LogicTreeValue> {
         }
     }
 
+    @Override
+    public boolean acceptsChild(Tree<LogicTreeValue> child) {
+        boolean thisReturn = false;
+        switch (this.getValue().getValueType()) {
+            case EVENT_NAME:
+                if (child.getValue().getValueType() == LogicTreeValue.Type.EVENT) {
+                    thisReturn = true;
+                }
+                break;
+            case CONDITIONAL_NAME:
+                if (child.getValue().getValueType() == LogicTreeValue.Type.CONDITIONAL) {
+                    thisReturn = true;
+                }
+                break;
+            case ACTION_NAME:
+                if (child.getValue().getValueType() == LogicTreeValue.Type.ACTION) {
+                    thisReturn = true;
+                }
+                break;
+            case TRIGGER:
+                if (child.getValue().getValueType() == LogicTreeValue.Type.EVENT_NAME || //Can't move event/cond/action names
+                        child.getValue().getValueType() == LogicTreeValue.Type.CONDITIONAL_NAME ||
+                        child.getValue().getValueType() == LogicTreeValue.Type.ACTION_NAME) {
+                    thisReturn = true;
+                }
+            case SCENARIO:
+                if (child.getValue().getValueType() == LogicTreeValue.Type.TRIGGER) {
+                    thisReturn = true;
+                }
+                break;
+        }
+
+        return thisReturn && super.acceptsChild(child);
+    }
+
     public void setExpandedNoEntity(boolean expanded) {
         super.setExpanded(expanded);
     }
@@ -95,6 +131,16 @@ public class LogicTree extends Tree<LogicTreeValue> {
     @Override
     public void addChild(LogicTreeValue childValue){
         addChild(new LogicTree(childValue, hubToolScreen));
+    }
+
+    @Override
+    public void addChild(Tree<LogicTreeValue> child) {
+        super.addChild(child);
+    }
+
+    @Override
+    public void addChild(int index, Tree<LogicTreeValue> child) { //Should only send if moving entities on UI view
+        hubToolScreen.getScenarioEntity().send(new LogicTreeMoveEntityEvent(this.getValue().getEntity(), child.getValue().getEntity(), child.getValue().getValueType(), index, hubToolScreen));
     }
 
     @Override
