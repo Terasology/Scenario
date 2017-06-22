@@ -18,8 +18,17 @@ package org.terasology.scenario.components;
 import org.terasology.entitySystem.Component;
 
 /**
- * Component that denotes an action. Currently only includes a name for the action.
+ * Component that denotes an action.
+ * Will eventually be abstracted like events are into their own components based on action type
  */
 public class ActionComponent implements Component {
-    public String name;
+    public ActionType type;
+    public short itemId = 10;
+    public int numItems = 1;
+    public String itemIdName;
+
+
+    public enum ActionType {
+        GIVE_ITEM
+    }
 }

@@ -18,27 +18,40 @@ package org.terasology.scenario.internal.events;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 import org.terasology.scenario.internal.ui.HubToolScreen;
+import org.terasology.scenario.internal.ui.LogicTreeValue;
 
-/**
- * Event for adding an event to the logic tree. Sent to the root entity.
- * hubScreen: The hub tool's screen, if this is passed then after adding the event it will update the tree on this hubScreen,
- *            if not passed(null) then it will not update immediately.
- * triggerEntity: The entity of the trigger that the action will be attached to
- */
-public class LogicTreeAddEventEvent implements Event {
+public class LogicTreeMoveEntityEvent implements Event {
     private EntityRef triggerEntity;
-    private HubToolScreen hubScreen;
+    private EntityRef moveEntity;
+    private LogicTreeValue.Type elementType;
+    private int index;
+    private HubToolScreen hubToolScreen;
 
-    public LogicTreeAddEventEvent(HubToolScreen hubScreen, EntityRef triggerEntity) {
-        this.hubScreen = hubScreen;
+    public LogicTreeMoveEntityEvent(EntityRef triggerEntity, EntityRef moveEntity, LogicTreeValue.Type elementType, int index, HubToolScreen hubToolScreen) {
         this.triggerEntity = triggerEntity;
-    }
-
-    public HubToolScreen getHubScreen() {
-        return hubScreen;
+        this.moveEntity = moveEntity;
+        this.elementType = elementType;
+        this.index = index;
+        this.hubToolScreen = hubToolScreen;
     }
 
     public EntityRef getTriggerEntity() {
         return triggerEntity;
+    }
+
+    public EntityRef getMoveEntity() {
+        return moveEntity;
+    }
+
+    public LogicTreeValue.Type getElementType() {
+        return elementType;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public HubToolScreen getHubScreen() {
+        return hubToolScreen;
     }
 }

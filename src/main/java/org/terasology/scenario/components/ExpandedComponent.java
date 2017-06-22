@@ -16,7 +16,14 @@
 package org.terasology.scenario.components;
 
 import org.terasology.entitySystem.Component;
+import org.terasology.entitySystem.entity.EntityRef;
 
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * Expanded component that is attached to a hubtool to include which entities should be expanded in the treeview
+ */
 public class ExpandedComponent implements Component{
-    public boolean isExpanded;
+    public Set<EntityRef> expandedList = new HashSet<>();
 }

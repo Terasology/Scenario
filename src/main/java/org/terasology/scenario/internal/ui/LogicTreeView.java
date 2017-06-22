@@ -16,19 +16,23 @@
 package org.terasology.scenario.internal.ui;
 
 import org.terasology.assets.management.AssetManager;
+import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.input.MouseInput;
 import org.terasology.rendering.nui.NUIManager;
 import org.terasology.rendering.nui.contextMenu.ContextMenuUtils;
 import org.terasology.rendering.nui.contextMenu.MenuTree;
 import org.terasology.rendering.nui.widgets.UITreeView;
 
+import java.util.Set;
 import java.util.function.Function;
 
 /**
  * Class the details the actual displaying portion of the logicTree
  */
 public final class LogicTreeView extends UITreeView<LogicTreeValue> {
-    AssetManager assetManager;
+    private AssetManager assetManager;
+
+    public Set<EntityRef> expandedList;
 
     private Function<LogicTree, MenuTree> contextMenuTreeProducer;
 
@@ -45,6 +49,8 @@ public final class LogicTreeView extends UITreeView<LogicTreeValue> {
     public void setContextMenuTreeProducer(Function<LogicTree, MenuTree> contextMenuTreeProducer) {
         this.contextMenuTreeProducer = contextMenuTreeProducer;
     }
+
+
 
     public void setEditor(NUIManager manager) {
         subscribeNodeClick((event, node) -> {

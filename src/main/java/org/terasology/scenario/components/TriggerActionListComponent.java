@@ -20,10 +20,9 @@ import org.terasology.entitySystem.entity.EntityRef;
 
 import java.util.ArrayList;
 import java.util.List;
-
 /**
- * Component attached to a scenario entity. Denotes the "root" of the logic structure.
+ * List for actions in a trigger
  */
-public class ScenarioComponent implements Component {
-    public List<EntityRef> triggerEntities  = new ArrayList<>();
+public class TriggerActionListComponent implements Component {
+    public List<EntityRef> actions = new ArrayList<>();
 }

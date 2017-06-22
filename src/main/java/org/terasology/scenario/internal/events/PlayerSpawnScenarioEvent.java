@@ -13,16 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.components;
+package org.terasology.scenario.internal.events;
 
-import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
-
-import java.util.List;
+import org.terasology.entitySystem.event.Event;
 
 /**
- * Component attached to event entities that allows for a list of actions to be attached
+ * Scenario event for when a player spawns
  */
-public class ActionListComponent implements Component {
-    public List<EntityRef> actions;
+public class PlayerSpawnScenarioEvent implements Event {
+    private EntityRef spawningEntity;
+
+    public PlayerSpawnScenarioEvent(EntityRef spawningEntity) {
+        this.spawningEntity = spawningEntity;
+    }
+
+    public EntityRef getSpawningEntity() {
+        return spawningEntity;
+    }
 }

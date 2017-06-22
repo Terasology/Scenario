@@ -18,12 +18,14 @@ package org.terasology.scenario.components;
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * Component attached to a scenario entity. Denotes the "root" of the logic structure.
+ * Component that includes the details about a trigger, currently it is a name and three empty entities that are
+ * used for the entity expansion of a hub tool that represent the blank event/condition/action portions of the UI
  */
-public class ScenarioComponent implements Component {
-    public List<EntityRef> triggerEntities  = new ArrayList<>();
+public class TriggerNameComponent implements Component {
+    public String name;
+
+    public EntityRef entityForEvent;
+    public EntityRef entityForCondition;
+    public EntityRef entityForAction;
 }

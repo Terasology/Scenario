@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Component attached to a scenario entity. Denotes the "root" of the logic structure.
+ * List for events in a trigger
  */
-public class ScenarioComponent implements Component {
-    public List<EntityRef> triggerEntities  = new ArrayList<>();
+public class TriggerEventListComponent implements Component {
+    public List<EntityRef> events = new ArrayList<>();
 }

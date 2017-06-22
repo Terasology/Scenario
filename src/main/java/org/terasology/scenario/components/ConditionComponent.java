@@ -16,14 +16,11 @@
 package org.terasology.scenario.components;
 
 import org.terasology.entitySystem.Component;
-import org.terasology.entitySystem.entity.EntityRef;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Component attached to a scenario entity. Denotes the "root" of the logic structure.
+ * Component that denotes a conditional.
+ * Will eventually be replaced with multiple components to denote type(like events are currently)
  */
-public class ScenarioComponent implements Component {
-    public List<EntityRef> triggerEntities  = new ArrayList<>();
+public class ConditionComponent implements Component {
+    public String name;
 }
