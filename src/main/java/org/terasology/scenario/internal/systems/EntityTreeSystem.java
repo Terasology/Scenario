@@ -222,6 +222,9 @@ public class EntityTreeSystem extends BaseComponentSystem{
                 list = component.triggerEntities;
                 break;
             default:
+                if (event.getHubScreen() != null) {
+                    event.getHubScreen().updateTree(entity);
+                }
                 return;
         }
         int startIndex = list.indexOf(event.getMoveEntity());
@@ -252,6 +255,9 @@ public class EntityTreeSystem extends BaseComponentSystem{
                 entity.saveComponent(component);
                 break;
             default:
+                if (event.getHubScreen() != null) {
+                    event.getHubScreen().updateTree(entity);
+                }
                 return;
         }
 
