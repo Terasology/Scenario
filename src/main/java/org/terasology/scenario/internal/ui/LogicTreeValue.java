@@ -17,11 +17,15 @@ package org.terasology.scenario.internal.ui;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.rendering.assets.texture.TextureRegion;
-import org.terasology.scenario.components.ActionComponent;
 import org.terasology.scenario.components.ConditionComponent;
+import org.terasology.scenario.components.actions.ActionComponent;
+import org.terasology.scenario.components.actions.ActionHeadComponent;
 import org.terasology.scenario.components.events.OnSpawnComponent;
+
+import java.util.Iterator;
 
 /**
  * Value for the logic tree, currently it entails the text to display, the image attached,
@@ -70,15 +74,17 @@ public class LogicTreeValue {
 
         //Check for action
         if (valueType == Type.ACTION) {
-            if (entity.hasComponent(ActionComponent.class)) {
-                ActionComponent comp = entity.getComponent(ActionComponent.class);
-                switch (comp.type) {
-                    case GIVE_ITEM:
-                        text = "Give player " + comp.numItems + " " + comp.itemIdName;
+            if (entity.hasComponent(ActionHeadComponent.class)) {
+                ActionHeadComponent comp = entity.getComponent(ActionHeadComponent.class);
+                Iterator<Component> components = comp.action.iterateComponents().iterator();
+                while (components.hasNext()){
+                    Component tempComp = components.next();
+                    if (tempComp instanceof ActionComponent) {
+                        text = ((ActionComponent)tempComp).getDisplayText();
                         break;
-                    default:
-                        break;
+                    }
                 }
+
             }
         }
 

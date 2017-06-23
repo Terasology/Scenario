@@ -15,19 +15,22 @@
  */
 package org.terasology.scenario.internal.systems;
 
+import org.slf4j.LoggerFactory;
+import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
-import org.terasology.logic.inventory.events.GiveItemEvent;
 import org.terasology.registry.In;
-import org.terasology.scenario.components.ActionComponent;
+import org.terasology.scenario.components.actions.ActionComponent;
+import org.terasology.scenario.components.actions.ActionHeadComponent;
 import org.terasology.scenario.internal.events.EventTriggerEvent;
 import org.terasology.world.block.BlockManager;
-import org.terasology.world.block.family.BlockFamily;
 import org.terasology.world.block.items.BlockItemFactory;
+
+import java.util.Iterator;
 
 /**
  * System that responds and triggers the actions of a logic event
@@ -42,6 +45,8 @@ public class ActionEventSystem extends BaseComponentSystem {
 
     private BlockItemFactory blockItemFactory;
 
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ActionEventSystem.class);
+
     @Override
     public void initialise() {
         super.initialise();
@@ -49,19 +54,15 @@ public class ActionEventSystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent
-    public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity, ActionComponent action) {
-        switch (action.type) {
-            case GIVE_ITEM:
-                EntityRef target = event.triggeringEntity;
-                BlockFamily blockFamily = blockManager.getBlockFamily(blockManager.getBlock(action.itemId).getURI());
-                EntityRef item = blockItemFactory.newInstance(blockFamily, action.numItems);
-
-                GiveItemEvent giveItemEvent = new GiveItemEvent(event.triggeringEntity);
-                item.send(giveItemEvent);
-                if (!giveItemEvent.isHandled()) {
-                    item.destroy();
-                }
-
+    public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity, ActionHeadComponent action) {
+        ActionComponent actualAction;
+        Iterator<Component> components = action.action.iterateComponents().iterator();
+        while (components.hasNext()){
+            Component tempComp = components.next();
+            if (tempComp instanceof ActionComponent) {
+                ((ActionComponent) tempComp).triggerAction(event.informationEntity, entityManager);
+                break;
+            }
         }
     }
 }
