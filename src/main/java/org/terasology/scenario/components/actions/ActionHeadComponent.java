@@ -13,22 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.components;
+package org.terasology.scenario.components.actions;
 
 import org.terasology.entitySystem.Component;
+import org.terasology.entitySystem.entity.EntityRef;
 
-/**
- * Component that denotes an action.
- * Will eventually be abstracted like events are into their own components based on action type
- */
-public class ActionComponent implements Component {
-    public ActionType type;
-    public short itemId = 10;
-    public int numItems = 1;
-    public String itemIdName;
-
-
-    public enum ActionType {
-        GIVE_ITEM
-    }
+public class ActionHeadComponent implements Component {
+    /**
+     * The Entity that actually attributes what type of action this component is, allows all of the actions
+     * to be treated the same, grab the headComponent and reference what component is attached through this variable with
+     * out needing to do a search for which component is actually attached.
+     *
+     * This EntityRef MUST only have one component of which satisfies the interface of ActionComponent
+     */
+    public EntityRef action;
 }
