@@ -26,7 +26,6 @@ import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.registry.In;
-import org.terasology.scenario.components.ActionComponent;
 import org.terasology.scenario.components.ConditionComponent;
 import org.terasology.scenario.components.EventNameComponent;
 import org.terasology.scenario.components.ExpandedComponent;
@@ -35,6 +34,8 @@ import org.terasology.scenario.components.TriggerActionListComponent;
 import org.terasology.scenario.components.TriggerConditionListComponent;
 import org.terasology.scenario.components.TriggerEventListComponent;
 import org.terasology.scenario.components.TriggerNameComponent;
+import org.terasology.scenario.components.actions.ActionHeadComponent;
+import org.terasology.scenario.components.actions.GiveBlockActionComponent;
 import org.terasology.scenario.components.events.OnSpawnComponent;
 import org.terasology.scenario.internal.events.LogicTreeAddActionEvent;
 import org.terasology.scenario.internal.events.LogicTreeAddConditionEvent;
@@ -92,14 +93,15 @@ public class EntityTreeSystem extends BaseComponentSystem{
     @ReceiveEvent
     public void onLogicTreeAddActionEvent(LogicTreeAddActionEvent event, EntityRef entity, ScenarioComponent component) {
         TriggerActionListComponent actions = event.getTriggerEntity().getComponent(TriggerActionListComponent.class);
-        ActionComponent actionName = new ActionComponent();
-        actionName.type = ActionComponent.ActionType.GIVE_ITEM;
-
-        //REMOVE THIS ONCE EDITABLE FROM CONTEXT MENU
-        actionName.itemIdName = blockManager.getBlock(actionName.itemId).getDisplayName();
-        //END REMOVE
-
-        EntityRef newActionEntity = entityManager.create(actionName);
+        /**
+         * Base component is just the default action of a "give triggering player 1 stone"
+         */
+        GiveBlockActionComponent baseComponent = new GiveBlockActionComponent(blockManager.getBlockFamily("core:stone"), entityManager);
+        EntityRef baseComponentEntity = entityManager.create();
+        baseComponentEntity.addComponent(baseComponent);
+        ActionHeadComponent actionComponent = new ActionHeadComponent();
+        actionComponent.action = baseComponentEntity;
+        EntityRef newActionEntity = entityManager.create(actionComponent);
         newActionEntity.setOwner(event.getTriggerEntity());
         actions.actions.add(newActionEntity);
         event.getTriggerEntity().saveComponent(actions);
@@ -186,7 +188,7 @@ public class EntityTreeSystem extends BaseComponentSystem{
                 event.getDeleteFromEntity().saveComponent(conds);
                 event.getDeleteEntity().destroy();
             }
-            else if (event.getDeleteEntity().hasComponent(ActionComponent.class)) { //Action
+            else if (event.getDeleteEntity().hasComponent(ActionHeadComponent.class)) { //Action
                 TriggerActionListComponent actions = event.getDeleteFromEntity().getComponent(TriggerActionListComponent.class);
                 actions.actions.remove(event.getDeleteEntity());
                 event.getDeleteFromEntity().saveComponent(actions);

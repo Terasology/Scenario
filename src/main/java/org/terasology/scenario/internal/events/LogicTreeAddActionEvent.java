@@ -17,7 +17,6 @@ package org.terasology.scenario.internal.events;
 
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
-import org.terasology.scenario.components.ActionComponent;
 import org.terasology.scenario.internal.ui.HubToolScreen;
 
 /**
