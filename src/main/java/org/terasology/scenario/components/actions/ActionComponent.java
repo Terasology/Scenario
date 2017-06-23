@@ -50,15 +50,9 @@ public interface ActionComponent extends Component {
     Map<String, InformationEnums.DataTypes> getTypes();
 
     /**
-     * Returns the variables and their types needed to be filled to trigger the action
-     */
-    Map<String, InformationEnums.DataTypes> neededTypes();
-
-    /**
      * Triggers this action based on the required values indicated in the mapping from neededTypes().
-     * Component will delete the entityRefs after use
      */
-    void triggerAction(Map<String, EntityRef> variables, EntityManager entityManager);
+    void triggerAction(EntityRef passedEntity, EntityManager entityManager);
 
     /**
      * Allows for setting a variable in the component,

@@ -22,9 +22,9 @@ import org.terasology.entitySystem.event.Event;
  * An event that is called when an event is triggered by an entity
  */
 public class EventTriggerEvent implements Event {
-    public EntityRef triggeringEntity;
+    public EntityRef informationEntity;
 
-    public EventTriggerEvent(EntityRef triggeringEntity) {
-        this.triggeringEntity = triggeringEntity;
+    public EventTriggerEvent(EntityRef informationEntity) {
+        this.informationEntity = informationEntity;
     }
 }

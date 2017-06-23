@@ -26,15 +26,11 @@ import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.registry.In;
 import org.terasology.scenario.components.actions.ActionComponent;
 import org.terasology.scenario.components.actions.ActionHeadComponent;
-import org.terasology.scenario.components.information.InformationEnums;
-import org.terasology.scenario.components.information.PlayerComponent;
 import org.terasology.scenario.internal.events.EventTriggerEvent;
 import org.terasology.world.block.BlockManager;
 import org.terasology.world.block.items.BlockItemFactory;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 /**
  * System that responds and triggers the actions of a logic event
@@ -64,36 +60,7 @@ public class ActionEventSystem extends BaseComponentSystem {
         while (components.hasNext()){
             Component tempComp = components.next();
             if (tempComp instanceof ActionComponent) {
-                actualAction = (ActionComponent)tempComp;
-                Map<String, InformationEnums.DataTypes> satisfy = actualAction.neededTypes();
-                Map<String, EntityRef> passVariables = new HashMap<>();
-                for(Map.Entry<String, InformationEnums.DataTypes> v : satisfy.entrySet()) {
-                    switch (v.getValue()) {
-                        case PLAYER:
-                            switch (actualAction.getVariable(v.getKey()).getComponent(PlayerComponent.class).type){
-                                case TRIGGERING_PLAYER:
-                                    PlayerComponent playerComp = new PlayerComponent();
-                                    playerComp.value = event.triggeringEntity;
-                                    passVariables.put(v.getKey(), entityManager.create(playerComp));
-                                    break;
-                                case TARGETTED_PLAYER:
-                                    //Put targetted entity
-                                    break;
-                                default:
-                                    break;
-                            }
-                        case BLOCK:
-                            //Put block
-                            break;
-                        case INTEGER:
-                            //Put Integer
-                            break;
-                        default:
-                                break;
-                    }
-                }
-
-                ((ActionComponent) tempComp).triggerAction(passVariables, entityManager);
+                ((ActionComponent) tempComp).triggerAction(event.informationEntity, entityManager);
                 break;
             }
         }

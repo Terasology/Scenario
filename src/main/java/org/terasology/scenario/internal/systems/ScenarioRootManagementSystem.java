@@ -27,6 +27,7 @@ import org.terasology.registry.In;
 import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.components.TriggerActionListComponent;
 import org.terasology.scenario.components.events.OnSpawnComponent;
+import org.terasology.scenario.components.events.triggerInformation.TriggeringEntityComponent;
 import org.terasology.scenario.internal.events.EventTriggerEvent;
 import org.terasology.scenario.internal.events.PlayerSpawnScenarioEvent;
 
@@ -46,7 +47,7 @@ public class ScenarioRootManagementSystem extends BaseComponentSystem {
         //Send to actions
         for(EntityRef a : actions.actions) {
             //Send new event in case eventually a new event needs to be made in which triggers and actions need different data
-            a.send(new EventTriggerEvent(event.triggeringEntity));
+            a.send(new EventTriggerEvent(event.informationEntity));
         }
     }
 
@@ -54,6 +55,9 @@ public class ScenarioRootManagementSystem extends BaseComponentSystem {
     @ReceiveEvent
     public void onPlayerSpawnScenarioEvent(PlayerSpawnScenarioEvent event, EntityRef entity, ScenarioComponent component) {
         Iterable<EntityRef> entityList = entityManager.getEntitiesWith(OnSpawnComponent.class);
-        entityList.forEach(e -> e.getOwner().send(new EventTriggerEvent(event.getSpawningEntity())));
+        TriggeringEntityComponent triggerEntity = new TriggeringEntityComponent();
+        triggerEntity.entity = event.getSpawningEntity();
+        EntityRef passEntity = entityManager.create(triggerEntity);
+        entityList.forEach(e -> e.getOwner().send(new EventTriggerEvent(passEntity)));
     }
 }

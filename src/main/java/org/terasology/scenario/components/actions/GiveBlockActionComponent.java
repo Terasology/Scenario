@@ -24,6 +24,8 @@ import org.terasology.scenario.components.information.BlockComponent;
 import org.terasology.scenario.components.information.InformationEnums;
 import org.terasology.scenario.components.information.IntegerComponent;
 import org.terasology.scenario.components.information.PlayerComponent;
+import org.terasology.scenario.components.events.triggerInformation.TargettedEntityComponent;
+import org.terasology.scenario.components.events.triggerInformation.TriggeringEntityComponent;
 import org.terasology.world.block.family.BlockFamily;
 import org.terasology.world.block.items.BlockItemFactory;
 
@@ -36,7 +38,6 @@ public class GiveBlockActionComponent implements ActionComponent {
     public BlockFamily block;
 
     public Map<String, EntityRef> variables;
-    public Map<String, InformationEnums.DataTypes> neededTypes;
     public Map<String, InformationEnums.DataTypes> types;
 
     public GiveBlockActionComponent(){
@@ -68,9 +69,6 @@ public class GiveBlockActionComponent implements ActionComponent {
         types.put("player", InformationEnums.DataTypes.PLAYER);
         types.put("amount", InformationEnums.DataTypes.INTEGER);
         types.put("block", InformationEnums.DataTypes.BLOCK);
-
-        neededTypes = new HashMap<>();
-        neededTypes.put("player", InformationEnums.DataTypes.PLAYER);
     }
 
 
@@ -108,27 +106,26 @@ public class GiveBlockActionComponent implements ActionComponent {
     }
 
     @Override
-    public Map<String, InformationEnums.DataTypes> neededTypes() {
-        return neededTypes;
-    }
-
-    @Override
-    public void triggerAction(Map<String, EntityRef> passedVariables, EntityManager entityManager) {
+    public void triggerAction(EntityRef passedEntity, EntityManager entityManager) {
         BlockItemFactory blockItemFactory = new BlockItemFactory(entityManager);
         EntityRef item = blockItemFactory.newInstance(block, amount);
         if(!item.exists()) {
             throw new IllegalArgumentException("Unknown block or item");
         }
-        PlayerComponent playerComp = passedVariables.get("player").getComponent(PlayerComponent.class);
-        EntityRef player = playerComp.value;
-        GiveItemEvent giveItemEvent = new GiveItemEvent(player);
+        EntityRef playerEntity;
+        switch (this.player) {
+            default:
+            case TRIGGERING_PLAYER:
+                playerEntity = passedEntity.getComponent(TriggeringEntityComponent.class).entity;
+                break;
+            case TARGETTED_PLAYER:
+                playerEntity = passedEntity.getComponent(TargettedEntityComponent.class).entity;
+                break;
+        }
+        GiveItemEvent giveItemEvent = new GiveItemEvent(playerEntity);
         item.send(giveItemEvent);
         if (!giveItemEvent.isHandled()) {
             item.destroy();
-        }
-
-        for(Map.Entry<String, EntityRef> e : passedVariables.entrySet()) {
-            e.getValue().destroy();
         }
     }
 

@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.components.information;
+package org.terasology.scenario.components.events.triggerInformation;
 
 import org.terasology.entitySystem.Component;
+import org.terasology.entitySystem.entity.EntityRef;
 
-public class PlayerComponent implements Component {
-    public InformationEnums.PlayerType type;
+public class TargettedEntityComponent implements Component {
+    public EntityRef entity;
 }
