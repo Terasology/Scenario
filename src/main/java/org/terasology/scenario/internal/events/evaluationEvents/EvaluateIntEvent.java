@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.internal.events;
+package org.terasology.scenario.internal.events.evaluationEvents;
 
-import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 
-/**
- * An event that is called when an event is triggered by an entity
- */
-public class EventTriggerEvent implements Event {
-    public EntityRef informationEntity;
+public class EvaluateIntEvent implements Event {
+    private int result;
 
-    public EventTriggerEvent(EntityRef informationEntity) {
-        this.informationEntity = informationEntity;
+    public void setResult(int result) {
+        this.result = result;
+    }
+
+    public int getResult() {
+        return result;
     }
 }

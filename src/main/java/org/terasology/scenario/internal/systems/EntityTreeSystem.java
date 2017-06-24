@@ -26,7 +26,6 @@ import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.registry.In;
-import org.terasology.scenario.components.ActionComponent;
 import org.terasology.scenario.components.ConditionComponent;
 import org.terasology.scenario.components.EventNameComponent;
 import org.terasology.scenario.components.ExpandedComponent;
@@ -35,6 +34,8 @@ import org.terasology.scenario.components.TriggerActionListComponent;
 import org.terasology.scenario.components.TriggerConditionListComponent;
 import org.terasology.scenario.components.TriggerEventListComponent;
 import org.terasology.scenario.components.TriggerNameComponent;
+import org.terasology.scenario.components.actions.ActionComponent;
+import org.terasology.scenario.components.actions.TextComponent;
 import org.terasology.scenario.components.events.OnSpawnComponent;
 import org.terasology.scenario.internal.events.LogicTreeAddActionEvent;
 import org.terasology.scenario.internal.events.LogicTreeAddConditionEvent;
@@ -42,6 +43,8 @@ import org.terasology.scenario.internal.events.LogicTreeAddEventEvent;
 import org.terasology.scenario.internal.events.LogicTreeAddTriggerEvent;
 import org.terasology.scenario.internal.events.LogicTreeDeleteEvent;
 import org.terasology.scenario.internal.events.LogicTreeMoveEntityEvent;
+import org.terasology.scenario.internal.events.ReplaceEntityEvent;
+import org.terasology.scenario.internal.utilities.ArgumentParser;
 import org.terasology.world.block.BlockManager;
 
 import java.util.List;
@@ -92,14 +95,10 @@ public class EntityTreeSystem extends BaseComponentSystem{
     @ReceiveEvent
     public void onLogicTreeAddActionEvent(LogicTreeAddActionEvent event, EntityRef entity, ScenarioComponent component) {
         TriggerActionListComponent actions = event.getTriggerEntity().getComponent(TriggerActionListComponent.class);
-        ActionComponent actionName = new ActionComponent();
-        actionName.type = ActionComponent.ActionType.GIVE_ITEM;
-
-        //REMOVE THIS ONCE EDITABLE FROM CONTEXT MENU
-        actionName.itemIdName = blockManager.getBlock(actionName.itemId).getDisplayName();
-        //END REMOVE
-
-        EntityRef newActionEntity = entityManager.create(actionName);
+        //Sets up basic action as a give block component
+        EntityRef newActionEntity = entityManager.create(assetManager.getAsset("scenario:givePlayerBlockAction", Prefab.class).get());
+        ArgumentParser argParser = ArgumentParser.getInstance();
+        argParser.parseDefaults(newActionEntity);
         newActionEntity.setOwner(event.getTriggerEntity());
         actions.actions.add(newActionEntity);
         event.getTriggerEntity().saveComponent(actions);
@@ -186,7 +185,7 @@ public class EntityTreeSystem extends BaseComponentSystem{
                 event.getDeleteFromEntity().saveComponent(conds);
                 event.getDeleteEntity().destroy();
             }
-            else if (event.getDeleteEntity().hasComponent(ActionComponent.class)) { //Action
+            else if (event.getDeleteEntity().hasComponent(TextComponent.class)) { //Action
                 TriggerActionListComponent actions = event.getDeleteFromEntity().getComponent(TriggerActionListComponent.class);
                 actions.actions.remove(event.getDeleteEntity());
                 event.getDeleteFromEntity().saveComponent(actions);
@@ -263,6 +262,29 @@ public class EntityTreeSystem extends BaseComponentSystem{
 
         if (event.getHubScreen() != null) {
             event.getHubScreen().updateTree(entity);
+        }
+    }
+
+
+    /**
+     * This event should only ever be called for replacing an action/event/condtional with the same type
+     */
+    @ReceiveEvent
+    public void onReplaceEntityEvent(ReplaceEntityEvent event, EntityRef entity, ScenarioComponent component) {
+        EntityRef owningTrigger = event.getReplaced().getOwner();
+        if (event.getReplaced().hasComponent(ActionComponent.class)) {
+            TriggerActionListComponent actions = owningTrigger.getComponent(TriggerActionListComponent.class);
+            event.getReplacer().setOwner(owningTrigger);
+            int index = actions.actions.indexOf(event.getReplaced());
+            actions.actions.remove(event.getReplaced());
+            actions.actions.add(index, event.getReplacer());
+            owningTrigger.saveComponent(actions);
+            entity.saveComponent(component);
+        }
+
+
+        if (event.getHubtool() != null) {
+            event.getHubtool().updateTree(entity);
         }
     }
 

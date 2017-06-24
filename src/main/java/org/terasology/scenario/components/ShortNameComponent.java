@@ -13,18 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.internal.events;
+package org.terasology.scenario.components;
 
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.event.Event;
+import org.terasology.entitySystem.Component;
 
 /**
- * An event that is called when an event is triggered by an entity
+ * The name for the prefab for what it should be called in dropdown for editing
  */
-public class EventTriggerEvent implements Event {
-    public EntityRef informationEntity;
-
-    public EventTriggerEvent(EntityRef informationEntity) {
-        this.informationEntity = informationEntity;
-    }
+public class ShortNameComponent implements Component {
+    public String name;
 }

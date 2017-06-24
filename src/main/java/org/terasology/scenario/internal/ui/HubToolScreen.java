@@ -39,6 +39,7 @@ import org.terasology.scenario.internal.events.LogicTreeAddConditionEvent;
 import org.terasology.scenario.internal.events.LogicTreeAddEventEvent;
 import org.terasology.scenario.internal.events.LogicTreeAddTriggerEvent;
 import org.terasology.scenario.internal.events.LogicTreeDeleteEvent;
+import org.terasology.scenario.internal.utilities.ArgumentParser;
 import org.terasology.world.block.BlockManager;
 
 import java.util.ArrayList;
@@ -87,6 +88,10 @@ public class HubToolScreen extends BaseInteractionScreen {
     }
     @Override
     public void initialise() {
+        ArgumentParser parser = ArgumentParser.getInstance();
+        parser.setBlockManager(blockManager);
+        parser.setEntityManager(entityManager);
+        parser.setAssetManager(assetManager);
         overviewBox = find("overviewBox", UIBox.class);
         logicBox = find("logicBox", UIBox.class);
         regionBox = find("regionBox", UIBox.class);
@@ -178,6 +183,7 @@ public class HubToolScreen extends BaseInteractionScreen {
                 logicTreeMenuTreeBuilder.putConsumer(LogicTreeMenuTreeBuilder.OPTION_ADD_ACTION, this::addAction);
                 logicTreeMenuTreeBuilder.putConsumer(LogicTreeMenuTreeBuilder.OPTION_ADD_CONDITIONAL, this::addCondition);
                 logicTreeMenuTreeBuilder.putConsumer(LogicTreeMenuTreeBuilder.OPTION_ADD_TRIGGER, this::addTrigger);
+                logicTreeMenuTreeBuilder.putConsumer(LogicTreeMenuTreeBuilder.OPTION_EDIT, this::pushEditScreen);
                 logicTreeMenuTreeBuilder.subscribeAddContextMenu(n -> {
                     getEditor().fireUpdateListeners();
                 });
@@ -211,6 +217,11 @@ public class HubToolScreen extends BaseInteractionScreen {
             treeView.setEditor(getManager());
             treeView.setAssetManager(assetManager);
         }
+    }
+
+    private void pushEditScreen(LogicTree node) {
+        EditLogicScreen editLogic = getManager().pushScreen(EditLogicScreen.ASSET_URI, EditLogicScreen.class);
+        editLogic.setEntities(scenarioEntity, node.getValue().getEntity(), node.getValue().getValueType(), this);
     }
 
     /**

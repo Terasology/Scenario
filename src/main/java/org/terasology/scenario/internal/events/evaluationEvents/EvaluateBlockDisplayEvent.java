@@ -13,22 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.components;
+package org.terasology.scenario.internal.events.evaluationEvents;
 
-import org.terasology.entitySystem.Component;
+import org.terasology.entitySystem.event.Event;
 
-/**
- * Component that denotes an action.
- * Will eventually be abstracted like events are into their own components based on action type
- */
-public class ActionComponent implements Component {
-    public ActionType type;
-    public short itemId = 10;
-    public int numItems = 1;
-    public String itemIdName;
+public class EvaluateBlockDisplayEvent implements Event {
+    private String result;
 
+    public void setResult(String result) {
+        this.result = result;
+    }
 
-    public enum ActionType {
-        GIVE_ITEM
+    public String getResult() {
+        return result;
     }
 }

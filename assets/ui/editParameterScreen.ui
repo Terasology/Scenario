@@ -1,0 +1,96 @@
+{
+  "type": "EditParameterScreen",
+  "contents": {
+    "type": "RelativeLayout",
+    "contents": [
+      {
+        "type": "engine:UIBox",
+        "id": "newWidget",
+        "layoutInfo": {
+          "width": 400,
+          "height": 300,
+          "position-vertical-center": {},
+          "position-horizontal-center": {}
+        },
+        "content": {
+          "type": "RelativeLayout",
+          "contents": [
+            {
+              "type": "engine:UILabel",
+              "id": "editLabel",
+              "layoutInfo": {
+                "position-top": {},
+                "position-horizontal-center": {},
+                "use-content-height": true
+              },
+              "text": "Edit X"
+            },
+            {
+              "type": "RowLayout",
+              "id": "selectionLayout",
+              "layoutInfo": {
+                "position-top": {
+                  "widget": "editLabel",
+                  "target": "BOTTOM",
+                  "offset": 5
+                },
+                "use-content-height": true
+              },
+              "contents": [
+                {
+                  "type": "engine:UILabel",
+                  "id": "selectLabel",
+                  "layoutInfo": {},
+                  "text": "Select Y"
+                },
+                {
+                  "type": "engine:UIDropdownScrollable",
+                  "id": "selectionDropdown",
+                  "layoutInfo": {}
+                }
+              ]
+            },
+            {
+              "type": "ColumnLayout",
+              "id": "variableWidget",
+              "layoutInfo": {
+                "position-top": {
+                  "widget": "selectionLayout",
+                  "target": "BOTTOM"
+                },
+                "height": 175
+              },
+              "contents": []
+            },
+            {
+              "type": "engine:RowLayout",
+              "id": "buttonLayout",
+              "layoutInfo": {
+                "position-top": {
+                  "widget": "variableWidget",
+                  "target": "BOTTOM"
+                },
+                "height": 50
+              },
+              "contents": [
+                {
+                  "type": "engine:UIButton",
+                  "id": "okButton",
+                  "layoutInfo": {},
+                  "text": "Accept"
+                },
+                {
+                  "type": "engine:UIButton",
+                  "id": "cancelButton",
+                  "layoutInfo": {},
+                  "text": "Cancel"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "skin": "engine:default"
+}

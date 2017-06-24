@@ -1,0 +1,11 @@
+{
+    "Action":{},
+    "ShortName":{
+        "name":"Log message"
+    },
+    "LogInfo":{},
+    "Text":{
+        "text":"Put [text:String] in logger."
+    },
+    "ArgumentContainer":{}
+}

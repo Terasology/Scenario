@@ -19,26 +19,26 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 import org.terasology.scenario.internal.ui.HubToolScreen;
 
-/**
- * Event for adding an action to the logic tree. Sent to the root entity.
- * hubScreen: The hub tool's screen, if this is passed then after adding the event it will update the tree on this hubScreen,
- *            if not passed(null) then it will not update immediately.
- * triggerEntity: The entity of the trigger that the action will be attached to
- */
-public class LogicTreeAddActionEvent implements Event {
-    private EntityRef triggerEntity;
-    private HubToolScreen hubScreen;
+public class ReplaceEntityEvent implements Event {
+    private EntityRef replaced;
+    private EntityRef replacer;
+    private HubToolScreen hubtool;
 
-    public LogicTreeAddActionEvent(HubToolScreen hubScreen, EntityRef triggerEntity) {
-        this.hubScreen = hubScreen;
-        this.triggerEntity = triggerEntity;
+    public ReplaceEntityEvent(EntityRef replaced, EntityRef replacer, HubToolScreen hubtool) {
+        this.replaced = replaced;
+        this.replacer = replacer;
+        this.hubtool = hubtool;
     }
 
-    public HubToolScreen getHubScreen() {
-        return hubScreen;
+    public EntityRef getReplaced() {
+        return replaced;
     }
 
-    public EntityRef getTriggerEntity() {
-        return triggerEntity;
+    public EntityRef getReplacer() {
+        return replacer;
+    }
+
+    public HubToolScreen getHubtool() {
+        return hubtool;
     }
 }
