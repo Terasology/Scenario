@@ -1,0 +1,9 @@
+{
+    "ScenarioInteger":{},
+    "ShortName":{
+        "name":"Constant Integer"
+    },
+    "ConstInteger":{
+        "value":1
+    }
+}

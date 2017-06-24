@@ -41,6 +41,7 @@ public class LogicTreeMenuTreeBuilder {
     public static final String OPTION_DELETE = "Delete";
     public static final String OPTION_ADD_CONDITIONAL = "Add Conditional";
     public static final String OPTION_ADD_TRIGGER = "Add Trigger";
+    public static final String OPTION_EDIT = "Edit";
 
 
     private NUIManager nuiManager;
@@ -91,9 +92,12 @@ public class LogicTreeMenuTreeBuilder {
             case CONDITIONAL:
             case EVENT:
                 primaryTree.addOption(OPTION_DELETE, externalConsumers.get(OPTION_DELETE), node);
+                primaryTree.addOption(OPTION_EDIT, externalConsumers.get(OPTION_EDIT), node);
+                break;
         }
 
         return primaryTree;
     }
+
 
 }

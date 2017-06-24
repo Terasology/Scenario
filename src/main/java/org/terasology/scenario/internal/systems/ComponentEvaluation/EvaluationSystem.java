@@ -21,7 +21,9 @@ import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.scenario.components.information.ConstIntegerComponent;
+import org.terasology.scenario.components.information.ConstStringComponent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateIntEvent;
+import org.terasology.scenario.internal.events.evaluationEvents.EvaluateStringEvent;
 
 /**
  * Currently just 1 system, will be split up if there becomes too many events that warrant seperation by type
@@ -32,5 +34,10 @@ public class EvaluationSystem extends BaseComponentSystem {
     @ReceiveEvent
     public void onEvaluateIntEvent(EvaluateIntEvent event, EntityRef entity, ConstIntegerComponent component) {
         event.setResult(component.value);
+    }
+
+    @ReceiveEvent
+    public void onEvaluateStringEvent(EvaluateStringEvent event, EntityRef entity, ConstStringComponent component) {
+        event.setResult(component.string);
     }
 }

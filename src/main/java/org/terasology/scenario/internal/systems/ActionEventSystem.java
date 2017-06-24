@@ -27,12 +27,14 @@ import org.terasology.logic.inventory.events.GiveItemEvent;
 import org.terasology.registry.In;
 import org.terasology.scenario.components.actions.ArgumentContainerComponent;
 import org.terasology.scenario.components.actions.GiveBlockActionComponent;
+import org.terasology.scenario.components.actions.LogInfoComponent;
 import org.terasology.scenario.components.events.triggerInformation.TriggeringEntityComponent;
 import org.terasology.scenario.components.information.BlockComponent;
 import org.terasology.scenario.components.information.InformationEnums;
 import org.terasology.scenario.components.information.PlayerComponent;
 import org.terasology.scenario.internal.events.EventTriggerEvent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateIntEvent;
+import org.terasology.scenario.internal.events.evaluationEvents.EvaluateStringEvent;
 import org.terasology.world.block.BlockManager;
 import org.terasology.world.block.family.BlockFamily;
 import org.terasology.world.block.items.BlockItemFactory;
@@ -78,5 +80,16 @@ public class ActionEventSystem extends BaseComponentSystem {
             GiveItemEvent giveItemEvent = new GiveItemEvent(giveEntity);
             item.send(giveItemEvent);
         }
+    }
+
+    @ReceiveEvent //Logger message
+    public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity, LogInfoComponent action) {
+        Map<String, EntityRef> variables = entity.getComponent(ArgumentContainerComponent.class).arguments;
+
+        EvaluateStringEvent stringEvaluateEvent = new EvaluateStringEvent();
+        variables.get("text").send(stringEvaluateEvent);
+        String out = stringEvaluateEvent.getResult();
+
+        logger.info(out);
     }
 }

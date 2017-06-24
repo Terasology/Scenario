@@ -1,0 +1,9 @@
+{
+    "ScenarioString":{},
+    "ShortName":{
+        "name":"Constant String"
+    },
+    "ConstString":{
+        "string":"message"
+    }
+}

@@ -24,10 +24,12 @@ import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.scenario.components.information.BlockComponent;
 import org.terasology.scenario.components.information.ConstIntegerComponent;
+import org.terasology.scenario.components.information.ConstStringComponent;
 import org.terasology.scenario.components.information.PlayerComponent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateBlockDisplayEvent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateIntDisplayEvent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluatePlayerDisplayEvent;
+import org.terasology.scenario.internal.events.evaluationEvents.EvaluateStringDisplayEvent;
 
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class EvaluationDisplaySystem extends BaseComponentSystem {
@@ -47,5 +49,10 @@ public class EvaluationDisplaySystem extends BaseComponentSystem {
     @ReceiveEvent //Trigger/Target player
     public void onEvaluatePlayerDisplayEvent(EvaluatePlayerDisplayEvent event, EntityRef entity, PlayerComponent comp) {
         event.setResult(comp.type.name());
+    }
+
+    @ReceiveEvent //Constant string
+    public void onEvaluateStringDisplayEvent(EvaluateStringDisplayEvent event, EntityRef entity, ConstStringComponent comp) {
+        event.setResult(comp.string);
     }
 }

@@ -34,6 +34,7 @@ import org.terasology.scenario.components.TriggerActionListComponent;
 import org.terasology.scenario.components.TriggerConditionListComponent;
 import org.terasology.scenario.components.TriggerEventListComponent;
 import org.terasology.scenario.components.TriggerNameComponent;
+import org.terasology.scenario.components.actions.ActionComponent;
 import org.terasology.scenario.components.actions.TextComponent;
 import org.terasology.scenario.components.events.OnSpawnComponent;
 import org.terasology.scenario.internal.events.LogicTreeAddActionEvent;
@@ -42,6 +43,7 @@ import org.terasology.scenario.internal.events.LogicTreeAddEventEvent;
 import org.terasology.scenario.internal.events.LogicTreeAddTriggerEvent;
 import org.terasology.scenario.internal.events.LogicTreeDeleteEvent;
 import org.terasology.scenario.internal.events.LogicTreeMoveEntityEvent;
+import org.terasology.scenario.internal.events.ReplaceEntityEvent;
 import org.terasology.scenario.internal.utilities.ArgumentParser;
 import org.terasology.world.block.BlockManager;
 
@@ -254,6 +256,28 @@ public class EntityTreeSystem extends BaseComponentSystem{
 
         if (event.getHubScreen() != null) {
             event.getHubScreen().updateTree(entity);
+        }
+    }
+
+
+    /**
+     * This event should only ever be called for replacing an action/event/condtional with the same type
+     */
+    @ReceiveEvent
+    public void onReplaceEntityEvent(ReplaceEntityEvent event, EntityRef entity, ScenarioComponent component) {
+        EntityRef owningTrigger = event.getReplaced().getOwner();
+        if (event.getReplaced().hasComponent(ActionComponent.class)) {
+            TriggerActionListComponent actions = owningTrigger.getComponent(TriggerActionListComponent.class);
+            int index = actions.actions.indexOf(event.getReplaced());
+            actions.actions.remove(event.getReplaced());
+            actions.actions.add(index, event.getReplacer());
+            owningTrigger.saveComponent(actions);
+            entity.saveComponent(component);
+        }
+
+
+        if (event.getHubtool() != null) {
+            event.getHubtool().updateTree(entity);
         }
     }
 

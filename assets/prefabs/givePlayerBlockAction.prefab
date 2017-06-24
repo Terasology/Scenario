@@ -1,4 +1,8 @@
 {
+    "Action":{},
+    "ShortName":{
+        "name":"Give block"
+    },
     "GiveBlockAction":{},
     "Text":{
         "text":"Give [player:Player] [amount:Integer] [block:Block]."
