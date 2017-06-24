@@ -33,6 +33,6 @@ public final class InformationEnums {
     }
     public enum PlayerType {
         TRIGGERING_PLAYER,
-        TARGETTED_PLAYER,
+        TARGETED_PLAYER,
     }
 }

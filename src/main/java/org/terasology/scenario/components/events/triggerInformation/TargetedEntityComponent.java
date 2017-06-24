@@ -18,6 +18,6 @@ package org.terasology.scenario.components.events.triggerInformation;
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
 
-public class TargettedEntityComponent implements Component {
+public class TargetedEntityComponent implements Component {
     public EntityRef entity;
 }
