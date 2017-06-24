@@ -39,6 +39,7 @@ import org.terasology.scenario.internal.events.LogicTreeAddConditionEvent;
 import org.terasology.scenario.internal.events.LogicTreeAddEventEvent;
 import org.terasology.scenario.internal.events.LogicTreeAddTriggerEvent;
 import org.terasology.scenario.internal.events.LogicTreeDeleteEvent;
+import org.terasology.scenario.internal.utilities.ArgumentParser;
 import org.terasology.world.block.BlockManager;
 
 import java.util.ArrayList;
@@ -87,6 +88,9 @@ public class HubToolScreen extends BaseInteractionScreen {
     }
     @Override
     public void initialise() {
+        ArgumentParser parser = ArgumentParser.getInstance();
+        parser.setBlockManager(blockManager);
+        parser.setEntityManager(entityManager);
         overviewBox = find("overviewBox", UIBox.class);
         logicBox = find("logicBox", UIBox.class);
         regionBox = find("regionBox", UIBox.class);

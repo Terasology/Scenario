@@ -34,8 +34,7 @@ import org.terasology.scenario.components.TriggerActionListComponent;
 import org.terasology.scenario.components.TriggerConditionListComponent;
 import org.terasology.scenario.components.TriggerEventListComponent;
 import org.terasology.scenario.components.TriggerNameComponent;
-import org.terasology.scenario.components.actions.ActionHeadComponent;
-import org.terasology.scenario.components.actions.GiveBlockActionComponent;
+import org.terasology.scenario.components.actions.TextComponent;
 import org.terasology.scenario.components.events.OnSpawnComponent;
 import org.terasology.scenario.internal.events.LogicTreeAddActionEvent;
 import org.terasology.scenario.internal.events.LogicTreeAddConditionEvent;
@@ -43,6 +42,7 @@ import org.terasology.scenario.internal.events.LogicTreeAddEventEvent;
 import org.terasology.scenario.internal.events.LogicTreeAddTriggerEvent;
 import org.terasology.scenario.internal.events.LogicTreeDeleteEvent;
 import org.terasology.scenario.internal.events.LogicTreeMoveEntityEvent;
+import org.terasology.scenario.internal.utilities.ArgumentParser;
 import org.terasology.world.block.BlockManager;
 
 import java.util.List;
@@ -93,15 +93,10 @@ public class EntityTreeSystem extends BaseComponentSystem{
     @ReceiveEvent
     public void onLogicTreeAddActionEvent(LogicTreeAddActionEvent event, EntityRef entity, ScenarioComponent component) {
         TriggerActionListComponent actions = event.getTriggerEntity().getComponent(TriggerActionListComponent.class);
-        /**
-         * Base component is just the default action of a "give triggering player 1 stone"
-         */
-        GiveBlockActionComponent baseComponent = new GiveBlockActionComponent(blockManager.getBlockFamily("core:stone"), entityManager);
-        EntityRef baseComponentEntity = entityManager.create();
-        baseComponentEntity.addComponent(baseComponent);
-        ActionHeadComponent actionComponent = new ActionHeadComponent();
-        actionComponent.action = baseComponentEntity;
-        EntityRef newActionEntity = entityManager.create(actionComponent);
+        //Sets up basic action as a give block component
+        EntityRef newActionEntity = entityManager.create(assetManager.getAsset("scenario:givePlayerBlockAction", Prefab.class).get());
+        ArgumentParser argParser = ArgumentParser.getInstance();
+        argParser.parseDefaults(newActionEntity);
         newActionEntity.setOwner(event.getTriggerEntity());
         actions.actions.add(newActionEntity);
         event.getTriggerEntity().saveComponent(actions);
@@ -188,7 +183,7 @@ public class EntityTreeSystem extends BaseComponentSystem{
                 event.getDeleteFromEntity().saveComponent(conds);
                 event.getDeleteEntity().destroy();
             }
-            else if (event.getDeleteEntity().hasComponent(ActionHeadComponent.class)) { //Action
+            else if (event.getDeleteEntity().hasComponent(TextComponent.class)) { //Action
                 TriggerActionListComponent actions = event.getDeleteFromEntity().getComponent(TriggerActionListComponent.class);
                 actions.actions.remove(event.getDeleteEntity());
                 event.getDeleteFromEntity().saveComponent(actions);

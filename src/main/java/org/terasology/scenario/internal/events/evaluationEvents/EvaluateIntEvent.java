@@ -13,9 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.components.actions;
+package org.terasology.scenario.internal.events.evaluationEvents;
 
-import org.terasology.entitySystem.Component;
+import org.terasology.entitySystem.event.Event;
 
-public class GiveBlockActionComponent implements Component {
+public class EvaluateIntEvent implements Event {
+    private int result;
+
+    public void setResult(int result) {
+        this.result = result;
+    }
+
+    public int getResult() {
+        return result;
+    }
 }

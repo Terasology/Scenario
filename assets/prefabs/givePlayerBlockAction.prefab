@@ -1,0 +1,7 @@
+{
+    "GiveBlockAction":{},
+    "Text":{
+        "text":"Give [player:Player] [amount:Integer] [block:Block]."
+    },
+    "ArgumentContainer":{}
+}

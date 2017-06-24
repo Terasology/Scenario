@@ -16,6 +16,10 @@
 package org.terasology.scenario.components.actions;
 
 import org.terasology.entitySystem.Component;
+import org.terasology.entitySystem.entity.EntityRef;
 
-public class GiveBlockActionComponent implements Component {
+import java.util.Map;
+
+public class ArgumentContainerComponent implements Component {
+    public Map<String, EntityRef> arguments;
 }

@@ -16,15 +16,7 @@
 package org.terasology.scenario.components.actions;
 
 import org.terasology.entitySystem.Component;
-import org.terasology.entitySystem.entity.EntityRef;
 
-public class ActionHeadComponent implements Component {
-    /**
-     * The Entity that actually attributes what type of action this component is, allows all of the actions
-     * to be treated the same, grab the headComponent and reference what component is attached through this variable with
-     * out needing to do a search for which component is actually attached.
-     *
-     * This EntityRef MUST only have one component of which satisfies the interface of ActionComponent
-     */
-    public EntityRef action;
+public class TextComponent implements Component {
+    public String text;
 }

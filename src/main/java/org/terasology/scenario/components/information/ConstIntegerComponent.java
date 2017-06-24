@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.components.actions;
+package org.terasology.scenario.components.information;
 
 import org.terasology.entitySystem.Component;
 
-public class GiveBlockActionComponent implements Component {
+public class ConstIntegerComponent implements Component {
+    public int value;
 }
