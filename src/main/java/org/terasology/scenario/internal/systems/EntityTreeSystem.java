@@ -268,6 +268,7 @@ public class EntityTreeSystem extends BaseComponentSystem{
         EntityRef owningTrigger = event.getReplaced().getOwner();
         if (event.getReplaced().hasComponent(ActionComponent.class)) {
             TriggerActionListComponent actions = owningTrigger.getComponent(TriggerActionListComponent.class);
+            event.getReplacer().setOwner(owningTrigger);
             int index = actions.actions.indexOf(event.getReplaced());
             actions.actions.remove(event.getReplaced());
             actions.actions.add(index, event.getReplacer());
