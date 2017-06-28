@@ -22,37 +22,64 @@ import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
+import org.terasology.registry.In;
+import org.terasology.scenario.components.actions.ArgumentContainerComponent;
 import org.terasology.scenario.components.information.BlockComponent;
+import org.terasology.scenario.components.information.ConstBlockComponent;
 import org.terasology.scenario.components.information.ConstIntegerComponent;
 import org.terasology.scenario.components.information.ConstStringComponent;
 import org.terasology.scenario.components.information.PlayerComponent;
-import org.terasology.scenario.internal.events.evaluationEvents.EvaluateBlockDisplayEvent;
-import org.terasology.scenario.internal.events.evaluationEvents.EvaluateIntDisplayEvent;
-import org.terasology.scenario.internal.events.evaluationEvents.EvaluatePlayerDisplayEvent;
-import org.terasology.scenario.internal.events.evaluationEvents.EvaluateStringDisplayEvent;
+import org.terasology.scenario.components.information.RandomIntComponent;
+import org.terasology.scenario.internal.events.evaluationEvents.EvaluateDisplayEvent;
+import org.terasology.world.block.BlockManager;
+
+import java.util.Map;
 
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class EvaluationDisplaySystem extends BaseComponentSystem {
 
     private static Logger logger = LoggerFactory.getLogger(EvaluationDisplaySystem.class);
 
+    @In
+    BlockManager blockManager;
+
     @ReceiveEvent //Constant int
-    public void onEvaluateIntDisplayEvent(EvaluateIntDisplayEvent event, EntityRef entity, ConstIntegerComponent comp) {
+    public void onEvaluateIntDisplayEvent(EvaluateDisplayEvent event, EntityRef entity, ConstIntegerComponent comp) {
         event.setResult(Integer.toString(comp.value));
     }
 
     @ReceiveEvent //Block
-    public void onEvaluateBlockDisplayEvent(EvaluateBlockDisplayEvent event, EntityRef entity, BlockComponent comp) {
+    public void onEvaluateBlockDisplayEvent(EvaluateDisplayEvent event, EntityRef entity, BlockComponent comp) {
         event.setResult(comp.value.getDisplayName());
     }
 
+    @ReceiveEvent //BlockConstant
+    public void onEvaluateBlockDisplayEvent(EvaluateDisplayEvent event, EntityRef entity, ConstBlockComponent comp) {
+        event.setResult(blockManager.getBlockFamily(comp.block_uri).getDisplayName());
+    }
+
     @ReceiveEvent //Trigger/Target player
-    public void onEvaluatePlayerDisplayEvent(EvaluatePlayerDisplayEvent event, EntityRef entity, PlayerComponent comp) {
+    public void onEvaluatePlayerDisplayEvent(EvaluateDisplayEvent event, EntityRef entity, PlayerComponent comp) {
         event.setResult(comp.type.name());
     }
 
     @ReceiveEvent //Constant string
-    public void onEvaluateStringDisplayEvent(EvaluateStringDisplayEvent event, EntityRef entity, ConstStringComponent comp) {
+    public void onEvaluateStringDisplayEvent(EvaluateDisplayEvent event, EntityRef entity, ConstStringComponent comp) {
         event.setResult(comp.string);
+    }
+
+    @ReceiveEvent
+    public void OnEvaluateRandomIntEvent(EvaluateDisplayEvent event, EntityRef entity, RandomIntComponent comp) {
+        Map<String, EntityRef> args = entity.getComponent(ArgumentContainerComponent.class).arguments;
+
+        EvaluateDisplayEvent evalInt1 = new EvaluateDisplayEvent();
+        args.get("int1").send(evalInt1);
+        String int1 = evalInt1.getResult();
+
+        EvaluateDisplayEvent evalInt2 = new EvaluateDisplayEvent();
+        args.get("int2").send(evalInt2);
+        String int2 = evalInt2.getResult();
+
+        event.setResult("Random(" + int1 + " - " + int2 + ")");
     }
 }

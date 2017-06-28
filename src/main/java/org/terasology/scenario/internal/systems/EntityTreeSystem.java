@@ -97,7 +97,14 @@ public class EntityTreeSystem extends BaseComponentSystem{
         TriggerActionListComponent actions = event.getTriggerEntity().getComponent(TriggerActionListComponent.class);
         //Sets up basic action as a give block component
         EntityRef newActionEntity = entityManager.create(assetManager.getAsset("scenario:givePlayerBlockAction", Prefab.class).get());
-        ArgumentParser argParser = ArgumentParser.getInstance();
+
+        ArgumentParser argParser = new ArgumentParser();
+        argParser.setAssetManager(assetManager);
+        argParser.setBlockManager(blockManager);
+        argParser.setEntityManager(entityManager);
+
+
+
         argParser.parseDefaults(newActionEntity);
         newActionEntity.setOwner(event.getTriggerEntity());
         actions.actions.add(newActionEntity);

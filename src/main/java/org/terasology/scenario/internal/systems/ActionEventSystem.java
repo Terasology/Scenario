@@ -33,6 +33,7 @@ import org.terasology.scenario.components.information.BlockComponent;
 import org.terasology.scenario.components.information.InformationEnums;
 import org.terasology.scenario.components.information.PlayerComponent;
 import org.terasology.scenario.internal.events.EventTriggerEvent;
+import org.terasology.scenario.internal.events.evaluationEvents.EvaluateBlockEvent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateIntEvent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateStringEvent;
 import org.terasology.world.block.BlockManager;
@@ -67,7 +68,10 @@ public class ActionEventSystem extends BaseComponentSystem {
     public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity, GiveBlockActionComponent action) {
         Map<String, EntityRef> variables = entity.getComponent(ArgumentContainerComponent.class).arguments;
 
-        BlockFamily block = variables.get("block").getComponent(BlockComponent.class).value;
+        EvaluateBlockEvent blockEvaluateEvent = new EvaluateBlockEvent();
+        variables.get("block").send(blockEvaluateEvent);
+        BlockFamily block = blockEvaluateEvent.getResult();
+
         EvaluateIntEvent intEvaluateEvent = new EvaluateIntEvent();
         variables.get("amount").send(intEvaluateEvent);
         int amount = intEvaluateEvent.getResult();

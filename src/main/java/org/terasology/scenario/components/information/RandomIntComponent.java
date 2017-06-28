@@ -13,18 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.internal.events.evaluationEvents;
+package org.terasology.scenario.components.information;
 
-import org.terasology.entitySystem.event.Event;
+import org.terasology.entitySystem.Component;
 
-public class EvaluateIntDisplayEvent implements Event {
-    private String result;
-
-    public void setResult(String result) {
-        this.result = result;
-    }
-
-    public String getResult() {
-        return result;
-    }
+public class RandomIntComponent implements Component {
 }

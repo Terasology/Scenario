@@ -24,21 +24,16 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.prefab.Prefab;
 import org.terasology.rendering.FontColor;
 import org.terasology.rendering.nui.Color;
+import org.terasology.rendering.nui.CoreScreenLayer;
 import org.terasology.rendering.nui.UIWidget;
 import org.terasology.rendering.nui.widgets.UIButton;
 import org.terasology.rendering.nui.widgets.UILabel;
 import org.terasology.scenario.components.actions.ArgumentContainerComponent;
 import org.terasology.scenario.components.actions.TextComponent;
-import org.terasology.scenario.components.information.BlockComponent;
-import org.terasology.scenario.components.information.IndentificationComponents.ScenarioBlockComponent;
 import org.terasology.scenario.components.information.IndentificationComponents.ScenarioPlayerEntityComponent;
 import org.terasology.scenario.components.information.InformationEnums;
 import org.terasology.scenario.components.information.PlayerComponent;
-import org.terasology.scenario.internal.events.evaluationEvents.EvaluateBlockDisplayEvent;
-import org.terasology.scenario.internal.events.evaluationEvents.EvaluateIntDisplayEvent;
-import org.terasology.scenario.internal.events.evaluationEvents.EvaluatePlayerDisplayEvent;
-import org.terasology.scenario.internal.events.evaluationEvents.EvaluateStringDisplayEvent;
-import org.terasology.scenario.internal.ui.EditLogicScreen;
+import org.terasology.scenario.internal.events.evaluationEvents.EvaluateDisplayEvent;
 import org.terasology.scenario.internal.ui.EditParameterScreen;
 import org.terasology.world.block.BlockManager;
 
@@ -62,17 +57,6 @@ public class ArgumentParser {
     private static ArgumentParser parser;
 
     private List<String> keys;
-
-    private ArgumentParser() {
-
-    }
-
-    public static ArgumentParser getInstance() {
-        if (parser == null) {
-            parser = new ArgumentParser();
-        }
-        return parser;
-    }
 
     public void setBlockManager(BlockManager blockManager) {
         this.blockManager = blockManager;
@@ -108,10 +92,7 @@ public class ArgumentParser {
                 args.arguments.put(key, entityManager.create(assetManager.getAsset("scenario:scenarioConstantInt", Prefab.class).get()));
             }
             else if (type.equals("Block")) {
-                defaultComponent = new BlockComponent();
-                ((BlockComponent)defaultComponent).value = blockManager.getBlockFamily("core:stone");
-                indicatorComponent = new ScenarioBlockComponent();
-                args.arguments.put(key, entityManager.create(defaultComponent, indicatorComponent));
+                args.arguments.put(key, entityManager.create(assetManager.getAsset("scenario:scenarioConstantBlock", Prefab.class).get()));
             }
             else if (type.equals("Player")) {
                 defaultComponent = new PlayerComponent();
@@ -148,30 +129,9 @@ public class ArgumentParser {
             int indexColon = group.indexOf(":");
             String key = group.substring(0, indexColon);
             String type = group.substring(indexColon+1);
-            if (type.equals("Integer")) {
-                EvaluateIntDisplayEvent event = new EvaluateIntDisplayEvent();
-                args.arguments.get(key).send(event);
-                replacements.add(event.getResult());
-            }
-            else if (type.equals("Block")) {
-                EvaluateBlockDisplayEvent event = new EvaluateBlockDisplayEvent();
-                args.arguments.get(key).send(event);
-                replacements.add(event.getResult());
-            }
-            else if (type.equals("Player")) {
-                EvaluatePlayerDisplayEvent event = new EvaluatePlayerDisplayEvent();
-                args.arguments.get(key).send(event);
-                replacements.add(event.getResult());
-            }
-            else if (type.equals("String")) {
-                EvaluateStringDisplayEvent event = new EvaluateStringDisplayEvent();
-                args.arguments.get(key).send(event);
-                replacements.add(event.getResult());
-            }
-            else {
-                //String parsed incorrectly, should throw some kind of exception probably
-                return "";
-            }
+            EvaluateDisplayEvent event = new EvaluateDisplayEvent();
+            args.arguments.get(key).send(event);
+            replacements.add(event.getResult());
         }
 
         Pattern replacePattern = Pattern.compile("\\[.*?\\]");
@@ -186,7 +146,7 @@ public class ArgumentParser {
         return sb.toString();
     }
 
-    public List<UIWidget> generateWidgets(EntityRef entity, EditLogicScreen editScreen) {
+    public List<UIWidget> generateWidgets(EntityRef entity, CoreScreenLayer editScreen) {
         List<UIWidget> output = new ArrayList<>();
         String text = entity.getComponent(TextComponent.class).text;
         ArgumentContainerComponent args = entity.getComponent(ArgumentContainerComponent.class);
@@ -200,22 +160,22 @@ public class ArgumentParser {
             String key = group.substring(0, indexColon);
             String type = group.substring(indexColon+1);
             if (type.equals("Integer")) {
-                EvaluateIntDisplayEvent event = new EvaluateIntDisplayEvent();
+                EvaluateDisplayEvent event = new EvaluateDisplayEvent();
                 args.arguments.get(key).send(event);
                 replacements.add(event.getResult());
             }
             else if (type.equals("Block")) {
-                EvaluateBlockDisplayEvent event = new EvaluateBlockDisplayEvent();
+                EvaluateDisplayEvent event = new EvaluateDisplayEvent();
                 args.arguments.get(key).send(event);
                 replacements.add(event.getResult());
             }
             else if (type.equals("Player")) {
-                EvaluatePlayerDisplayEvent event = new EvaluatePlayerDisplayEvent();
+                EvaluateDisplayEvent event = new EvaluateDisplayEvent();
                 args.arguments.get(key).send(event);
                 replacements.add(event.getResult());
             }
             else if (type.equals("String")) {
-                EvaluateStringDisplayEvent event = new EvaluateStringDisplayEvent();
+                EvaluateDisplayEvent event = new EvaluateDisplayEvent();
                 args.arguments.get(key).send(event);
                 replacements.add(event.getResult());
             }
@@ -244,7 +204,7 @@ public class ArgumentParser {
             EntityRef tempEntity = args.arguments.get(tempKey);
             button.subscribe(b -> {
                 EditParameterScreen screen = editScreen.getManager().pushScreen(EditParameterScreen.ASSET_URI, EditParameterScreen.class);
-                screen.setupParameter(tempKey, tempEntity, editScreen);
+                screen.setupParameter(tempKey, tempEntity, editScreen, this);
             });
             output.add(button);
             index++;
