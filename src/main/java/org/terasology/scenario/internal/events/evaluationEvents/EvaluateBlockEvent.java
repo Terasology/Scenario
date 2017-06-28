@@ -16,15 +16,17 @@
 package org.terasology.scenario.internal.events.evaluationEvents;
 
 import org.terasology.entitySystem.event.Event;
+import org.terasology.world.block.family.BlockFamily;
 
-public class EvaluatePlayerDisplayEvent implements Event {
-    private String result;
+public class EvaluateBlockEvent implements Event {
 
-    public void setResult(String result) {
+    private BlockFamily result;
+
+    public void setResult(BlockFamily result) {
         this.result = result;
     }
 
-    public String getResult() {
+    public BlockFamily getResult() {
         return result;
     }
 }

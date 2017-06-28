@@ -46,7 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EditLogicScreen extends CoreScreenLayer {
-    public static final ResourceUrn ASSET_URI = new ResourceUrn("scenario:editLogicScreen");
+    public static final ResourceUrn ASSET_URI = new ResourceUrn("scenario:editLogicScreen!instance");
     private static Logger logger = LoggerFactory.getLogger(EditLogicScreen.class);
 
     @In
@@ -69,6 +69,8 @@ public class EditLogicScreen extends CoreScreenLayer {
     private List<Prefab> optionList;
     private Prefab selectedPrefab;
 
+    private ArgumentParser parser;
+
 
     @Override
     public void initialise() {
@@ -84,10 +86,11 @@ public class EditLogicScreen extends CoreScreenLayer {
     }
 
 
-    public void setEntities(EntityRef scenarioEntity, EntityRef targetEntity, LogicTreeValue.Type type, HubToolScreen hubtool){
+    public void setEntities(EntityRef scenarioEntity, EntityRef targetEntity, LogicTreeValue.Type type, HubToolScreen hubtool, ArgumentParser parser){
         this.scenarioEntity = scenarioEntity;
         this.targetEntity = targetEntity;
         this.hubtool = hubtool;
+        this.parser = parser;
 
         switch (type) {
             case EVENT:
@@ -143,6 +146,11 @@ public class EditLogicScreen extends CoreScreenLayer {
             ReplaceEntityEvent event = new ReplaceEntityEvent(targetEntity, temporaryEntity, hubtool);
             scenarioEntity.send(event);
         }
+        else {
+            if (temporaryEntity.exists()) {
+                temporaryEntity.destroy();
+            }
+        }
         getManager().popScreen();
     }
 
@@ -176,12 +184,12 @@ public class EditLogicScreen extends CoreScreenLayer {
         selectedPrefab = value;
 
         temporaryEntity = entityManager.create(value);
-        ArgumentParser.getInstance().parseDefaults(temporaryEntity);
+        parser.parseDefaults(temporaryEntity);
         generateText();
     }
 
     private void generateText() {
-        List<UIWidget> widgets = ArgumentParser.getInstance().generateWidgets(temporaryEntity, this);
+        List<UIWidget> widgets = parser.generateWidgets(temporaryEntity, this);
         if (oldWidgets != null) {
             for(UIWidget w : oldWidgets) {
                 variables.removeWidget(w);

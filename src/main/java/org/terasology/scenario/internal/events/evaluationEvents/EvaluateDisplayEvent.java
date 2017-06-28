@@ -17,7 +17,7 @@ package org.terasology.scenario.internal.events.evaluationEvents;
 
 import org.terasology.entitySystem.event.Event;
 
-public class EvaluateStringDisplayEvent implements Event {
+public class EvaluateDisplayEvent implements Event {
     private String result;
 
     public void setResult(String result) {

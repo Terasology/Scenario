@@ -1,0 +1,9 @@
+{
+    "ScenarioBlock":{},
+    "ShortName":{
+        "name":"Constant block"
+    },
+    "ConstBlock":{
+        "block_uri":"core:stone"
+    }
+}

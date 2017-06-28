@@ -15,6 +15,7 @@
  */
 package org.terasology.scenario.internal.ui;
 
+import org.codehaus.plexus.util.cli.Arg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.entitySystem.entity.EntityRef;
@@ -36,6 +37,7 @@ public class LogicTreeValue {
     private TextureRegion textureRegion;
     private EntityRef entity;
     private Type valueType;
+    private ArgumentParser parser;
 
     public enum Type {
         SCENARIO,
@@ -54,26 +56,27 @@ public class LogicTreeValue {
         this.valueType = valueType;
     }
 
-    public LogicTreeValue(String text, TextureRegion textureRegion, Type valueType, EntityRef entity) {
+    public LogicTreeValue(String text, TextureRegion textureRegion, Type valueType, EntityRef entity, ArgumentParser parser) {
         this.text = text;
         this.textureRegion = textureRegion;
         this.valueType = valueType;
         this.entity = entity;
+        this.parser = parser;
     }
 
     //Constructor if creating an event, action, or conditional and text should be built upon what the actual action/event is
-    public LogicTreeValue(TextureRegion textureRegion, Type valueType, EntityRef entity) {
+    public LogicTreeValue(TextureRegion textureRegion, Type valueType, EntityRef entity, ArgumentParser parser) {
         this.textureRegion = textureRegion;
         this.valueType = valueType;
         this.entity = entity;
+        this.parser = parser;
 
         this.text = "Generic trigger";
 
         //Check for action
         if (valueType == Type.ACTION) {
             if (entity.hasComponent(TextComponent.class)) {
-                ArgumentParser argParser = ArgumentParser.getInstance();
-                text = argParser.parseDisplayText(entity);
+                text = parser.parseDisplayText(entity);
             }
         }
 

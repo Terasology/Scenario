@@ -62,6 +62,8 @@ public class HubToolScreen extends BaseInteractionScreen {
 
     private LogicTreeView treeView;
 
+    private ArgumentParser parser;
+
     @In
     private AssetManager assetManager;
 
@@ -88,7 +90,7 @@ public class HubToolScreen extends BaseInteractionScreen {
     }
     @Override
     public void initialise() {
-        ArgumentParser parser = ArgumentParser.getInstance();
+        parser = new ArgumentParser();
         parser.setBlockManager(blockManager);
         parser.setEntityManager(entityManager);
         parser.setAssetManager(assetManager);
@@ -221,7 +223,7 @@ public class HubToolScreen extends BaseInteractionScreen {
 
     private void pushEditScreen(LogicTree node) {
         EditLogicScreen editLogic = getManager().pushScreen(EditLogicScreen.ASSET_URI, EditLogicScreen.class);
-        editLogic.setEntities(scenarioEntity, node.getValue().getEntity(), node.getValue().getValueType(), this);
+        editLogic.setEntities(scenarioEntity, node.getValue().getEntity(), node.getValue().getValueType(), this, parser);
     }
 
     /**
@@ -404,7 +406,7 @@ public class HubToolScreen extends BaseInteractionScreen {
         }
         ScenarioComponent scenario = entity.getComponent(ScenarioComponent.class);
         LogicTreeView tempTreeView = new LogicTreeView();
-        LogicTree returnTree = new LogicTree(new LogicTreeValue("Scenario", assetManager.getAsset("Scenario:scenarioText", Texture.class).get(),  LogicTreeValue.Type.SCENARIO, entity), this);
+        LogicTree returnTree = new LogicTree(new LogicTreeValue("Scenario", assetManager.getAsset("Scenario:scenarioText", Texture.class).get(),  LogicTreeValue.Type.SCENARIO, entity, parser), this);
         tempTreeView.setModel(returnTree.getRoot());
         returnTree.setExpandedNoEntity(true);
 
@@ -418,18 +420,18 @@ public class HubToolScreen extends BaseInteractionScreen {
                 LogicTreeValue value;
 
                 //Assumes all components are non-null, if one isn't then it's a bad trigger entity anyways and will cause problems elsewhere
-                value = new LogicTreeValue(name.name, assetManager.getAsset("Scenario:triggerText", Texture.class).get(), LogicTreeValue.Type.TRIGGER, t);
-                LogicTree event = new LogicTree(new LogicTreeValue("Events", assetManager.getAsset("Scenario:eventText", Texture.class).get(), LogicTreeValue.Type.EVENT_NAME, t), this);
+                value = new LogicTreeValue(name.name, assetManager.getAsset("Scenario:triggerText", Texture.class).get(), LogicTreeValue.Type.TRIGGER, t, parser);
+                LogicTree event = new LogicTree(new LogicTreeValue("Events", assetManager.getAsset("Scenario:eventText", Texture.class).get(), LogicTreeValue.Type.EVENT_NAME, t, parser), this);
                 if (getInteractionTarget().getComponent(ExpandedComponent.class).expandedList.contains(t.getComponent(TriggerNameComponent.class).entityForEvent)) {
                     event.setExpandedNoEntity(true);
                 }
 
-                LogicTree condition = new LogicTree(new LogicTreeValue("Conditionals", assetManager.getAsset("Scenario:conditionalText", Texture.class).get(), LogicTreeValue.Type.CONDITIONAL_NAME, t), this);
+                LogicTree condition = new LogicTree(new LogicTreeValue("Conditionals", assetManager.getAsset("Scenario:conditionalText", Texture.class).get(), LogicTreeValue.Type.CONDITIONAL_NAME, t, parser), this);
                 if (getInteractionTarget().getComponent(ExpandedComponent.class).expandedList.contains(t.getComponent(TriggerNameComponent.class).entityForCondition)) {
                     condition.setExpandedNoEntity(true);
                 }
 
-                LogicTree action = new LogicTree(new LogicTreeValue("Actions", assetManager.getAsset("Scenario:actionText", Texture.class).get(), LogicTreeValue.Type.ACTION_NAME, t), this);
+                LogicTree action = new LogicTree(new LogicTreeValue("Actions", assetManager.getAsset("Scenario:actionText", Texture.class).get(), LogicTreeValue.Type.ACTION_NAME, t, parser), this);
                 if (getInteractionTarget().getComponent(ExpandedComponent.class).expandedList.contains(t.getComponent(TriggerNameComponent.class).entityForAction)) {
                     action.setExpandedNoEntity(true);
                 }
@@ -440,13 +442,13 @@ public class HubToolScreen extends BaseInteractionScreen {
                 tempTriggerTree.addChild(action);
 
                 for (EntityRef e : events.events) {
-                    event.addChild(new LogicTreeValue(assetManager.getAsset("Scenario:eventText", Texture.class).get(), LogicTreeValue.Type.EVENT, e));
+                    event.addChild(new LogicTreeValue(assetManager.getAsset("Scenario:eventText", Texture.class).get(), LogicTreeValue.Type.EVENT, e, parser));
                 }
                 for (EntityRef c : conditionals.conditions) {
-                    condition.addChild(new LogicTreeValue(assetManager.getAsset("Scenario:conditionalText", Texture.class).get(), LogicTreeValue.Type.CONDITIONAL, c));
+                    condition.addChild(new LogicTreeValue(assetManager.getAsset("Scenario:conditionalText", Texture.class).get(), LogicTreeValue.Type.CONDITIONAL, c, parser));
                 }
                 for (EntityRef a : actions.actions) {
-                    action.addChild(new LogicTreeValue(assetManager.getAsset("Scenario:actionText", Texture.class).get(), LogicTreeValue.Type.ACTION, a));
+                    action.addChild(new LogicTreeValue(assetManager.getAsset("Scenario:actionText", Texture.class).get(), LogicTreeValue.Type.ACTION, a, parser));
                 }
                 returnTree.addChild(tempTriggerTree);
                 tempTriggerTree.setExpandedNoEntity(getInteractionTarget().getComponent(ExpandedComponent.class).expandedList.contains(t));
