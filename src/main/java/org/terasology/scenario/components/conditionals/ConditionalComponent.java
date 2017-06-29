@@ -13,14 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.components;
+package org.terasology.scenario.components.conditionals;
 
 import org.terasology.entitySystem.Component;
 
-/**
- * Component that denotes a conditional.
- * Will eventually be replaced with multiple components to denote type(like events are currently)
- */
-public class ConditionComponent implements Component {
-    public String name;
+public class ConditionalComponent implements Component {
 }

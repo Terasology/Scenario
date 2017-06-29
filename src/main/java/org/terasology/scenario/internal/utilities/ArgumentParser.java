@@ -77,7 +77,9 @@ public class ArgumentParser {
     public void parseDefaults (EntityRef entity) {
         String text = entity.getComponent(TextComponent.class).text;
         ArgumentContainerComponent args = entity.getComponent(ArgumentContainerComponent.class);
-        args.arguments = new HashMap<>();
+        if (entity.hasComponent(ArgumentContainerComponent.class)) { //Some cases might not have any arguments
+            args.arguments = new HashMap<>();
+        }
 
         Pattern pattern = Pattern.compile("\\[(.*?)\\]");
         Matcher matcher = pattern.matcher(text);
@@ -110,7 +112,9 @@ public class ArgumentParser {
 
         }
 
-        entity.saveComponent(args);
+        if (args != null) {
+            entity.saveComponent(args);
+        }
     }
 
     /**
@@ -159,30 +163,9 @@ public class ArgumentParser {
             int indexColon = group.indexOf(":");
             String key = group.substring(0, indexColon);
             String type = group.substring(indexColon+1);
-            if (type.equals("Integer")) {
-                EvaluateDisplayEvent event = new EvaluateDisplayEvent();
-                args.arguments.get(key).send(event);
-                replacements.add(event.getResult());
-            }
-            else if (type.equals("Block")) {
-                EvaluateDisplayEvent event = new EvaluateDisplayEvent();
-                args.arguments.get(key).send(event);
-                replacements.add(event.getResult());
-            }
-            else if (type.equals("Player")) {
-                EvaluateDisplayEvent event = new EvaluateDisplayEvent();
-                args.arguments.get(key).send(event);
-                replacements.add(event.getResult());
-            }
-            else if (type.equals("String")) {
-                EvaluateDisplayEvent event = new EvaluateDisplayEvent();
-                args.arguments.get(key).send(event);
-                replacements.add(event.getResult());
-            }
-            else {
-                //String parsed incorrectly, should throw some kind of exception probably
-                return null;
-            }
+            EvaluateDisplayEvent event = new EvaluateDisplayEvent();
+            args.arguments.get(key).send(event);
+            replacements.add(event.getResult());
             keys.add(key);
         }
 

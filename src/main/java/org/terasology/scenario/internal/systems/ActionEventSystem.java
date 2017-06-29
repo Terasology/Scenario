@@ -23,6 +23,8 @@ import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
+import org.terasology.logic.inventory.InventoryComponent;
+import org.terasology.logic.inventory.ItemComponent;
 import org.terasology.logic.inventory.events.GiveItemEvent;
 import org.terasology.registry.In;
 import org.terasology.scenario.components.actions.ArgumentContainerComponent;
@@ -41,6 +43,7 @@ import org.terasology.world.block.family.BlockFamily;
 import org.terasology.world.block.items.BlockItemFactory;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -68,11 +71,11 @@ public class ActionEventSystem extends BaseComponentSystem {
     public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity, GiveBlockActionComponent action) {
         Map<String, EntityRef> variables = entity.getComponent(ArgumentContainerComponent.class).arguments;
 
-        EvaluateBlockEvent blockEvaluateEvent = new EvaluateBlockEvent();
+        EvaluateBlockEvent blockEvaluateEvent = new EvaluateBlockEvent(event.informationEntity);
         variables.get("block").send(blockEvaluateEvent);
         BlockFamily block = blockEvaluateEvent.getResult();
 
-        EvaluateIntEvent intEvaluateEvent = new EvaluateIntEvent();
+        EvaluateIntEvent intEvaluateEvent = new EvaluateIntEvent(event.informationEntity);
         variables.get("amount").send(intEvaluateEvent);
         int amount = intEvaluateEvent.getResult();
 
@@ -90,7 +93,7 @@ public class ActionEventSystem extends BaseComponentSystem {
     public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity, LogInfoComponent action) {
         Map<String, EntityRef> variables = entity.getComponent(ArgumentContainerComponent.class).arguments;
 
-        EvaluateStringEvent stringEvaluateEvent = new EvaluateStringEvent();
+        EvaluateStringEvent stringEvaluateEvent = new EvaluateStringEvent(event.informationEntity);
         variables.get("text").send(stringEvaluateEvent);
         String out = stringEvaluateEvent.getResult();
 

@@ -47,6 +47,7 @@ import org.terasology.scenario.components.actions.ArgumentContainerComponent;
 import org.terasology.scenario.components.information.ConstBlockComponent;
 import org.terasology.scenario.components.information.ConstIntegerComponent;
 import org.terasology.scenario.components.information.ConstStringComponent;
+import org.terasology.scenario.components.information.IndentificationComponents.ScenarioBlockComponent;
 import org.terasology.scenario.components.information.IndentificationComponents.ScenarioIntegerComponent;
 import org.terasology.scenario.components.information.IndentificationComponents.ScenarioStringComponent;
 import org.terasology.scenario.internal.utilities.ArgumentParser;
@@ -144,6 +145,14 @@ public class EditParameterScreen extends CoreScreenLayer {
             }
             editLabel.setText("Edit String");
             selectionLabel.setText("Select a String type");
+        }
+        else if (entity.hasComponent(ScenarioBlockComponent.class)) {
+            Iterable<Prefab> prefabs = prefabManager.listPrefabs(ScenarioBlockComponent.class);
+            for (Prefab p : prefabs) {
+                optionList.add(p);
+            }
+            editLabel.setText("Edit Block");
+            selectionLabel.setText("Select a Block type");
         }
 
         dropdown.setOptions(optionList);

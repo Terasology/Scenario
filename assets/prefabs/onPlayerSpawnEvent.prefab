@@ -1,0 +1,10 @@
+{
+    "Event":{},
+    "ShortName":{
+        "name":"On Player Spawn"
+    },
+    "OnSpawn":{},
+    "Text":{
+        "text":"On player spawn"
+    }
+}

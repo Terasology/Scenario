@@ -23,13 +23,19 @@ import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
+import org.terasology.logic.health.DoDestroyEvent;
 import org.terasology.registry.In;
 import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.components.TriggerActionListComponent;
+import org.terasology.scenario.components.TriggerConditionListComponent;
+import org.terasology.scenario.components.events.OnBlockDestroyComponent;
 import org.terasology.scenario.components.events.OnSpawnComponent;
+import org.terasology.scenario.components.events.triggerInformation.DestroyedBlockComponent;
 import org.terasology.scenario.components.events.triggerInformation.TriggeringEntityComponent;
 import org.terasology.scenario.internal.events.EventTriggerEvent;
-import org.terasology.scenario.internal.events.PlayerSpawnScenarioEvent;
+import org.terasology.scenario.internal.events.evaluationEvents.ConditionalCheckEvent;
+import org.terasology.scenario.internal.events.scenarioEvents.DoDestroyScenarioEvent;
+import org.terasology.scenario.internal.events.scenarioEvents.PlayerSpawnScenarioEvent;
 
 
 @RegisterSystem(RegisterMode.AUTHORITY)
@@ -44,6 +50,13 @@ public class ScenarioRootManagementSystem extends BaseComponentSystem {
     @ReceiveEvent
     public void onEventTrigger(EventTriggerEvent event, EntityRef entity, TriggerActionListComponent actions) {
         //Check Condition
+        for(EntityRef c : entity.getComponent(TriggerConditionListComponent.class).conditions) {
+            ConditionalCheckEvent cond = new ConditionalCheckEvent(event.informationEntity);
+            c.send(cond);
+            if (!cond.getResult()){
+                return; //Break check if any conditional is registered as false
+            }
+        }
         //Send to actions
         for(EntityRef a : actions.actions) {
             //Send new event in case eventually a new event needs to be made in which triggers and actions need different data
@@ -58,6 +71,19 @@ public class ScenarioRootManagementSystem extends BaseComponentSystem {
         TriggeringEntityComponent triggerEntity = new TriggeringEntityComponent();
         triggerEntity.entity = event.getSpawningEntity();
         EntityRef passEntity = entityManager.create(triggerEntity);
+        entityList.forEach(e -> e.getOwner().send(new EventTriggerEvent(passEntity)));
+    }
+
+    @ReceiveEvent
+    public void onDoDestroyScenarioEvent(DoDestroyScenarioEvent event, EntityRef entity, ScenarioComponent component) {
+        Iterable<EntityRef> entityList = entityManager.getEntitiesWith(OnBlockDestroyComponent.class);
+        TriggeringEntityComponent triggerEntity = new TriggeringEntityComponent();
+        triggerEntity.entity = event.getInstigator();
+        DestroyedBlockComponent destroyed = new DestroyedBlockComponent();
+        destroyed.damageType = event.getDamageType();
+        destroyed.destroyedBlock = event.getDestroyed();
+        destroyed.directCause = event.getDirectCause();
+        EntityRef passEntity = entityManager.create(triggerEntity, destroyed);
         entityList.forEach(e -> e.getOwner().send(new EventTriggerEvent(passEntity)));
     }
 }

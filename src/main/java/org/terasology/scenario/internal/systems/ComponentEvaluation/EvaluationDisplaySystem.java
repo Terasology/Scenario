@@ -30,6 +30,7 @@ import org.terasology.scenario.components.information.ConstIntegerComponent;
 import org.terasology.scenario.components.information.ConstStringComponent;
 import org.terasology.scenario.components.information.PlayerComponent;
 import org.terasology.scenario.components.information.RandomIntComponent;
+import org.terasology.scenario.components.information.TriggeringBlockComponent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateDisplayEvent;
 import org.terasology.world.block.BlockManager;
 
@@ -51,6 +52,11 @@ public class EvaluationDisplaySystem extends BaseComponentSystem {
     @ReceiveEvent //Block
     public void onEvaluateBlockDisplayEvent(EvaluateDisplayEvent event, EntityRef entity, BlockComponent comp) {
         event.setResult(comp.value.getDisplayName());
+    }
+
+    @ReceiveEvent //Trigger Block
+    public void onEvaluateDisplayEvent(EvaluateDisplayEvent event, EntityRef entity, TriggeringBlockComponent comp) {
+        event.setResult("Triggering Block");
     }
 
     @ReceiveEvent //BlockConstant

@@ -13,32 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.internal.events.evaluationEvents;
+package org.terasology.scenario.internal.events.scenarioEvents;
 
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 
-public class EvaluateStringEvent implements Event {
-    private String result;
-    private EntityRef passedEntity;
+/**
+ * Scenario event for when a player spawns
+ */
+public class PlayerSpawnScenarioEvent implements Event {
+    private EntityRef spawningEntity;
 
-    public EvaluateStringEvent(EntityRef passed) {
-        this.passedEntity = passed;
+    public PlayerSpawnScenarioEvent(EntityRef spawningEntity) {
+        this.spawningEntity = spawningEntity;
     }
 
-    public void setResult(String result) {
-        this.result = result;
-    }
-
-    public String getResult() {
-        return result;
-    }
-
-    public void setPassedEntity(EntityRef entity) {
-        this.passedEntity = entity;
-    }
-
-    public EntityRef getPassedEntity() {
-        return passedEntity;
+    public EntityRef getSpawningEntity() {
+        return spawningEntity;
     }
 }

@@ -39,6 +39,8 @@ import org.terasology.rendering.nui.widgets.UILabel;
 import org.terasology.scenario.components.ShortNameComponent;
 import org.terasology.scenario.components.actions.ActionComponent;
 import org.terasology.scenario.components.actions.ArgumentContainerComponent;
+import org.terasology.scenario.components.conditionals.ConditionalComponent;
+import org.terasology.scenario.components.events.EventComponent;
 import org.terasology.scenario.internal.events.ReplaceEntityEvent;
 import org.terasology.scenario.internal.utilities.ArgumentParser;
 
@@ -165,6 +167,18 @@ public class EditLogicScreen extends CoreScreenLayer {
         List<Prefab> output = new ArrayList<>();
         if (targetEntity.hasComponent(ActionComponent.class)) {
             Iterable<Prefab> prefabs = prefabManager.listPrefabs(ActionComponent.class);
+            for (Prefab p : prefabs) {
+                output.add(p);
+            }
+        }
+        if (targetEntity.hasComponent(EventComponent.class)) {
+            Iterable<Prefab> prefabs = prefabManager.listPrefabs(EventComponent.class);
+            for (Prefab p : prefabs) {
+                output.add(p);
+            }
+        }
+        if (targetEntity.hasComponent(ConditionalComponent.class)) {
+            Iterable<Prefab> prefabs = prefabManager.listPrefabs(ConditionalComponent.class);
             for (Prefab p : prefabs) {
                 output.add(p);
             }

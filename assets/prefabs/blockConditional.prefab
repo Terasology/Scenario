@@ -1,0 +1,11 @@
+{
+    "Conditional":{},
+    "ShortName":{
+        "name":"Block is type"
+    },
+    "BlockConditional":{},
+    "Text":{
+        "text":"Is [block1:Block] of type [block2:Block]"
+    },
+    "ArgumentContainer":{}
+}

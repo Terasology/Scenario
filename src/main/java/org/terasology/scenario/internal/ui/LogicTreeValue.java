@@ -15,14 +15,11 @@
  */
 package org.terasology.scenario.internal.ui;
 
-import org.codehaus.plexus.util.cli.Arg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.rendering.assets.texture.TextureRegion;
-import org.terasology.scenario.components.ConditionComponent;
 import org.terasology.scenario.components.actions.TextComponent;
-import org.terasology.scenario.components.events.OnSpawnComponent;
 import org.terasology.scenario.internal.utilities.ArgumentParser;
 
 /**
@@ -73,23 +70,11 @@ public class LogicTreeValue {
 
         this.text = "Generic trigger";
 
-        //Check for action
-        if (valueType == Type.ACTION) {
+        //Check for action/event/conditional
+        if (valueType == Type.ACTION || valueType == Type.EVENT || valueType == Type.CONDITIONAL) {
             if (entity.hasComponent(TextComponent.class)) {
                 text = parser.parseDisplayText(entity);
             }
-        }
-
-        //Check for event
-        else if (valueType == Type.EVENT) {
-            if (entity.hasComponent(OnSpawnComponent.class)) {
-                text = "On player spawn";
-            }
-        }
-
-        //Check for conditional
-        else if (valueType == Type.CONDITIONAL) {
-            text = entity.getComponent(ConditionComponent.class).name;
         }
         //Other types are handled with item renderer
 
