@@ -1,0 +1,10 @@
+{
+    "ScenarioBlock":{},
+    "ShortName":{
+        "name":"Triggering block"
+    },
+    "Text":{
+        "text":"Triggering block"
+    },
+    "TriggeringBlock":{}
+}

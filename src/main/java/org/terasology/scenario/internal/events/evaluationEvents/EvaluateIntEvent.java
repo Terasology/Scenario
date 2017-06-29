@@ -15,10 +15,16 @@
  */
 package org.terasology.scenario.internal.events.evaluationEvents;
 
+import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 
 public class EvaluateIntEvent implements Event {
     private int result;
+    private EntityRef passedEntity;
+
+    public EvaluateIntEvent(EntityRef passed) {
+        this.passedEntity = passed;
+    }
 
     public void setResult(int result) {
         this.result = result;
@@ -26,5 +32,13 @@ public class EvaluateIntEvent implements Event {
 
     public int getResult() {
         return result;
+    }
+
+    public void setPassedEntity(EntityRef entity) {
+        this.passedEntity = entity;
+    }
+
+    public EntityRef getPassedEntity() {
+        return passedEntity;
     }
 }

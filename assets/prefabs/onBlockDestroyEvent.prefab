@@ -1,0 +1,10 @@
+{
+    "Event":{},
+    "ShortName":{
+        "name":"On Block Destroyed"
+    },
+    "OnBlockDestroy":{},
+    "Text":{
+        "text":"On block destroyed"
+    }
+}

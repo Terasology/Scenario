@@ -18,19 +18,19 @@ package org.terasology.scenario.internal.events.evaluationEvents;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 
-public class EvaluateStringEvent implements Event {
-    private String result;
+public class ConditionalCheckEvent implements Event {
+    private boolean result;
     private EntityRef passedEntity;
 
-    public EvaluateStringEvent(EntityRef passed) {
+    public ConditionalCheckEvent(EntityRef passed) {
         this.passedEntity = passed;
     }
 
-    public void setResult(String result) {
+    public void setResult(boolean result) {
         this.result = result;
     }
 
-    public String getResult() {
+    public boolean getResult() {
         return result;
     }
 

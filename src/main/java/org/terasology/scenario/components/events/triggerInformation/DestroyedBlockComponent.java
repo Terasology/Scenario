@@ -13,32 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.internal.events.evaluationEvents;
+package org.terasology.scenario.components.events.triggerInformation;
 
+import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.event.Event;
+import org.terasology.entitySystem.prefab.Prefab;
 
-public class EvaluateStringEvent implements Event {
-    private String result;
-    private EntityRef passedEntity;
-
-    public EvaluateStringEvent(EntityRef passed) {
-        this.passedEntity = passed;
-    }
-
-    public void setResult(String result) {
-        this.result = result;
-    }
-
-    public String getResult() {
-        return result;
-    }
-
-    public void setPassedEntity(EntityRef entity) {
-        this.passedEntity = entity;
-    }
-
-    public EntityRef getPassedEntity() {
-        return passedEntity;
-    }
+public class DestroyedBlockComponent implements Component {
+    public EntityRef destroyedBlock;
+    public EntityRef directCause;
+    public Prefab damageType;
 }

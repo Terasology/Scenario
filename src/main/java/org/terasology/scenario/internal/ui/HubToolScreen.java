@@ -88,6 +88,7 @@ public class HubToolScreen extends BaseInteractionScreen {
     public EntityRef getScenarioEntity() {
         return scenarioEntity;
     }
+
     @Override
     public void initialise() {
         parser = new ArgumentParser();

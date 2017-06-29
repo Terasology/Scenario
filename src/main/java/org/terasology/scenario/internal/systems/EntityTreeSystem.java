@@ -26,8 +26,6 @@ import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.registry.In;
-import org.terasology.scenario.components.ConditionComponent;
-import org.terasology.scenario.components.EventNameComponent;
 import org.terasology.scenario.components.ExpandedComponent;
 import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.components.TriggerActionListComponent;
@@ -35,8 +33,8 @@ import org.terasology.scenario.components.TriggerConditionListComponent;
 import org.terasology.scenario.components.TriggerEventListComponent;
 import org.terasology.scenario.components.TriggerNameComponent;
 import org.terasology.scenario.components.actions.ActionComponent;
-import org.terasology.scenario.components.actions.TextComponent;
-import org.terasology.scenario.components.events.OnSpawnComponent;
+import org.terasology.scenario.components.conditionals.ConditionalComponent;
+import org.terasology.scenario.components.events.EventComponent;
 import org.terasology.scenario.internal.events.LogicTreeAddActionEvent;
 import org.terasology.scenario.internal.events.LogicTreeAddConditionEvent;
 import org.terasology.scenario.internal.events.LogicTreeAddEventEvent;
@@ -72,9 +70,17 @@ public class EntityTreeSystem extends BaseComponentSystem{
     @ReceiveEvent
     public void onLogicTreeAddEventEvent(LogicTreeAddEventEvent event, EntityRef entity, ScenarioComponent component) {
         TriggerEventListComponent events = event.getTriggerEntity().getComponent(TriggerEventListComponent.class);
-        OnSpawnComponent spawn = new OnSpawnComponent();
-        EventNameComponent name = new EventNameComponent();
-        EntityRef newEventEntity = entityManager.create(spawn, name);
+
+        EntityRef newEventEntity = entityManager.create(assetManager.getAsset("scenario:onPlayerSpawnEvent", Prefab.class).get());
+
+        ArgumentParser argParser = new ArgumentParser();
+        argParser.setAssetManager(assetManager);
+        argParser.setBlockManager(blockManager);
+        argParser.setEntityManager(entityManager);
+
+
+
+        argParser.parseDefaults(newEventEntity);
         newEventEntity.setOwner(event.getTriggerEntity());
         events.events.add(newEventEntity);
         event.getTriggerEntity().saveComponent(events);
@@ -127,9 +133,17 @@ public class EntityTreeSystem extends BaseComponentSystem{
     @ReceiveEvent
     public void onLogicTreeAddConditionEvent(LogicTreeAddConditionEvent event, EntityRef entity, ScenarioComponent component) {
         TriggerConditionListComponent conditions = event.getTriggerEntity().getComponent(TriggerConditionListComponent.class);
-        ConditionComponent cond = new ConditionComponent();
-        cond.name = "New Condition";
-        EntityRef newCondEntity = entityManager.create(cond);
+        //Sets up basic action as a give block component
+        EntityRef newCondEntity = entityManager.create(assetManager.getAsset("scenario:blockConditional", Prefab.class).get());
+
+        ArgumentParser argParser = new ArgumentParser();
+        argParser.setAssetManager(assetManager);
+        argParser.setBlockManager(blockManager);
+        argParser.setEntityManager(entityManager);
+
+
+
+        argParser.parseDefaults(newCondEntity);
         newCondEntity.setOwner(event.getTriggerEntity());
         conditions.conditions.add(newCondEntity);
         event.getTriggerEntity().saveComponent(conditions);
@@ -180,19 +194,19 @@ public class EntityTreeSystem extends BaseComponentSystem{
     @ReceiveEvent
     public void onLogicTreeDeleteEvent(LogicTreeDeleteEvent event, EntityRef entity, ScenarioComponent component) {
         if (event.getDeleteFromEntity().hasComponent(TriggerNameComponent.class)) { //Must be event/cond/action
-            if (event.getDeleteEntity().hasComponent(EventNameComponent.class)) { //Event
+            if (event.getDeleteEntity().hasComponent(EventComponent.class)) { //Event
                 TriggerEventListComponent events = event.getDeleteFromEntity().getComponent(TriggerEventListComponent.class);
                 events.events.remove(event.getDeleteEntity());
                 event.getDeleteFromEntity().saveComponent(events);
                 event.getDeleteEntity().destroy();
             }
-            else if (event.getDeleteEntity().hasComponent(ConditionComponent.class)) { //Condition
+            else if (event.getDeleteEntity().hasComponent(ConditionalComponent.class)) { //Condition
                 TriggerConditionListComponent conds = event.getDeleteFromEntity().getComponent(TriggerConditionListComponent.class);
                 conds.conditions.remove(event.getDeleteEntity());
                 event.getDeleteFromEntity().saveComponent(conds);
                 event.getDeleteEntity().destroy();
             }
-            else if (event.getDeleteEntity().hasComponent(TextComponent.class)) { //Action
+            else if (event.getDeleteEntity().hasComponent(ActionComponent.class)) { //Action
                 TriggerActionListComponent actions = event.getDeleteFromEntity().getComponent(TriggerActionListComponent.class);
                 actions.actions.remove(event.getDeleteEntity());
                 event.getDeleteFromEntity().saveComponent(actions);
@@ -286,6 +300,24 @@ public class EntityTreeSystem extends BaseComponentSystem{
             actions.actions.remove(event.getReplaced());
             actions.actions.add(index, event.getReplacer());
             owningTrigger.saveComponent(actions);
+            entity.saveComponent(component);
+        }
+        else if (event.getReplaced().hasComponent(EventComponent.class)) {
+            TriggerEventListComponent events = owningTrigger.getComponent(TriggerEventListComponent.class);
+            event.getReplacer().setOwner(owningTrigger);
+            int index = events.events.indexOf(event.getReplaced());
+            events.events.remove(event.getReplaced());
+            events.events.add(index, event.getReplacer());
+            owningTrigger.saveComponent(events);
+            entity.saveComponent(component);
+        }
+        else if (event.getReplaced().hasComponent(ConditionalComponent.class)) {
+            TriggerConditionListComponent conds = owningTrigger.getComponent(TriggerConditionListComponent.class);
+            event.getReplacer().setOwner(owningTrigger);
+            int index = conds.conditions.indexOf(event.getReplaced());
+            conds.conditions.remove(event.getReplaced());
+            conds.conditions.add(index, event.getReplacer());
+            owningTrigger.saveComponent(conds);
             entity.saveComponent(component);
         }
 

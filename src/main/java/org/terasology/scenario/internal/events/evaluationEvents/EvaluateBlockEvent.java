@@ -15,12 +15,18 @@
  */
 package org.terasology.scenario.internal.events.evaluationEvents;
 
+import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 import org.terasology.world.block.family.BlockFamily;
 
 public class EvaluateBlockEvent implements Event {
 
     private BlockFamily result;
+    private EntityRef passedEntity;
+
+    public EvaluateBlockEvent(EntityRef passed) {
+        this.passedEntity = passed;
+    }
 
     public void setResult(BlockFamily result) {
         this.result = result;
@@ -28,5 +34,13 @@ public class EvaluateBlockEvent implements Event {
 
     public BlockFamily getResult() {
         return result;
+    }
+
+    public void setPassedEntity(EntityRef entity) {
+        this.passedEntity = entity;
+    }
+
+    public EntityRef getPassedEntity() {
+        return passedEntity;
     }
 }
