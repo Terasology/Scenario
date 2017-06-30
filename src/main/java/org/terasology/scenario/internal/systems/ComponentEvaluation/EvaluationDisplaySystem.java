@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
+import org.terasology.entitySystem.prefab.PrefabManager;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
@@ -26,9 +27,13 @@ import org.terasology.registry.In;
 import org.terasology.scenario.components.actions.ArgumentContainerComponent;
 import org.terasology.scenario.components.information.BlockComponent;
 import org.terasology.scenario.components.information.ConstBlockComponent;
+import org.terasology.scenario.components.information.ConstComparatorComponent;
 import org.terasology.scenario.components.information.ConstIntegerComponent;
+import org.terasology.scenario.components.information.ConstItemPrefabComponent;
 import org.terasology.scenario.components.information.ConstStringComponent;
+import org.terasology.scenario.components.information.ItemCountComponent;
 import org.terasology.scenario.components.information.PlayerComponent;
+import org.terasology.scenario.components.information.PlayerNameComponent;
 import org.terasology.scenario.components.information.RandomIntComponent;
 import org.terasology.scenario.components.information.TriggeringBlockComponent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateDisplayEvent;
@@ -43,6 +48,9 @@ public class EvaluationDisplaySystem extends BaseComponentSystem {
 
     @In
     BlockManager blockManager;
+
+    @In
+    PrefabManager prefabManager;
 
     @ReceiveEvent //Constant int
     public void onEvaluateIntDisplayEvent(EvaluateDisplayEvent event, EntityRef entity, ConstIntegerComponent comp) {
@@ -74,6 +82,27 @@ public class EvaluationDisplaySystem extends BaseComponentSystem {
         event.setResult(comp.string);
     }
 
+    @ReceiveEvent //Comparator
+    public void onEvaluateStringEvent(EvaluateDisplayEvent event, EntityRef entity, ConstComparatorComponent comp) {
+        switch (comp.compare) {
+            case EQUAL_TO:
+                event.setResult("=");
+                break;
+            case GREATER_THAN:
+                event.setResult(">");
+                break;
+            case GREATER_THAN_EQUAL_TO:
+                event.setResult(">=");
+                break;
+            case LESS_THAN:
+                event.setResult("<");
+                break;
+            case LESS_THAN_EQUAL_TO:
+                event.setResult("<=");
+                break;
+        }
+    }
+
     @ReceiveEvent
     public void OnEvaluateRandomIntEvent(EvaluateDisplayEvent event, EntityRef entity, RandomIntComponent comp) {
         Map<String, EntityRef> args = entity.getComponent(ArgumentContainerComponent.class).arguments;
@@ -87,5 +116,36 @@ public class EvaluationDisplaySystem extends BaseComponentSystem {
         String int2 = evalInt2.getResult();
 
         event.setResult("Random(" + int1 + " - " + int2 + ")");
+    }
+
+    @ReceiveEvent
+    public void OnEvaluateItemEvent(EvaluateDisplayEvent event, EntityRef entity, ConstItemPrefabComponent comp) {
+        event.setResult(comp.prefabURI);
+    }
+
+    @ReceiveEvent //Count of items
+    public void onEvaluateIntEvent(EvaluateDisplayEvent event, EntityRef entity, ItemCountComponent comp) {
+        Map<String, EntityRef> args = entity.getComponent(ArgumentContainerComponent.class).arguments;
+
+        EvaluateDisplayEvent evalItem = new EvaluateDisplayEvent();
+        args.get("item").send(evalItem);
+        String itemName = evalItem.getResult();
+
+        EvaluateDisplayEvent evalPlayer = new EvaluateDisplayEvent();
+        args.get("player").send(evalPlayer);
+        String player = evalPlayer.getResult();
+
+        event.setResult("Count of " + itemName + " owned by " + player);
+    }
+
+    @ReceiveEvent //PlayerName
+    public void OnEvaluatePlayerNameEvent(EvaluateDisplayEvent event, EntityRef entity, PlayerNameComponent comp) {
+        Map<String, EntityRef> args = entity.getComponent(ArgumentContainerComponent.class).arguments;
+
+        EvaluateDisplayEvent evalPlayer = new EvaluateDisplayEvent();
+        args.get("player").send(evalPlayer);
+        String player = evalPlayer.getResult();
+
+        event.setResult("Name of " + player);
     }
 }

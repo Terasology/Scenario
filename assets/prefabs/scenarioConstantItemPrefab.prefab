@@ -1,0 +1,9 @@
+{
+    "ScenarioItem":{},
+    "ShortName":{
+        "name":"Constant Item Prefab"
+    },
+    "ConstItemPrefab":{
+        "prefabURI":"core:axe"
+    }
+}

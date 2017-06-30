@@ -26,6 +26,7 @@ import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.prefab.Prefab;
 import org.terasology.entitySystem.prefab.PrefabManager;
+import org.terasology.logic.inventory.ItemComponent;
 import org.terasology.math.geom.Rect2i;
 import org.terasology.math.geom.Vector2i;
 import org.terasology.registry.In;
@@ -38,25 +39,27 @@ import org.terasology.rendering.nui.WidgetUtil;
 import org.terasology.rendering.nui.databinding.Binding;
 import org.terasology.rendering.nui.itemRendering.AbstractItemRenderer;
 import org.terasology.rendering.nui.layouts.ColumnLayout;
-import org.terasology.rendering.nui.widgets.UIDropdown;
 import org.terasology.rendering.nui.widgets.UIDropdownScrollable;
 import org.terasology.rendering.nui.widgets.UILabel;
 import org.terasology.rendering.nui.widgets.UIText;
 import org.terasology.scenario.components.ShortNameComponent;
 import org.terasology.scenario.components.actions.ArgumentContainerComponent;
 import org.terasology.scenario.components.information.ConstBlockComponent;
+import org.terasology.scenario.components.information.ConstComparatorComponent;
 import org.terasology.scenario.components.information.ConstIntegerComponent;
+import org.terasology.scenario.components.information.ConstItemPrefabComponent;
 import org.terasology.scenario.components.information.ConstStringComponent;
 import org.terasology.scenario.components.information.IndentificationComponents.ScenarioBlockComponent;
+import org.terasology.scenario.components.information.IndentificationComponents.ScenarioComparatorComponent;
 import org.terasology.scenario.components.information.IndentificationComponents.ScenarioIntegerComponent;
+import org.terasology.scenario.components.information.IndentificationComponents.ScenarioItemComponent;
 import org.terasology.scenario.components.information.IndentificationComponents.ScenarioStringComponent;
 import org.terasology.scenario.internal.utilities.ArgumentParser;
-import org.terasology.world.block.BlockExplorer;
 import org.terasology.world.block.BlockManager;
 import org.terasology.world.block.BlockUri;
-import org.terasology.world.block.shapes.BlockShape;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -91,9 +94,13 @@ public class EditParameterScreen extends CoreScreenLayer {
 
     private UIText textEntry;
     private UIDropdownScrollable<String> blockDropdown;
+    private UIDropdownScrollable<String> itemDropdown;
+    private UIDropdownScrollable<ConstComparatorComponent.comparison> comparisonDropdown;
     private List<UIWidget> oldWidgets;
 
     private List<String> blocksURI;
+    private List<String> itemPrefabs;
+
 
     private ArgumentParser parser;
 
@@ -119,6 +126,13 @@ public class EditParameterScreen extends CoreScreenLayer {
             if (!block.equals(BlockManager.AIR_ID) && !block.equals(BlockManager.UNLOADED_ID)) {
                 blocksURI.add(block.toString());
             }
+        }
+
+        itemPrefabs = new ArrayList<>();
+
+        Iterable<Prefab> tempPrefabs = prefabManager.listPrefabs(ItemComponent.class);
+        for (Prefab p : tempPrefabs) {
+            itemPrefabs.add(p.getUrn().toString());
         }
     }
 
@@ -153,6 +167,22 @@ public class EditParameterScreen extends CoreScreenLayer {
             }
             editLabel.setText("Edit Block");
             selectionLabel.setText("Select a Block type");
+        }
+        else if (entity.hasComponent(ScenarioItemComponent.class)) {
+            Iterable<Prefab> prefabs = prefabManager.listPrefabs(ScenarioItemComponent.class);
+            for (Prefab p : prefabs) {
+                optionList.add(p);
+            }
+            editLabel.setText("Edit Item");
+            selectionLabel.setText("Select a Item type");
+        }
+        else if (entity.hasComponent(ScenarioComparatorComponent.class)) {
+            Iterable<Prefab> prefabs = prefabManager.listPrefabs(ScenarioComparatorComponent.class);
+            for (Prefab p : prefabs) {
+                optionList.add(p);
+            }
+            editLabel.setText("Edit Comparator");
+            selectionLabel.setText("Select a Comparator type");
         }
 
         dropdown.setOptions(optionList);
@@ -200,6 +230,14 @@ public class EditParameterScreen extends CoreScreenLayer {
             tempEntity.getComponent(ConstBlockComponent.class).block_uri = blockDropdown.getSelection();
             tempEntity.saveComponent(tempEntity.getComponent(ConstBlockComponent.class));
         }
+        else if (tempEntity.getParentPrefab().equals(prefabManager.getPrefab("scenario:scenarioConstantItemPrefab"))) {
+            tempEntity.getComponent(ConstItemPrefabComponent.class).prefabURI = itemDropdown.getSelection();
+            tempEntity.saveComponent(tempEntity.getComponent(ConstItemPrefabComponent.class));
+        }
+        else if (tempEntity.getParentPrefab().equals(prefabManager.getPrefab("scenario:scenarioConstantComparator"))) {
+            tempEntity.getComponent(ConstComparatorComponent.class).compare = comparisonDropdown.getSelection();
+            tempEntity.saveComponent(tempEntity.getComponent(ConstComparatorComponent.class));
+        }
         if (!tempEntity.equals(baseEntity)) {
             if (returnScreen instanceof EditLogicScreen) {
                 ((EditLogicScreen)returnScreen).setVariable(key, tempEntity);
@@ -207,7 +245,6 @@ public class EditParameterScreen extends CoreScreenLayer {
             else { //Must be a parameter(recursive) screen
                 ((EditParameterScreen)returnScreen).setVariable(key, tempEntity);
             }
-
         }
         else {
             if (tempEntity.exists()) {
@@ -244,35 +281,20 @@ public class EditParameterScreen extends CoreScreenLayer {
             String entryValue;
             UIText entry = new UIText();
             entry.setReadOnly(false);
-            entryValue = Integer.toString(tempEntity.getComponent(ConstIntegerComponent.class).value);
+            if (tempEntity.hasComponent(ConstIntegerComponent.class)) {
+                entryValue = Integer.toString(tempEntity.getComponent(ConstIntegerComponent.class).value);
+            }
+            else {
+                entryValue = tempEntity.getComponent(ConstStringComponent.class).string;
+            }
             entry.setText(entryValue);
-            if (textEntry != null) {
-                variables.removeWidget(textEntry);
-            }
-            if (oldWidgets != null) {
-                for(UIWidget w : oldWidgets) {
-                    variables.removeWidget(w);
-                }
-            }
-            if (blockDropdown != null) {
-                variables.removeWidget(blockDropdown);
-            }
+            emptyVariables();
 
             textEntry = entry;
             variables.addWidget(entry);
         }
         else if(tempEntity.hasComponent(ConstBlockComponent.class)) {
-            if (textEntry != null) {
-                variables.removeWidget(textEntry);
-            }
-            if (oldWidgets != null) {
-                for(UIWidget w : oldWidgets) {
-                    variables.removeWidget(w);
-                }
-            }
-            if (blockDropdown != null) {
-                variables.removeWidget(blockDropdown);
-            }
+            emptyVariables();
 
             blockDropdown = new UIDropdownScrollable<>();
             blockDropdown.setOptions(blocksURI);
@@ -280,19 +302,26 @@ public class EditParameterScreen extends CoreScreenLayer {
 
             variables.addWidget(blockDropdown);
         }
-        else {
-            if (textEntry != null) {
-                variables.removeWidget(textEntry);
-            }
-            if (oldWidgets != null) {
-                for(UIWidget w : oldWidgets) {
-                    variables.removeWidget(w);
-                }
-            }
-            if (blockDropdown != null) {
-                variables.removeWidget(blockDropdown);
-            }
+        else if(tempEntity.hasComponent(ConstItemPrefabComponent.class)) {
+            emptyVariables();
 
+            itemDropdown = new UIDropdownScrollable<>();
+            itemDropdown.setOptions(itemPrefabs);
+            itemDropdown.setSelection(tempEntity.getComponent(ConstItemPrefabComponent.class).prefabURI);
+
+            variables.addWidget(itemDropdown);
+        }
+        else if(tempEntity.hasComponent(ConstComparatorComponent.class)) {
+            emptyVariables();
+
+            comparisonDropdown = new UIDropdownScrollable<>();
+            comparisonDropdown.setOptions(Arrays.asList(ConstComparatorComponent.comparison.values()));
+            comparisonDropdown.setSelection(tempEntity.getComponent(ConstComparatorComponent.class).compare);
+
+            variables.addWidget(comparisonDropdown);
+        }
+        else {
+            emptyVariables();
             oldWidgets = parser.generateWidgets(tempEntity, this);
             for (UIWidget u : oldWidgets) {
                 variables.addWidget(u);
@@ -305,6 +334,26 @@ public class EditParameterScreen extends CoreScreenLayer {
         tempEntity.saveComponent(tempEntity.getComponent(ArgumentContainerComponent.class));
 
         setupInteraction();
+    }
+
+    private void emptyVariables() {
+        if (textEntry != null) {
+            variables.removeWidget(textEntry);
+        }
+        if (oldWidgets != null) {
+            for(UIWidget w : oldWidgets) {
+                variables.removeWidget(w);
+            }
+        }
+        if (blockDropdown != null) {
+            variables.removeWidget(blockDropdown);
+        }
+        if (itemDropdown != null) {
+            variables.removeWidget(itemDropdown);
+        }
+        if (comparisonDropdown != null) {
+            variables.removeWidget(comparisonDropdown);
+        }
     }
 
 }

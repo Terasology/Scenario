@@ -90,6 +90,7 @@ public class EntityTreeSystem extends BaseComponentSystem{
             event.getHubScreen().getEntity().getComponent(ExpandedComponent.class).expandedList.add(event.getTriggerEntity());
             event.getHubScreen().getEntity().getComponent(ExpandedComponent.class).expandedList.add(event.getTriggerEntity().getComponent(TriggerNameComponent.class).entityForEvent);
             event.getHubScreen().getEntity().saveComponent(event.getHubScreen().getEntity().getComponent(ExpandedComponent.class));
+            event.getHubScreen().setAddedEntity(newEventEntity);
             event.getHubScreen().updateTree(entity);
         }
     }
@@ -121,6 +122,7 @@ public class EntityTreeSystem extends BaseComponentSystem{
             event.getHubScreen().getEntity().getComponent(ExpandedComponent.class).expandedList.add(event.getTriggerEntity());
             event.getHubScreen().getEntity().getComponent(ExpandedComponent.class).expandedList.add(event.getTriggerEntity().getComponent(TriggerNameComponent.class).entityForAction);
             event.getHubScreen().getEntity().saveComponent(event.getHubScreen().getEntity().getComponent(ExpandedComponent.class));
+            event.getHubScreen().setAddedEntity(newActionEntity);
             event.getHubScreen().updateTree(entity);
         }
     }
@@ -153,6 +155,7 @@ public class EntityTreeSystem extends BaseComponentSystem{
             event.getHubScreen().getEntity().getComponent(ExpandedComponent.class).expandedList.add(event.getTriggerEntity());
             event.getHubScreen().getEntity().getComponent(ExpandedComponent.class).expandedList.add(event.getTriggerEntity().getComponent(TriggerNameComponent.class).entityForCondition);
             event.getHubScreen().getEntity().saveComponent(event.getHubScreen().getEntity().getComponent(ExpandedComponent.class));
+            event.getHubScreen().setAddedEntity(newCondEntity);
             event.getHubScreen().updateTree(entity);
         }
     }

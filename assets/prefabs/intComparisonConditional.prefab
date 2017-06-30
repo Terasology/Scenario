@@ -1,0 +1,11 @@
+{
+    "Conditional":{},
+    "ShortName":{
+        "name":"Integer Comparison"
+    },
+    "IntComparisonConditional":{},
+    "Text":{
+        "text":"[int1:Integer] [compare:Comparator] [int2:Integer]"
+    },
+    "ArgumentContainer":{}
+}

@@ -29,12 +29,14 @@ import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.components.TriggerActionListComponent;
 import org.terasology.scenario.components.TriggerConditionListComponent;
 import org.terasology.scenario.components.events.OnBlockDestroyComponent;
+import org.terasology.scenario.components.events.OnRespawnComponent;
 import org.terasology.scenario.components.events.OnSpawnComponent;
 import org.terasology.scenario.components.events.triggerInformation.DestroyedBlockComponent;
 import org.terasology.scenario.components.events.triggerInformation.TriggeringEntityComponent;
 import org.terasology.scenario.internal.events.EventTriggerEvent;
 import org.terasology.scenario.internal.events.evaluationEvents.ConditionalCheckEvent;
 import org.terasology.scenario.internal.events.scenarioEvents.DoDestroyScenarioEvent;
+import org.terasology.scenario.internal.events.scenarioEvents.PlayerRespawnScenarioEvent;
 import org.terasology.scenario.internal.events.scenarioEvents.PlayerSpawnScenarioEvent;
 
 
@@ -64,6 +66,15 @@ public class ScenarioRootManagementSystem extends BaseComponentSystem {
         }
     }
 
+
+    @ReceiveEvent
+    public void onPlayerRespawnScenarioEvent(PlayerRespawnScenarioEvent event, EntityRef entity, ScenarioComponent component) {
+        Iterable<EntityRef> entityList = entityManager.getEntitiesWith(OnRespawnComponent.class);
+        TriggeringEntityComponent triggerEntity = new TriggeringEntityComponent();
+        triggerEntity.entity = event.getSpawningEntity();
+        EntityRef passEntity = entityManager.create(triggerEntity);
+        entityList.forEach(e -> e.getOwner().send(new EventTriggerEvent(passEntity)));
+    }
 
     @ReceiveEvent
     public void onPlayerSpawnScenarioEvent(PlayerSpawnScenarioEvent event, EntityRef entity, ScenarioComponent component) {

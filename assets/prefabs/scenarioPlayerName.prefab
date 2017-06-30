@@ -1,0 +1,11 @@
+{
+    "ScenarioString":{},
+    "ShortName":{
+        "name":"Player name"
+    },
+    "PlayerName":{},
+    "Text":{
+        "text":"Name of [player:Player]"
+    },
+    "ArgumentContainer":{}
+}

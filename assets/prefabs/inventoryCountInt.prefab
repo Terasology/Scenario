@@ -1,0 +1,11 @@
+{
+    "ScenarioInteger":{},
+    "ShortName":{
+        "name":"Count items inventory"
+    },
+    "ItemCount":{},
+    "Text":{
+        "text":"Count of [item:Item] in inventory of [player:Player]"
+    },
+    "ArgumentContainer":{}
+}

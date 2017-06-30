@@ -1,0 +1,11 @@
+{
+    "Action":{},
+    "ShortName":{
+        "name":"Give item"
+    },
+    "GiveItemAction":{},
+    "Text":{
+        "text":"Give [player:Player] [amount:Integer] [item:Item]."
+    },
+    "ArgumentContainer":{}
+}

@@ -20,16 +20,24 @@ import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
+import org.terasology.entitySystem.prefab.Prefab;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
+import org.terasology.logic.chat.ChatMessageEvent;
+import org.terasology.logic.common.DisplayNameComponent;
 import org.terasology.logic.inventory.InventoryComponent;
 import org.terasology.logic.inventory.ItemComponent;
 import org.terasology.logic.inventory.events.GiveItemEvent;
+import org.terasology.network.ClientComponent;
+import org.terasology.network.ColorComponent;
 import org.terasology.registry.In;
+import org.terasology.rendering.nui.Color;
 import org.terasology.scenario.components.actions.ArgumentContainerComponent;
 import org.terasology.scenario.components.actions.GiveBlockActionComponent;
+import org.terasology.scenario.components.actions.GiveItemActionComponent;
 import org.terasology.scenario.components.actions.LogInfoComponent;
+import org.terasology.scenario.components.actions.SendChatActionComponent;
 import org.terasology.scenario.components.events.triggerInformation.TriggeringEntityComponent;
 import org.terasology.scenario.components.information.BlockComponent;
 import org.terasology.scenario.components.information.InformationEnums;
@@ -37,6 +45,7 @@ import org.terasology.scenario.components.information.PlayerComponent;
 import org.terasology.scenario.internal.events.EventTriggerEvent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateBlockEvent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateIntEvent;
+import org.terasology.scenario.internal.events.evaluationEvents.EvaluateItemPrefabEvent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateStringEvent;
 import org.terasology.world.block.BlockManager;
 import org.terasology.world.block.family.BlockFamily;
@@ -89,6 +98,32 @@ public class ActionEventSystem extends BaseComponentSystem {
         }
     }
 
+    @ReceiveEvent //Give Item
+    public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity, GiveItemActionComponent action) {
+        Map<String, EntityRef> variables = entity.getComponent(ArgumentContainerComponent.class).arguments;
+
+        EvaluateItemPrefabEvent itemEvaluateEvent = new EvaluateItemPrefabEvent(event.informationEntity);
+        variables.get("item").send(itemEvaluateEvent);
+        Prefab itemPrefab = itemEvaluateEvent.getResult();
+
+        EvaluateIntEvent intEvaluateEvent = new EvaluateIntEvent(event.informationEntity);
+        variables.get("amount").send(intEvaluateEvent);
+        int amount = intEvaluateEvent.getResult();
+
+        InformationEnums.PlayerType player = variables.get("player").getComponent(PlayerComponent.class).type;
+
+        for (int i = 0; i < amount; i++) {
+            EntityRef item = entityManager.create(itemPrefab);
+
+
+            if (player == InformationEnums.PlayerType.TRIGGERING_PLAYER) {
+                EntityRef giveEntity = event.informationEntity.getComponent(TriggeringEntityComponent.class).entity;
+                GiveItemEvent giveItemEvent = new GiveItemEvent(giveEntity);
+                item.send(giveItemEvent);
+            }
+        }
+    }
+
     @ReceiveEvent //Logger message
     public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity, LogInfoComponent action) {
         Map<String, EntityRef> variables = entity.getComponent(ArgumentContainerComponent.class).arguments;
@@ -98,5 +133,28 @@ public class ActionEventSystem extends BaseComponentSystem {
         String out = stringEvaluateEvent.getResult();
 
         logger.info(out);
+    }
+
+    @ReceiveEvent //Chat message
+    public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity, SendChatActionComponent action) {
+        Map<String, EntityRef> variables = entity.getComponent(ArgumentContainerComponent.class).arguments;
+
+        EvaluateStringEvent stringEvaluateEvent = new EvaluateStringEvent(event.informationEntity);
+        variables.get("message").send(stringEvaluateEvent);
+        String message = stringEvaluateEvent.getResult();
+
+        EvaluateStringEvent stringEvaluateEvent2 = new EvaluateStringEvent(event.informationEntity);
+        variables.get("owner").send(stringEvaluateEvent2);
+        String from = stringEvaluateEvent2.getResult();
+
+        DisplayNameComponent name = new DisplayNameComponent();
+        name.name = from;
+        ColorComponent color = new ColorComponent();
+        color.color = Color.CYAN;
+        EntityRef ent = entityManager.create(name, color);
+
+        for (EntityRef client : entityManager.getEntitiesWith(ClientComponent.class)) {
+            client.send(new ChatMessageEvent(message, ent));
+        }
     }
 }
