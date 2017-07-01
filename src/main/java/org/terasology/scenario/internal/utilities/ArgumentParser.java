@@ -58,6 +58,8 @@ public class ArgumentParser {
 
     private List<String> keys;
 
+    private Color specialColor = new Color(0, 191, 255);
+
     public void setBlockManager(BlockManager blockManager) {
         this.blockManager = blockManager;
     }
@@ -105,11 +107,16 @@ public class ArgumentParser {
             else if (type.equals("String")) {
                 args.arguments.put(key, entityManager.create(assetManager.getAsset("scenario:scenarioConstantString", Prefab.class).get()));
             }
+            else if (type.equals("Item")) {
+                args.arguments.put(key, entityManager.create(assetManager.getAsset("scenario:scenarioConstantItemPrefab", Prefab.class).get()));
+            }
+            else if (type.equals("Comparator")) {
+                args.arguments.put(key, entityManager.create(assetManager.getAsset("scenario:scenarioConstantComparator", Prefab.class).get()));
+            }
             else {
                 //String parsed incorrectly, should throw some kind of exception probably
                 return;
             }
-
         }
 
         if (args != null) {
@@ -143,7 +150,7 @@ public class ArgumentParser {
         StringBuffer sb = new StringBuffer();
         int index = 0;
         while(replaceMatcher.find()) {
-            replaceMatcher.appendReplacement(sb, FontColor.getColored(replacements.get(index), Color.BLUE));
+            replaceMatcher.appendReplacement(sb, FontColor.getColored(replacements.get(index), specialColor));
             index++;
         }
         replaceMatcher.appendTail(sb);
@@ -182,7 +189,7 @@ public class ArgumentParser {
 
             end = replaceMatcher.end();
             UIButton button = new UIButton();
-            button.setText(FontColor.getColored(replacements.get(index), Color.BLUE));
+            button.setText(FontColor.getColored(replacements.get(index), specialColor));
             String tempKey = keys.get(index);
             EntityRef tempEntity = args.arguments.get(tempKey);
             button.subscribe(b -> {

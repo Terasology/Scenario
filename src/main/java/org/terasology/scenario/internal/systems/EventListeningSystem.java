@@ -25,9 +25,11 @@ import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.health.DoDestroyEvent;
 import org.terasology.logic.players.event.OnPlayerRespawnedEvent;
+import org.terasology.logic.players.event.OnPlayerSpawnedEvent;
 import org.terasology.registry.In;
 import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.internal.events.scenarioEvents.DoDestroyScenarioEvent;
+import org.terasology.scenario.internal.events.scenarioEvents.PlayerRespawnScenarioEvent;
 import org.terasology.scenario.internal.events.scenarioEvents.PlayerSpawnScenarioEvent;
 
 /**
@@ -42,20 +44,35 @@ public class EventListeningSystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void onPlayerRejoinEvent(OnPlayerRespawnedEvent event, EntityRef entity) {
-        EntityRef scenario = entityManager.getEntitiesWith(ScenarioComponent.class).iterator().next();
-        if (scenario == null) {
-            return;
+        if (entityManager.getEntitiesWith(ScenarioComponent.class).iterator().hasNext()) {
+            EntityRef scenario = entityManager.getEntitiesWith(ScenarioComponent.class).iterator().next();
+            if (scenario == null) {
+                return;
+            }
+            scenario.send(new PlayerRespawnScenarioEvent(entity));
         }
-        scenario.send(new PlayerSpawnScenarioEvent(entity));
+    }
+
+    @ReceiveEvent
+    public void onPlayerSpawnEvent(OnPlayerSpawnedEvent event, EntityRef entity) {
+        if (entityManager.getEntitiesWith(ScenarioComponent.class).iterator().hasNext()) {
+            EntityRef scenario = entityManager.getEntitiesWith(ScenarioComponent.class).iterator().next();
+            if (scenario == null) {
+                return;
+            }
+            scenario.send(new PlayerSpawnScenarioEvent(entity));
+        }
     }
 
     @ReceiveEvent
     public void onDoDestroyEvent(DoDestroyEvent event, EntityRef entity) {
-        EntityRef scenario = entityManager.getEntitiesWith(ScenarioComponent.class).iterator().next();
-        if (scenario == null) {
-            return;
+        if (entityManager.getEntitiesWith(ScenarioComponent.class).iterator().hasNext()) {
+            EntityRef scenario = entityManager.getEntitiesWith(ScenarioComponent.class).iterator().next();
+            if (scenario == null) {
+                return;
+            }
+            scenario.send(new DoDestroyScenarioEvent(event.getInstigator(), event.getDirectCause(), event.getDamageType(), entity));
         }
-        scenario.send(new DoDestroyScenarioEvent(event.getInstigator(), event.getDirectCause(), event.getDamageType(), entity));
     }
 
 }

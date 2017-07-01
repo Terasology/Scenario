@@ -1,0 +1,11 @@
+{
+    "Action":{},
+    "ShortName":{
+        "name":"Send chat message"
+    },
+    "SendChatAction":{},
+    "Text":{
+        "text":"Send [message:String] from [owner:String]."
+    },
+    "ArgumentContainer":{}
+}

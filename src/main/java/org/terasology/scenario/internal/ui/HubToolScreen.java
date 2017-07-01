@@ -64,6 +64,9 @@ public class HubToolScreen extends BaseInteractionScreen {
 
     private ArgumentParser parser;
 
+    private EntityRef addedEntity;
+    private LogicTree newAddedEntityTree;
+
     @In
     private AssetManager assetManager;
 
@@ -178,7 +181,12 @@ public class HubToolScreen extends BaseInteractionScreen {
 
         if (treeView != null){
             treeView.expandedList = new HashSet<>();
-           treeView.setContextMenuTreeProducer(node -> {
+            treeView.subscribeNodeDoubleClick((event, node) -> {
+                if (canEdit((LogicTree)node)) {
+                    pushEditScreen((LogicTree) node);
+                }
+            });
+            treeView.setContextMenuTreeProducer(node -> {
                 LogicTreeMenuTreeBuilder logicTreeMenuTreeBuilder = new LogicTreeMenuTreeBuilder();
                 logicTreeMenuTreeBuilder.setManager(getManager());
                 logicTreeMenuTreeBuilder.putConsumer(LogicTreeMenuTreeBuilder.OPTION_DELETE, this::delete);
@@ -220,6 +228,19 @@ public class HubToolScreen extends BaseInteractionScreen {
             treeView.setEditor(getManager());
             treeView.setAssetManager(assetManager);
         }
+    }
+
+    private boolean canEdit(LogicTree node) {
+        if (node.getValue().getValueType() == LogicTreeValue.Type.CONDITIONAL ||
+                node.getValue().getValueType() == LogicTreeValue.Type.EVENT ||
+                node.getValue().getValueType() == LogicTreeValue.Type.ACTION) {
+            return true;
+        }
+        else {
+            return false;
+        }
+
+
     }
 
     private void pushEditScreen(LogicTree node) {
@@ -381,6 +402,7 @@ public class HubToolScreen extends BaseInteractionScreen {
      * Function for updating the currently displayed tree with a new root for the scenario tree.
      *
      * @param newScenario must have a ScenarioComponent in order to build the tree detailed from it.
+     *                automatically open the edit screen
      */
     public void updateTree(EntityRef newScenario) {
         if (newScenario.getComponent(ScenarioComponent.class) != null) {
@@ -392,9 +414,22 @@ public class HubToolScreen extends BaseInteractionScreen {
             if (tempTree != null) {
                 treeView.setModel(tempTree);
             }
+            if (newAddedEntityTree != null) {
+                if (canEdit(newAddedEntityTree)) {
+                    pushEditScreen(newAddedEntityTree);
+                    newAddedEntityTree = null;
+                }
+                else {
+                    newAddedEntityTree = null;
+                }
+            }
         }
     }
 
+    public void setAddedEntity(EntityRef addedEntity) {
+        this.addedEntity = addedEntity;
+
+    }
 
     /**
      * Constructs the treeView version of the tree detailed in the entity/component tree structure for logic
@@ -443,13 +478,34 @@ public class HubToolScreen extends BaseInteractionScreen {
                 tempTriggerTree.addChild(action);
 
                 for (EntityRef e : events.events) {
-                    event.addChild(new LogicTreeValue(assetManager.getAsset("Scenario:eventText", Texture.class).get(), LogicTreeValue.Type.EVENT, e, parser));
+                    if (addedEntity != null && addedEntity.equals(e)) {
+                        addedEntity = null;
+                        newAddedEntityTree = new LogicTree(new LogicTreeValue(assetManager.getAsset("Scenario:eventText", Texture.class).get(), LogicTreeValue.Type.EVENT, e, parser), this);
+                        event.addChild(newAddedEntityTree);
+                    }
+                    else {
+                        event.addChild(new LogicTreeValue(assetManager.getAsset("Scenario:eventText", Texture.class).get(), LogicTreeValue.Type.EVENT, e, parser));
+                    }
                 }
                 for (EntityRef c : conditionals.conditions) {
-                    condition.addChild(new LogicTreeValue(assetManager.getAsset("Scenario:conditionalText", Texture.class).get(), LogicTreeValue.Type.CONDITIONAL, c, parser));
+                    if (addedEntity != null && addedEntity.equals(c)) {
+                        addedEntity = null;
+                        newAddedEntityTree = new LogicTree(new LogicTreeValue(assetManager.getAsset("Scenario:conditionalText", Texture.class).get(), LogicTreeValue.Type.CONDITIONAL, c, parser), this);
+                        condition.addChild(newAddedEntityTree);
+                    }
+                    else {
+                        condition.addChild(new LogicTreeValue(assetManager.getAsset("Scenario:conditionalText", Texture.class).get(), LogicTreeValue.Type.CONDITIONAL, c, parser));
+                    }
                 }
                 for (EntityRef a : actions.actions) {
-                    action.addChild(new LogicTreeValue(assetManager.getAsset("Scenario:actionText", Texture.class).get(), LogicTreeValue.Type.ACTION, a, parser));
+                    if (addedEntity != null && addedEntity.equals(a)) {
+                        addedEntity = null;
+                        newAddedEntityTree = new LogicTree(new LogicTreeValue(assetManager.getAsset("Scenario:actionText", Texture.class).get(), LogicTreeValue.Type.ACTION, a, parser), this);
+                        action.addChild(newAddedEntityTree);
+                    }
+                    else {
+                        action.addChild(new LogicTreeValue(assetManager.getAsset("Scenario:actionText", Texture.class).get(), LogicTreeValue.Type.ACTION, a, parser));
+                    }
                 }
                 returnTree.addChild(tempTriggerTree);
                 tempTriggerTree.setExpandedNoEntity(getInteractionTarget().getComponent(ExpandedComponent.class).expandedList.contains(t));
