@@ -13,19 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.components;
+package org.terasology.scenario.internal.events;
 
-import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.entitySystem.event.Event;
 
-import java.util.ArrayList;
-import java.util.List;
+public class RegionTreeFullAddEvent implements Event {
+    private EntityRef addEntity;
+    private EntityRef adder;
 
-/**
- * Component attached to a scenario entity. Denotes the "root" of the logic structure.
- */
-public class ScenarioComponent implements Component {
-    public List<EntityRef> triggerEntities  = new ArrayList<>();
+    public RegionTreeFullAddEvent(EntityRef addEntity, EntityRef adder) {
+        this.addEntity = addEntity;
+        this.adder = adder;
+    }
 
-    public List<EntityRef> regionEntities = new ArrayList<>();
+    public EntityRef getAddEntity() {
+        return addEntity;
+    }
+
+    public EntityRef getAdder() {
+        return adder;
+    }
 }

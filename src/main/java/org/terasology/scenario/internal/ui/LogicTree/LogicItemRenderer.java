@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.internal.ui;
+package org.terasology.scenario.internal.ui.LogicTree;
 
 import org.terasology.math.geom.Rect2i;
 import org.terasology.math.geom.Vector2i;
@@ -22,6 +22,7 @@ import org.terasology.rendering.assets.texture.TextureRegion;
 import org.terasology.rendering.nui.Canvas;
 import org.terasology.rendering.nui.TextLineBuilder;
 import org.terasology.rendering.nui.itemRendering.AbstractItemRenderer;
+import org.terasology.scenario.internal.ui.LogicTree.LogicTreeValue;
 
 import java.util.List;
 

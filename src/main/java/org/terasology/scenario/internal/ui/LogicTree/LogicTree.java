@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.internal.ui;
+package org.terasology.scenario.internal.ui.LogicTree;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +21,7 @@ import org.terasology.rendering.nui.widgets.treeView.Tree;
 import org.terasology.scenario.components.ExpandedComponent;
 import org.terasology.scenario.components.TriggerNameComponent;
 import org.terasology.scenario.internal.events.LogicTreeMoveEntityEvent;
+import org.terasology.scenario.internal.ui.HubToolScreen;
 
 
 public class LogicTree extends Tree<LogicTreeValue> {

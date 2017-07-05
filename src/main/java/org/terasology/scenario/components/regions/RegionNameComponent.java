@@ -13,19 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.components;
+package org.terasology.scenario.components.regions;
 
 import org.terasology.entitySystem.Component;
-import org.terasology.entitySystem.entity.EntityRef;
 
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- * Component attached to a scenario entity. Denotes the "root" of the logic structure.
- */
-public class ScenarioComponent implements Component {
-    public List<EntityRef> triggerEntities  = new ArrayList<>();
-
-    public List<EntityRef> regionEntities = new ArrayList<>();
+public class RegionNameComponent implements Component {
+    public String regionName = "New Region";
 }

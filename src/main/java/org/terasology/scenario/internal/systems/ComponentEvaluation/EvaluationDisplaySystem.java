@@ -84,23 +84,7 @@ public class EvaluationDisplaySystem extends BaseComponentSystem {
 
     @ReceiveEvent //Comparator
     public void onEvaluateStringEvent(EvaluateDisplayEvent event, EntityRef entity, ConstComparatorComponent comp) {
-        switch (comp.compare) {
-            case EQUAL_TO:
-                event.setResult("=");
-                break;
-            case GREATER_THAN:
-                event.setResult(">");
-                break;
-            case GREATER_THAN_EQUAL_TO:
-                event.setResult(">=");
-                break;
-            case LESS_THAN:
-                event.setResult("<");
-                break;
-            case LESS_THAN_EQUAL_TO:
-                event.setResult("<=");
-                break;
-        }
+        event.setResult(comp.compare.toString());
     }
 
     @ReceiveEvent

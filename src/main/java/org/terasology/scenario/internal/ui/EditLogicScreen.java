@@ -42,6 +42,7 @@ import org.terasology.scenario.components.actions.ArgumentContainerComponent;
 import org.terasology.scenario.components.conditionals.ConditionalComponent;
 import org.terasology.scenario.components.events.EventComponent;
 import org.terasology.scenario.internal.events.ReplaceEntityEvent;
+import org.terasology.scenario.internal.ui.LogicTree.LogicTreeValue;
 import org.terasology.scenario.internal.utilities.ArgumentParser;
 
 import java.util.ArrayList;

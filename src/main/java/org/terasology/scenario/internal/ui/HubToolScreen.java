@@ -24,6 +24,7 @@ import org.terasology.registry.In;
 import org.terasology.rendering.assets.texture.Texture;
 import org.terasology.rendering.nui.BaseInteractionScreen;
 import org.terasology.rendering.nui.UIWidget;
+import org.terasology.rendering.nui.contextMenu.MenuTree;
 import org.terasology.rendering.nui.databinding.ReadOnlyBinding;
 import org.terasology.rendering.nui.widgets.UIBox;
 import org.terasology.rendering.nui.widgets.UIButton;
@@ -34,11 +35,21 @@ import org.terasology.scenario.components.TriggerActionListComponent;
 import org.terasology.scenario.components.TriggerConditionListComponent;
 import org.terasology.scenario.components.TriggerEventListComponent;
 import org.terasology.scenario.components.TriggerNameComponent;
+import org.terasology.scenario.components.VisibilityComponent;
 import org.terasology.scenario.internal.events.LogicTreeAddActionEvent;
 import org.terasology.scenario.internal.events.LogicTreeAddConditionEvent;
 import org.terasology.scenario.internal.events.LogicTreeAddEventEvent;
 import org.terasology.scenario.internal.events.LogicTreeAddTriggerEvent;
 import org.terasology.scenario.internal.events.LogicTreeDeleteEvent;
+import org.terasology.scenario.internal.events.RegionTreeAddEvent;
+import org.terasology.scenario.internal.events.RegionTreeDeleteEvent;
+import org.terasology.scenario.internal.ui.LogicTree.LogicTree;
+import org.terasology.scenario.internal.ui.LogicTree.LogicTreeMenuTreeBuilder;
+import org.terasology.scenario.internal.ui.LogicTree.LogicTreeValue;
+import org.terasology.scenario.internal.ui.LogicTree.LogicTreeView;
+import org.terasology.scenario.internal.ui.RegionTree.RegionTree;
+import org.terasology.scenario.internal.ui.RegionTree.RegionTreeValue;
+import org.terasology.scenario.internal.ui.RegionTree.RegionTreeView;
 import org.terasology.scenario.internal.utilities.ArgumentParser;
 import org.terasology.world.block.BlockManager;
 
@@ -61,6 +72,7 @@ public class HubToolScreen extends BaseInteractionScreen {
     private EntityRef scenarioEntity;
 
     private LogicTreeView treeView;
+    private RegionTreeView regionTreeView;
 
     private ArgumentParser parser;
 
@@ -110,6 +122,7 @@ public class HubToolScreen extends BaseInteractionScreen {
         deleteButton = find("deleteButton", UIButton.class);
 
         treeView = find("logicTree", LogicTreeView.class);
+        regionTreeView = find("RegionTree", RegionTreeView.class);
 
         ExpandedComponent exp = getInteractionTarget().getComponent(ExpandedComponent.class);
 
@@ -178,6 +191,43 @@ public class HubToolScreen extends BaseInteractionScreen {
             );
         }
 
+        if (regionTreeView != null) {
+            regionTreeView.subscribeNodeDoubleClick((event, node) -> {
+                if (canEditRegion((RegionTree) node)) {
+                    regionEdit((RegionTree) node);
+                }
+            });
+            regionTreeView.setContextMenuTreeProducer(node -> {
+                MenuTree menu = new MenuTree(null);
+                if (node.getValue().getEntity() == null) {
+                    menu.addOption("Add region", this::regionAdd, node);
+                }
+                else {
+                    menu.addOption("Edit region", this::regionEdit, node);
+                    menu.addOption("Delete region", this::regionDelete, node);
+                }
+                return menu;
+            });
+
+            Iterable<EntityRef> scenario = entityManager.getEntitiesWith(ScenarioComponent.class); // Checks for existing Scenario
+
+            if (scenario.iterator().hasNext()) { //If scenario exists
+                EntityRef main = scenario.iterator().next();
+                if (scenarioEntity == null || !scenarioEntity.equals(main)) {
+                    scenarioEntity = main;
+                }
+                RegionTree tempTree = constructRegions(main);
+                if (tempTree != null) {
+                    regionTreeView.setModel(tempTree);
+                }
+            }
+            else { //Create a new scenario if none exists
+                ScenarioComponent tempComponent = new ScenarioComponent();
+                scenarioEntity = entityManager.create(tempComponent);
+            }
+
+            regionTreeView.setEditor(getManager());
+        }
 
         if (treeView != null){
             treeView.expandedList = new HashSet<>();
@@ -385,6 +435,11 @@ public class HubToolScreen extends BaseInteractionScreen {
             if (tempTree != null) {
                 treeView.setModel(tempTree);
             }
+
+            RegionTree tempRegionTree = constructRegions(main);
+            if (tempRegionTree != null) {
+                regionTreeView.setModel(tempRegionTree);
+            }
         }
         else {
             ScenarioComponent tempComponent = new ScenarioComponent();
@@ -478,34 +533,13 @@ public class HubToolScreen extends BaseInteractionScreen {
                 tempTriggerTree.addChild(action);
 
                 for (EntityRef e : events.events) {
-                    if (addedEntity != null && addedEntity.equals(e)) {
-                        addedEntity = null;
-                        newAddedEntityTree = new LogicTree(new LogicTreeValue(assetManager.getAsset("Scenario:eventText", Texture.class).get(), LogicTreeValue.Type.EVENT, e, parser), this);
-                        event.addChild(newAddedEntityTree);
-                    }
-                    else {
-                        event.addChild(new LogicTreeValue(assetManager.getAsset("Scenario:eventText", Texture.class).get(), LogicTreeValue.Type.EVENT, e, parser));
-                    }
+                    checkAndAdd(e, LogicTreeValue.Type.EVENT, "Scenario:eventText", event);
                 }
                 for (EntityRef c : conditionals.conditions) {
-                    if (addedEntity != null && addedEntity.equals(c)) {
-                        addedEntity = null;
-                        newAddedEntityTree = new LogicTree(new LogicTreeValue(assetManager.getAsset("Scenario:conditionalText", Texture.class).get(), LogicTreeValue.Type.CONDITIONAL, c, parser), this);
-                        condition.addChild(newAddedEntityTree);
-                    }
-                    else {
-                        condition.addChild(new LogicTreeValue(assetManager.getAsset("Scenario:conditionalText", Texture.class).get(), LogicTreeValue.Type.CONDITIONAL, c, parser));
-                    }
+                    checkAndAdd(c, LogicTreeValue.Type.CONDITIONAL, "Scenario:conditionalText", condition);
                 }
                 for (EntityRef a : actions.actions) {
-                    if (addedEntity != null && addedEntity.equals(a)) {
-                        addedEntity = null;
-                        newAddedEntityTree = new LogicTree(new LogicTreeValue(assetManager.getAsset("Scenario:actionText", Texture.class).get(), LogicTreeValue.Type.ACTION, a, parser), this);
-                        action.addChild(newAddedEntityTree);
-                    }
-                    else {
-                        action.addChild(new LogicTreeValue(assetManager.getAsset("Scenario:actionText", Texture.class).get(), LogicTreeValue.Type.ACTION, a, parser));
-                    }
+                    checkAndAdd(a, LogicTreeValue.Type.ACTION, "Scenario:actionText", action);
                 }
                 returnTree.addChild(tempTriggerTree);
                 tempTriggerTree.setExpandedNoEntity(getInteractionTarget().getComponent(ExpandedComponent.class).expandedList.contains(t));
@@ -514,4 +548,67 @@ public class HubToolScreen extends BaseInteractionScreen {
         }
         return returnTree;
     }
+
+    private void checkAndAdd(EntityRef wantToAdd, LogicTreeValue.Type type, String textureUrn, LogicTree addTo) {
+        if (addedEntity != null && addedEntity.equals(wantToAdd)) {
+            addedEntity = null;
+            newAddedEntityTree = new LogicTree(new LogicTreeValue(assetManager.getAsset(textureUrn, Texture.class).get(), type, wantToAdd, parser), this);
+            addTo.addChild(newAddedEntityTree);
+        }
+        else {
+            addTo.addChild(new LogicTreeValue(assetManager.getAsset(textureUrn, Texture.class).get(), type, wantToAdd, parser));
+        }
+    }
+
+    public void updateRegionTree(EntityRef entity) {
+        if (entity.getComponent(ScenarioComponent.class) != null) {
+            if (!scenarioEntity.equals(entity)) {
+                scenarioEntity.destroy();
+            }
+            scenarioEntity = entity;
+            RegionTree tempTree = constructRegions(scenarioEntity);
+            if (tempTree != null) {
+                regionTreeView.setModel(tempTree);
+            }
+        }
+    }
+
+    public RegionTree constructRegions(EntityRef entity) {
+        if (!entity.hasComponent(ScenarioComponent.class)) {
+            return null;
+        }
+        ScenarioComponent scenario = entity.getComponent(ScenarioComponent.class);
+        RegionTreeView regionTreeValue = new RegionTreeView();
+        RegionTree returnTree = new RegionTree(new RegionTreeValue(null), this);
+        regionTreeView.setModel(returnTree);
+        returnTree.setExpanded(true);
+
+        for (EntityRef e : scenario.regionEntities) {
+            if (!getInteractionTarget().getComponent(VisibilityComponent.class).visibleList.contains(e)){
+                getInteractionTarget().getComponent(VisibilityComponent.class).visibleList.add(e);
+                getInteractionTarget().saveComponent(getInteractionTarget().getComponent(VisibilityComponent.class));
+            }
+            returnTree.addChild(new RegionTreeValue(e));
+        }
+
+        return returnTree;
+    }
+
+    public void regionAdd(RegionTree node) {
+        scenarioEntity.send(new RegionTreeAddEvent(this));
+    }
+
+    public void regionDelete(RegionTree node) {
+        scenarioEntity.send(new RegionTreeDeleteEvent(this, node.getValue().getEntity()));
+    }
+
+    public boolean canEditRegion(RegionTree node) {
+        return (node.getValue().getEntity() != null);
+    }
+
+    public void regionEdit(RegionTree node) {
+        EditRegionScreen editRegion = getManager().pushScreen(EditRegionScreen.ASSET_URI, EditRegionScreen.class);
+        editRegion.setupDisplay(node.getValue().getEntity(), this);
+    }
+
 }

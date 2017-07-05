@@ -27,6 +27,7 @@ import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.common.DisplayNameComponent;
 import org.terasology.logic.inventory.InventoryComponent;
+import org.terasology.network.ClientComponent;
 import org.terasology.registry.In;
 import org.terasology.scenario.components.actions.ArgumentContainerComponent;
 import org.terasology.scenario.components.conditionals.BlockConditionalComponent;
@@ -160,7 +161,8 @@ public class EvaluationSystem extends BaseComponentSystem {
 
         //TODO: Replaced once evaluation of player is done
         TriggeringEntityComponent temp = event.getPassedEntity().getComponent(TriggeringEntityComponent.class);
-        DisplayNameComponent name = temp.entity.getComponent(DisplayNameComponent.class);
+        EntityRef clientInfo = temp.entity.getOwner().getComponent(ClientComponent.class).clientInfo;
+        DisplayNameComponent name = clientInfo.getComponent(DisplayNameComponent.class);
 
         event.setResult(name.name);
     }
@@ -185,23 +187,6 @@ public class EvaluationSystem extends BaseComponentSystem {
         EvaluateComparatorEvent evalCompare = new EvaluateComparatorEvent(event.getPassedEntity());
         args.get("compare").send(evalCompare);
 
-
-        switch (evalCompare.getResult()) {
-            case EQUAL_TO:
-                event.setResult(int1 == int2);
-                break;
-            case GREATER_THAN:
-                event.setResult(int1 > int2);
-                break;
-            case GREATER_THAN_EQUAL_TO:
-                event.setResult(int1 >= int2);
-                break;
-            case LESS_THAN:
-                event.setResult(int1 < int2);
-                break;
-            case LESS_THAN_EQUAL_TO:
-                event.setResult(int1 <= int2);
-                break;
-        }
+        event.setResult(evalCompare.getResult().evaluate(int1, int2));
     }
 }

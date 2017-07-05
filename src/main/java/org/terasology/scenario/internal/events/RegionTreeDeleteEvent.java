@@ -13,19 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.components;
+package org.terasology.scenario.internal.events;
 
-import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.entitySystem.event.Event;
+import org.terasology.scenario.internal.ui.HubToolScreen;
 
-import java.util.ArrayList;
-import java.util.List;
+public class RegionTreeDeleteEvent implements Event {
+    private HubToolScreen hubScreen;
+    private EntityRef deleteEntity;
 
-/**
- * Component attached to a scenario entity. Denotes the "root" of the logic structure.
- */
-public class ScenarioComponent implements Component {
-    public List<EntityRef> triggerEntities  = new ArrayList<>();
+    public RegionTreeDeleteEvent(HubToolScreen hubScreen, EntityRef deleteEntity) {
+        this.hubScreen = hubScreen;
+        this.deleteEntity = deleteEntity;
+    }
 
-    public List<EntityRef> regionEntities = new ArrayList<>();
+    public HubToolScreen getHubScreen() {
+        return hubScreen;
+    }
+
+    public EntityRef getDeleteEntity() {
+        return deleteEntity;
+    }
 }
