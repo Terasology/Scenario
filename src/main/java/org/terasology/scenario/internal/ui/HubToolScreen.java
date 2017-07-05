@@ -584,10 +584,6 @@ public class HubToolScreen extends BaseInteractionScreen {
         returnTree.setExpanded(true);
 
         for (EntityRef e : scenario.regionEntities) {
-            if (!getInteractionTarget().getComponent(VisibilityComponent.class).visibleList.contains(e)){
-                getInteractionTarget().getComponent(VisibilityComponent.class).visibleList.add(e);
-                getInteractionTarget().saveComponent(getInteractionTarget().getComponent(VisibilityComponent.class));
-            }
             returnTree.addChild(new RegionTreeValue(e));
         }
 

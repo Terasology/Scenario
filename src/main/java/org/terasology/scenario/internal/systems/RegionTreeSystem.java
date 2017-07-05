@@ -29,6 +29,7 @@ import org.terasology.registry.In;
 import org.terasology.rendering.FontColor;
 import org.terasology.rendering.nui.Color;
 import org.terasology.scenario.components.ScenarioComponent;
+import org.terasology.scenario.components.VisibilityComponent;
 import org.terasology.scenario.components.regions.RegionBeingCreatedComponent;
 import org.terasology.scenario.components.regions.RegionColorComponent;
 import org.terasology.scenario.components.regions.RegionLocationComponent;
@@ -120,6 +121,12 @@ public class RegionTreeSystem extends BaseComponentSystem {
 
         for (EntityRef client : entityManager.getEntitiesWith(ClientComponent.class)) {
             client.send(new ChatMessageEvent("Region created by " + displayName, ent));
+        }
+
+        entity.saveComponent(component);
+        for (EntityRef e : entityManager.getEntitiesWith(VisibilityComponent.class)) {
+            e.getComponent(VisibilityComponent.class).visibleList.add(event.getAddEntity());
+            e.saveComponent(e.getComponent(VisibilityComponent.class));
         }
 
         ent.destroy();
