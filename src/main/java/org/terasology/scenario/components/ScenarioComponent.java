@@ -26,4 +26,6 @@ import java.util.List;
  */
 public class ScenarioComponent implements Component {
     public List<EntityRef> triggerEntities  = new ArrayList<>();
+
+    public List<EntityRef> regionEntities = new ArrayList<>();
 }

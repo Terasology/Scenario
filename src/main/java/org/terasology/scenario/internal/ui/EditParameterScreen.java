@@ -30,6 +30,7 @@ import org.terasology.logic.inventory.ItemComponent;
 import org.terasology.math.geom.Rect2i;
 import org.terasology.math.geom.Vector2i;
 import org.terasology.registry.In;
+import org.terasology.rendering.FontColor;
 import org.terasology.rendering.assets.font.Font;
 import org.terasology.rendering.nui.Canvas;
 import org.terasology.rendering.nui.CoreScreenLayer;
@@ -42,18 +43,25 @@ import org.terasology.rendering.nui.layouts.ColumnLayout;
 import org.terasology.rendering.nui.widgets.UIDropdownScrollable;
 import org.terasology.rendering.nui.widgets.UILabel;
 import org.terasology.rendering.nui.widgets.UIText;
+import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.components.ShortNameComponent;
 import org.terasology.scenario.components.actions.ArgumentContainerComponent;
 import org.terasology.scenario.components.information.ConstBlockComponent;
 import org.terasology.scenario.components.information.ConstComparatorComponent;
 import org.terasology.scenario.components.information.ConstIntegerComponent;
 import org.terasology.scenario.components.information.ConstItemPrefabComponent;
+import org.terasology.scenario.components.information.ConstRegionComponent;
 import org.terasology.scenario.components.information.ConstStringComponent;
 import org.terasology.scenario.components.information.IndentificationComponents.ScenarioBlockComponent;
 import org.terasology.scenario.components.information.IndentificationComponents.ScenarioComparatorComponent;
 import org.terasology.scenario.components.information.IndentificationComponents.ScenarioIntegerComponent;
 import org.terasology.scenario.components.information.IndentificationComponents.ScenarioItemComponent;
+import org.terasology.scenario.components.information.IndentificationComponents.ScenarioRegionComponent;
 import org.terasology.scenario.components.information.IndentificationComponents.ScenarioStringComponent;
+import org.terasology.scenario.components.regions.RegionColorComponent;
+import org.terasology.scenario.components.regions.RegionNameComponent;
+import org.terasology.scenario.internal.events.scenarioEvents.PlayerRespawnScenarioEvent;
+import org.terasology.scenario.internal.ui.RegionTree.RegionItemRenderer;
 import org.terasology.scenario.internal.utilities.ArgumentParser;
 import org.terasology.world.block.BlockManager;
 import org.terasology.world.block.BlockUri;
@@ -95,6 +103,7 @@ public class EditParameterScreen extends CoreScreenLayer {
     private UIText textEntry;
     private UIDropdownScrollable<String> blockDropdown;
     private UIDropdownScrollable<String> itemDropdown;
+    private UIDropdownScrollable<EntityRef> regionDropdown;
     private UIDropdownScrollable<ConstComparatorComponent.comparison> comparisonDropdown;
     private List<UIWidget> oldWidgets;
 
@@ -184,6 +193,14 @@ public class EditParameterScreen extends CoreScreenLayer {
             editLabel.setText("Edit Comparator");
             selectionLabel.setText("Select a Comparator type");
         }
+        else if (entity.hasComponent(ScenarioRegionComponent.class)) {
+            Iterable<Prefab> prefabs = prefabManager.listPrefabs(ScenarioRegionComponent.class);
+            for (Prefab p : prefabs) {
+                optionList.add(p);
+            }
+            editLabel.setText("Edit Region");
+            selectionLabel.setText("Select a region");
+        }
 
         dropdown.setOptions(optionList);
         setPrefabStart(entity);
@@ -237,6 +254,10 @@ public class EditParameterScreen extends CoreScreenLayer {
         else if (tempEntity.getParentPrefab().equals(prefabManager.getPrefab("scenario:scenarioConstantComparator"))) {
             tempEntity.getComponent(ConstComparatorComponent.class).compare = comparisonDropdown.getSelection();
             tempEntity.saveComponent(tempEntity.getComponent(ConstComparatorComponent.class));
+        }
+        else if (tempEntity.getParentPrefab().equals(prefabManager.getPrefab("scenario:scenarioConstantRegion"))) {
+            tempEntity.getComponent(ConstRegionComponent.class).regionEntity = regionDropdown.getSelection();
+            tempEntity.saveComponent(tempEntity.getComponent(ConstRegionComponent.class));
         }
         if (!tempEntity.equals(baseEntity)) {
             if (returnScreen instanceof EditLogicScreen) {
@@ -320,6 +341,37 @@ public class EditParameterScreen extends CoreScreenLayer {
 
             variables.addWidget(comparisonDropdown);
         }
+        else if(tempEntity.hasComponent(ConstRegionComponent.class)) {
+            emptyVariables();
+
+            regionDropdown = new UIDropdownScrollable<>();
+            if (entityManager.getEntitiesWith(ScenarioComponent.class).iterator().hasNext()) {
+                EntityRef scenario = entityManager.getEntitiesWith(ScenarioComponent.class).iterator().next();
+                if (scenario == null) {
+                    return;
+                }
+                List<EntityRef> regions = scenario.getComponent(ScenarioComponent.class).regionEntities;
+                regionDropdown.setOptions(regions);
+                regionDropdown.setOptionRenderer(new AbstractItemRenderer<EntityRef>() {
+                    @Override
+                    public void draw(EntityRef value, Canvas canvas) {
+                        String text = FontColor.getColored(value.getComponent(RegionNameComponent.class).regionName,
+                                value.getComponent(RegionColorComponent.class).color);
+                        canvas.drawText(text);
+                    }
+
+                    @Override
+                    public Vector2i getPreferredSize(EntityRef value, Canvas canvas) {
+                        Font font = canvas.getCurrentStyle().getFont();
+                        String text = value.getComponent(RegionNameComponent.class).regionName;
+                        List<String> lines = TextLineBuilder.getLines(font, text, canvas.size().x);
+                        return font.getSize(lines);
+                    }
+                });
+
+                variables.addWidget(regionDropdown);
+            }
+        }
         else {
             emptyVariables();
             oldWidgets = parser.generateWidgets(tempEntity, this);
@@ -353,6 +405,9 @@ public class EditParameterScreen extends CoreScreenLayer {
         }
         if (comparisonDropdown != null) {
             variables.removeWidget(comparisonDropdown);
+        }
+        if (regionDropdown != null) {
+            variables.removeWidget(regionDropdown);
         }
     }
 

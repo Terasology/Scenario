@@ -13,16 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.components.actions;
+package org.terasology.scenario.components.conditionals;
 
 import org.terasology.entitySystem.Component;
-import org.terasology.entitySystem.entity.EntityRef;
-
-import java.util.Map;
 
 /**
- * Component that contains the arguments for the variables indicated in the text of the entity
+ * Component to denote that a conditional is of type player in region conditional
  */
-public class ArgumentContainerComponent implements Component {
-    public Map<String, EntityRef> arguments;
+public class PlayerRegionComponent implements Component {
 }

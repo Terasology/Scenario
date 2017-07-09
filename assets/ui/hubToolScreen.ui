@@ -133,10 +133,10 @@
                   "content": {
                     "type": "RelativeLayout",
                     "layoutInfo": {
-                        "position-top": {
-                            "widget": "ButtonLayout",
-                            "target": "BOTTOM"
-                        }
+                      "position-top": {
+                        "widget": "ButtonLayout",
+                        "target": "BOTTOM"
+                      }
                     },
                     "contents": [
                       {
@@ -148,7 +148,7 @@
                           "layoutInfo": {}
                         },
                         "layoutInfo": {
-                            "position-top":{}
+                          "position-top": {}
                         }
                       }
                     ]
@@ -161,8 +161,28 @@
                   "visible": false,
                   "content": {
                     "type": "RelativeLayout",
-                    "layoutInfo": {},
-                    "contents": []
+                    "layoutInfo": {
+                      "position-top": {
+                        "widget": "ButtonLayout",
+                        "target": "BOTTOM"
+                      }
+                    },
+                    "contents": [
+                      {
+                        "type": "engine:ScrollableArea",
+                        "id": "scrollAreaRegions",
+                        "layoutInfo": {
+                          "position-top": {}
+                        },
+                        "contents": [
+                          {
+                            "type": "Scenario:RegionTreeView",
+                            "id": "RegionTree",
+                            "layoutInfo": {}
+                          }
+                        ]
+                      }
+                    ]
                   }
                 }
               ]

@@ -19,11 +19,43 @@ import org.terasology.entitySystem.Component;
 
 public class ConstComparatorComponent implements Component {
     public enum comparison {
-        GREATER_THAN,
-        LESS_THAN,
-        EQUAL_TO,
-        GREATER_THAN_EQUAL_TO,
-        LESS_THAN_EQUAL_TO
+        GREATER_THAN(">") {
+            public boolean evaluate(int x, int y) {
+                return x > y;
+            }
+        },
+        LESS_THAN("<") {
+            public boolean evaluate(int x, int y) {
+                return x < y;
+            }
+        },
+        EQUAL_TO("=") {
+            public boolean evaluate(int x, int y) {
+                return x == y;
+            }
+        },
+        GREATER_THAN_EQUAL_TO(">=") {
+            public boolean evaluate(int x, int y) {
+                return x >= y;
+            }
+        },
+        LESS_THAN_EQUAL_TO("<=") {
+            public boolean evaluate(int x, int y) {
+                return x <= y;
+            }
+        };
+
+        private String stringRepresentation;
+
+        comparison(String stringRepresentation) {
+            this.stringRepresentation = stringRepresentation;
+        }
+
+        public String toString() {
+            return stringRepresentation;
+        }
+
+        public abstract boolean evaluate(int x, int y);
     }
 
     public comparison compare = comparison.EQUAL_TO;

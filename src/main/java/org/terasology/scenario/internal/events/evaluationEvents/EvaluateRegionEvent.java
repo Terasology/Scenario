@@ -13,16 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.components.actions;
+package org.terasology.scenario.internal.events.evaluationEvents;
 
-import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.entitySystem.event.Event;
 
-import java.util.Map;
+public class EvaluateRegionEvent implements Event {
+    private EntityRef result;
+    private EntityRef passedEntity;
 
-/**
- * Component that contains the arguments for the variables indicated in the text of the entity
- */
-public class ArgumentContainerComponent implements Component {
-    public Map<String, EntityRef> arguments;
+    public EvaluateRegionEvent(EntityRef passed) {
+        this.passedEntity = passed;
+    }
+
+    public void setResult(EntityRef result) {
+        this.result = result;
+    }
+
+    public EntityRef getResult() {
+        return result;
+    }
+
+    public void setPassedEntity(EntityRef entity) {
+        this.passedEntity = entity;
+    }
+
+    public EntityRef getPassedEntity() {
+        return passedEntity;
+    }
 }

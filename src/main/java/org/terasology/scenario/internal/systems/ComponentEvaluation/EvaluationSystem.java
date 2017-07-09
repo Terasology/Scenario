@@ -25,28 +25,37 @@ import org.terasology.entitySystem.stubs.OwnerComponent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
+import org.terasology.logic.characters.CharacterComponent;
 import org.terasology.logic.common.DisplayNameComponent;
 import org.terasology.logic.inventory.InventoryComponent;
+import org.terasology.logic.location.LocationComponent;
+import org.terasology.math.geom.Vector3f;
+import org.terasology.network.ClientComponent;
 import org.terasology.registry.In;
 import org.terasology.scenario.components.actions.ArgumentContainerComponent;
 import org.terasology.scenario.components.conditionals.BlockConditionalComponent;
 import org.terasology.scenario.components.conditionals.IntComparisonConditionalComponent;
+import org.terasology.scenario.components.conditionals.PlayerRegionComponent;
 import org.terasology.scenario.components.events.triggerInformation.DestroyedBlockComponent;
 import org.terasology.scenario.components.events.triggerInformation.TriggeringEntityComponent;
 import org.terasology.scenario.components.information.ConstBlockComponent;
 import org.terasology.scenario.components.information.ConstComparatorComponent;
 import org.terasology.scenario.components.information.ConstIntegerComponent;
 import org.terasology.scenario.components.information.ConstItemPrefabComponent;
+import org.terasology.scenario.components.information.ConstRegionComponent;
 import org.terasology.scenario.components.information.ConstStringComponent;
+import org.terasology.scenario.components.information.IndentificationComponents.ScenarioRegionComponent;
 import org.terasology.scenario.components.information.ItemCountComponent;
 import org.terasology.scenario.components.information.PlayerNameComponent;
 import org.terasology.scenario.components.information.RandomIntComponent;
 import org.terasology.scenario.components.information.TriggeringBlockComponent;
+import org.terasology.scenario.components.regions.RegionLocationComponent;
 import org.terasology.scenario.internal.events.evaluationEvents.ConditionalCheckEvent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateBlockEvent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateComparatorEvent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateIntEvent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateItemPrefabEvent;
+import org.terasology.scenario.internal.events.evaluationEvents.EvaluateRegionEvent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateStringEvent;
 import org.terasology.utilities.random.FastRandom;
 import org.terasology.utilities.random.Random;
@@ -160,7 +169,8 @@ public class EvaluationSystem extends BaseComponentSystem {
 
         //TODO: Replaced once evaluation of player is done
         TriggeringEntityComponent temp = event.getPassedEntity().getComponent(TriggeringEntityComponent.class);
-        DisplayNameComponent name = temp.entity.getComponent(DisplayNameComponent.class);
+        EntityRef clientInfo = temp.entity.getOwner().getComponent(ClientComponent.class).clientInfo;
+        DisplayNameComponent name = clientInfo.getComponent(DisplayNameComponent.class);
 
         event.setResult(name.name);
     }
@@ -185,23 +195,28 @@ public class EvaluationSystem extends BaseComponentSystem {
         EvaluateComparatorEvent evalCompare = new EvaluateComparatorEvent(event.getPassedEntity());
         args.get("compare").send(evalCompare);
 
+        event.setResult(evalCompare.getResult().evaluate(int1, int2));
+    }
 
-        switch (evalCompare.getResult()) {
-            case EQUAL_TO:
-                event.setResult(int1 == int2);
-                break;
-            case GREATER_THAN:
-                event.setResult(int1 > int2);
-                break;
-            case GREATER_THAN_EQUAL_TO:
-                event.setResult(int1 >= int2);
-                break;
-            case LESS_THAN:
-                event.setResult(int1 < int2);
-                break;
-            case LESS_THAN_EQUAL_TO:
-                event.setResult(int1 <= int2);
-                break;
-        }
+    @ReceiveEvent
+    public void onEvaluatePlayerRegionComparison(ConditionalCheckEvent event, EntityRef entity, PlayerRegionComponent comp) {
+        Map<String, EntityRef> args = entity.getComponent(ArgumentContainerComponent.class).arguments;
+
+        EvaluateRegionEvent evalRegion = new EvaluateRegionEvent(event.getPassedEntity());
+        args.get("region").send(evalRegion);
+        EntityRef region = evalRegion.getResult();
+
+        //TODO: Replaced once evaluation of player is done
+        EntityRef player = event.getPassedEntity().getComponent(TriggeringEntityComponent.class).entity.getOwner().getComponent(ClientComponent.class).character;
+        RegionLocationComponent regionComp = region.getComponent(RegionLocationComponent.class);
+
+        Vector3f loc = player.getComponent(LocationComponent.class).getWorldPosition();
+
+        event.setResult(regionComp.region.encompasses((int)loc.x, (int)loc.y, (int)loc.z));
+    }
+
+    @ReceiveEvent
+    public void onEvaluateRegion(EvaluateRegionEvent event, EntityRef entity, ConstRegionComponent comp) {
+        event.setResult(comp.regionEntity);
     }
 }

@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.components.actions;
+package org.terasology.scenario.components.regions;
 
 import org.terasology.entitySystem.Component;
-import org.terasology.entitySystem.entity.EntityRef;
-
-import java.util.Map;
+import org.terasology.math.geom.Vector3i;
 
 /**
- * Component that contains the arguments for the variables indicated in the text of the entity
+ * Component indicating that this region is the one currently being created and should listen to edits
  */
-public class ArgumentContainerComponent implements Component {
-    public Map<String, EntityRef> arguments;
+public class RegionBeingCreatedComponent implements Component {
+    public Vector3i firstHit;
 }

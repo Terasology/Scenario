@@ -18,37 +18,24 @@ package org.terasology.scenario.internal.events;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 import org.terasology.scenario.internal.ui.HubToolScreen;
-import org.terasology.scenario.internal.ui.LogicTree.LogicTreeValue;
 
-public class LogicTreeMoveEntityEvent implements Event {
-    private EntityRef triggerEntity;
-    private EntityRef moveEntity;
-    private LogicTreeValue.Type elementType;
-    private int index;
+public class RegionRenameEvent implements Event {
+    private EntityRef entity;
+    private String newName;
     private HubToolScreen hubToolScreen;
 
-    public LogicTreeMoveEntityEvent(EntityRef triggerEntity, EntityRef moveEntity, LogicTreeValue.Type elementType, int index, HubToolScreen hubToolScreen) {
-        this.triggerEntity = triggerEntity;
-        this.moveEntity = moveEntity;
-        this.elementType = elementType;
-        this.index = index;
+    public RegionRenameEvent(EntityRef entity, String newName, HubToolScreen hubToolScreen) {
+        this.entity = entity;
+        this.newName = newName;
         this.hubToolScreen = hubToolScreen;
     }
 
-    public EntityRef getTriggerEntity() {
-        return triggerEntity;
+    public EntityRef getRegionEntity() {
+        return entity;
     }
 
-    public EntityRef getMoveEntity() {
-        return moveEntity;
-    }
-
-    public LogicTreeValue.Type getElementType() {
-        return elementType;
-    }
-
-    public int getIndex() {
-        return index;
+    public String getNewName() {
+        return newName;
     }
 
     public HubToolScreen getHubScreen() {

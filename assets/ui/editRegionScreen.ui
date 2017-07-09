@@ -1,0 +1,159 @@
+{
+  "type": "EditRegionScreen",
+  "contents": {
+    "type": "RelativeLayout",
+    "contents": [
+      {
+        "type": "engine:UIBox",
+        "id": "newWidget",
+        "layoutInfo": {
+          "width": 400,
+          "height": 300,
+          "position-vertical-center": {},
+          "position-horizontal-center": {}
+        },
+        "content": {
+          "type": "RelativeLayout",
+          "contents": [
+            {
+              "type": "engine:UILabel",
+              "id": "editLabel",
+              "layoutInfo": {
+                "position-top": {},
+                "position-horizontal-center": {},
+                "use-content-height": true
+              },
+              "text": "Edit Region"
+            },
+            {
+              "type": "RowLayout",
+              "id": "selectionLayout",
+              "layoutInfo": {
+                "position-top": {
+                  "widget": "editLabel",
+                  "target": "BOTTOM",
+                  "offset": 5
+                },
+                "use-content-height": true
+              },
+              "contents": [
+                {
+                  "type": "engine:UILabel",
+                  "id": "selectLabel",
+                  "layoutInfo": {},
+                  "text": "Region Name"
+                },
+                {
+                  "type": "engine:UIText",
+                  "id": "nameEntry",
+                  "layoutInfo": {}
+                }
+              ]
+            },
+            {
+              "type": "RowLayout",
+              "id": "visibilityLayout",
+              "layoutInfo": {
+                "position-top": {
+                  "widget": "selectionLayout",
+                  "target": "BOTTOM",
+                  "offset": 5
+                },
+                "use-content-height": true
+              },
+              "contents": [
+                {
+                  "type": "engine:UILabel",
+                  "id": "visibilityLabel",
+                  "layoutInfo": {},
+                  "text": "Visibility"
+                },
+                {
+                  "type": "engine:UICheckbox",
+                  "id": "visibility",
+                  "layoutInfo": {}
+                }
+              ]
+            },
+            {
+              "type": "RowLayout",
+              "id": "colorLayout",
+              "layoutInfo": {
+                "position-top": {
+                  "widget": "visibilityLayout",
+                  "target": "BOTTOM",
+                  "offset": 5
+                },
+                "use-content-height": true
+              },
+              "contents": [
+                {
+                  "type": "engine:UILabel",
+                  "id": "colorLabel",
+                  "layoutInfo": {},
+                  "text": "Color"
+                },
+                {
+                  "type": "engine:UISlider",
+                  "id": "colorSlider",
+                  "layoutInfo": {}
+                },
+                {
+                  "type": "engine:UIImage",
+                  "id": "colorImage",
+                  "layoutInfo": {
+                    "relativeWidth": 0.1
+                  },
+                  "skin": "framed_image"
+                }
+              ]
+            },
+            {
+              "type": "RowLayout",
+              "id": "teleportLayout",
+              "layoutInfo": {
+                "position-top": {
+                  "widget": "colorLayout",
+                  "target": "BOTTOM",
+                  "offset": 40
+                },
+                "use-content-height": true
+              },
+              "contents": [
+                {
+                  "type": "engine:UIButton",
+                  "id": "teleportButton",
+                  "layoutInfo": {},
+                  "text": "Teleport to region"
+                }
+              ]
+            },
+            {
+              "type": "engine:RowLayout",
+              "id": "buttonLayout",
+              "layoutInfo": {
+                "height": 50,
+                "position-bottom": {}
+              },
+              "contents": [
+                {
+                  "type": "engine:UIButton",
+                  "id": "okButton",
+                  "layoutInfo": {},
+                  "text": "Accept"
+                },
+                {
+                  "type": "engine:UIButton",
+                  "id": "cancelButton",
+                  "layoutInfo": {},
+                  "text": "Cancel"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "skin": "engine:default"
+}

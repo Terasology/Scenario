@@ -13,16 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.components.actions;
+package org.terasology.scenario.internal.events;
 
-import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.entitySystem.event.Event;
 
-import java.util.Map;
+public class RegionTreeFullAddEvent implements Event {
+    private EntityRef addEntity;
+    private EntityRef adder;
 
-/**
- * Component that contains the arguments for the variables indicated in the text of the entity
- */
-public class ArgumentContainerComponent implements Component {
-    public Map<String, EntityRef> arguments;
+    public RegionTreeFullAddEvent(EntityRef addEntity, EntityRef adder) {
+        this.addEntity = addEntity;
+        this.adder = adder;
+    }
+
+    public EntityRef getAddEntity() {
+        return addEntity;
+    }
+
+    public EntityRef getAdder() {
+        return adder;
+    }
 }

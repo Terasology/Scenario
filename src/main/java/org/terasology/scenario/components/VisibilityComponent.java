@@ -13,16 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.components.actions;
+package org.terasology.scenario.components;
 
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
 
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * Component that contains the arguments for the variables indicated in the text of the entity
+ * Component attached to a hubtool that includes a set of all of the region entities that should be visible to the
+ * local player (visibility of the regions are ticked to true)
  */
-public class ArgumentContainerComponent implements Component {
-    public Map<String, EntityRef> arguments;
+public class VisibilityComponent implements Component {
+    public Set<EntityRef> visibleList = new HashSet<>();
 }

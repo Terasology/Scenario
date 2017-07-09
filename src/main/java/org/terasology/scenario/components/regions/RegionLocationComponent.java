@@ -13,16 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.components.actions;
+package org.terasology.scenario.components.regions;
 
 import org.terasology.entitySystem.Component;
-import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.math.Region3i;
 
-import java.util.Map;
-
-/**
- * Component that contains the arguments for the variables indicated in the text of the entity
- */
-public class ArgumentContainerComponent implements Component {
-    public Map<String, EntityRef> arguments;
+public class RegionLocationComponent implements Component {
+    public Region3i region;
 }
