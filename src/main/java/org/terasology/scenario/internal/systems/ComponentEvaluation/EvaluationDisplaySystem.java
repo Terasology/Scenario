@@ -30,12 +30,14 @@ import org.terasology.scenario.components.information.ConstBlockComponent;
 import org.terasology.scenario.components.information.ConstComparatorComponent;
 import org.terasology.scenario.components.information.ConstIntegerComponent;
 import org.terasology.scenario.components.information.ConstItemPrefabComponent;
+import org.terasology.scenario.components.information.ConstRegionComponent;
 import org.terasology.scenario.components.information.ConstStringComponent;
 import org.terasology.scenario.components.information.ItemCountComponent;
 import org.terasology.scenario.components.information.PlayerComponent;
 import org.terasology.scenario.components.information.PlayerNameComponent;
 import org.terasology.scenario.components.information.RandomIntComponent;
 import org.terasology.scenario.components.information.TriggeringBlockComponent;
+import org.terasology.scenario.components.regions.RegionNameComponent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateDisplayEvent;
 import org.terasology.world.block.BlockManager;
 
@@ -131,5 +133,15 @@ public class EvaluationDisplaySystem extends BaseComponentSystem {
         String player = evalPlayer.getResult();
 
         event.setResult("Name of " + player);
+    }
+
+    @ReceiveEvent //RegionName
+    public void OnEvaluateRegionEvent(EvaluateDisplayEvent event, EntityRef entity, ConstRegionComponent comp) {
+        if (comp.regionEntity != null) {
+            event.setResult(comp.regionEntity.getComponent(RegionNameComponent.class).regionName);
+        }
+        else {
+            event.setResult("No region selected");
+        }
     }
 }

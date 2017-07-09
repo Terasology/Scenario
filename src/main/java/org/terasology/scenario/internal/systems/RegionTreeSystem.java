@@ -76,11 +76,20 @@ public class RegionTreeSystem extends BaseComponentSystem {
     public void onRegionTreeDeleteEvent(RegionTreeDeleteEvent event, EntityRef entity, ScenarioComponent component) {
         component.regionEntities.remove(event.getDeleteEntity());
         entity.saveComponent(component);
+
+
+        for (EntityRef e : entityManager.getEntitiesWith(VisibilityComponent.class)) {
+            e.getComponent(VisibilityComponent.class).visibleList.remove(event.getDeleteEntity());
+            e.saveComponent(e.getComponent(VisibilityComponent.class));
+        }
+
         event.getDeleteEntity().destroy();
 
         if (event.getHubScreen() != null) {
             event.getHubScreen().updateRegionTree(entity);
         }
+
+
     }
 
     @ReceiveEvent

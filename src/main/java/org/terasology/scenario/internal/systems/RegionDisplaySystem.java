@@ -25,15 +25,18 @@ import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
+import org.terasology.logic.location.LocationComponent;
 import org.terasology.logic.players.LocalPlayer;
 import org.terasology.math.Region3i;
 import org.terasology.math.geom.Vector3i;
 import org.terasology.registry.In;
+import org.terasology.rendering.logic.FloatingTextComponent;
 import org.terasology.rendering.logic.RegionOutlineComponent;
 import org.terasology.rendering.nui.Color;
 import org.terasology.scenario.components.VisibilityComponent;
 import org.terasology.scenario.components.regions.RegionColorComponent;
 import org.terasology.scenario.components.regions.RegionLocationComponent;
+import org.terasology.scenario.components.regions.RegionNameComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +49,7 @@ public class RegionDisplaySystem extends BaseComponentSystem {
     @In
     private LocalPlayer localPlayer;
 
-    private List<EntityRef> regionOutlineEntities = new ArrayList<>();
+    private List<EntityRef> regionOutlineAndTextEntities = new ArrayList<>();
 
     private Logger logger = LoggerFactory.getLogger(RegionDisplaySystem.class);
 
@@ -58,24 +61,36 @@ public class RegionDisplaySystem extends BaseComponentSystem {
     }
 
     private void updateOutlineEntities(VisibilityComponent component) {
-        List<helper> regions = getRegionsToDraw(component);
         destroyOutlineEntities();
+        List<ColoredRegion> regions = getRegionsToDraw(component);
 
-        regionOutlineEntities.clear();
-        for (helper h : regions) {
+        regionOutlineAndTextEntities.clear();
+        for (ColoredRegion r : regions) {
             EntityBuilder entityBuilder = entityManager.newBuilder();
             entityBuilder.setPersistent(false);
             RegionOutlineComponent regionOutlineComponent = new RegionOutlineComponent();
-            regionOutlineComponent.corner1 = new Vector3i(h.region.min());
-            regionOutlineComponent.corner2 = new Vector3i(h.region.max());
-            regionOutlineComponent.color = h.color;
+            regionOutlineComponent.corner1 = new Vector3i(r.region.min());
+            regionOutlineComponent.corner2 = new Vector3i(r.region.max());
+            regionOutlineComponent.color = r.color;
             entityBuilder.addComponent(regionOutlineComponent);
-            regionOutlineEntities.add(entityBuilder.build());
+            regionOutlineAndTextEntities.add(entityBuilder.build());
+
+            EntityBuilder entityBuilder2 = entityManager.newBuilder();
+            entityBuilder2.setPersistent(false);
+            FloatingTextComponent textComponent = new FloatingTextComponent();
+            textComponent.scale = 1.0f;
+            textComponent.text = r.text;
+            textComponent.textColor = r.color;
+            LocationComponent loc = new LocationComponent();
+            loc.setWorldPosition(r.region.center());
+            entityBuilder2.addComponent(textComponent);
+            entityBuilder2.addComponent(loc);
+            regionOutlineAndTextEntities.add(entityBuilder2.build());
         }
     }
 
     private void destroyOutlineEntities() {
-        for(EntityRef e : regionOutlineEntities) {
+        for(EntityRef e : regionOutlineAndTextEntities) {
             if (e.exists()) {
                 e.destroy();
             }
@@ -83,19 +98,22 @@ public class RegionDisplaySystem extends BaseComponentSystem {
     }
 
 
-    //Not sure if terasology already has some way of doing a set/tuple for a list
-    private class helper {
+    private class ColoredRegion {
         public Region3i region;
         public Color color;
+        public String text;
     }
 
-    private List<helper> getRegionsToDraw(VisibilityComponent component) {
-        List<helper> returnList = new ArrayList<>();
+    private List<ColoredRegion> getRegionsToDraw(VisibilityComponent component) {
+        List<ColoredRegion> returnList = new ArrayList<>();
         for (EntityRef e : component.visibleList) {
-            helper tempHelper = new helper();
-            tempHelper.region = e.getComponent(RegionLocationComponent.class).region;
-            tempHelper.color = e.getComponent(RegionColorComponent.class).color;
-            returnList.add(tempHelper);
+            if (e.exists()) {
+                ColoredRegion region = new ColoredRegion();
+                region.region = e.getComponent(RegionLocationComponent.class).region;
+                region.color = e.getComponent(RegionColorComponent.class).color;
+                region.text = e.getComponent(RegionNameComponent.class).regionName;
+                returnList.add(region);
+            }
         }
 
         return returnList;

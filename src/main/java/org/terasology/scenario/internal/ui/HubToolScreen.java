@@ -35,7 +35,6 @@ import org.terasology.scenario.components.TriggerActionListComponent;
 import org.terasology.scenario.components.TriggerConditionListComponent;
 import org.terasology.scenario.components.TriggerEventListComponent;
 import org.terasology.scenario.components.TriggerNameComponent;
-import org.terasology.scenario.components.VisibilityComponent;
 import org.terasology.scenario.internal.events.LogicTreeAddActionEvent;
 import org.terasology.scenario.internal.events.LogicTreeAddConditionEvent;
 import org.terasology.scenario.internal.events.LogicTreeAddEventEvent;
@@ -607,4 +606,10 @@ public class HubToolScreen extends BaseInteractionScreen {
         editRegion.setupDisplay(node.getValue().getEntity(), this);
     }
 
+    /**
+     * Function for requesting that this screen pop itself from the manager
+     */
+    public void requestPop() {
+        getManager().popScreen();
+    }
 }

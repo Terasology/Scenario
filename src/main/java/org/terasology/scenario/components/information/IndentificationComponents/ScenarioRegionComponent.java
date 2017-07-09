@@ -13,18 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.components;
+package org.terasology.scenario.components.information.IndentificationComponents;
 
 import org.terasology.entitySystem.Component;
-import org.terasology.entitySystem.entity.EntityRef;
 
-import java.util.HashSet;
-import java.util.Set;
-
-/**
- * Component attached to a hubtool that includes a set of all of the region entities that should be visible to the
- * local player (visibility of the regions are ticked to true)
- */
-public class VisibilityComponent implements Component {
-    public Set<EntityRef> visibleList = new HashSet<>();
+public class ScenarioRegionComponent implements Component {
 }

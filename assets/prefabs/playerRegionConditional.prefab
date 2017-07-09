@@ -1,0 +1,11 @@
+{
+    "Conditional":{},
+    "ShortName":{
+        "name":"Player in region"
+    },
+    "PlayerRegion":{},
+    "Text":{
+        "text":"Is [player:Player] inside of [region:Region]"
+    },
+    "ArgumentContainer":{}
+}

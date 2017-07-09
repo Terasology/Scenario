@@ -13,18 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.components;
+package org.terasology.scenario.internal.events.evaluationEvents;
 
-import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.entitySystem.event.Event;
 
-import java.util.HashSet;
-import java.util.Set;
+public class EvaluateRegionEvent implements Event {
+    private EntityRef result;
+    private EntityRef passedEntity;
 
-/**
- * Component attached to a hubtool that includes a set of all of the region entities that should be visible to the
- * local player (visibility of the regions are ticked to true)
- */
-public class VisibilityComponent implements Component {
-    public Set<EntityRef> visibleList = new HashSet<>();
+    public EvaluateRegionEvent(EntityRef passed) {
+        this.passedEntity = passed;
+    }
+
+    public void setResult(EntityRef result) {
+        this.result = result;
+    }
+
+    public EntityRef getResult() {
+        return result;
+    }
+
+    public void setPassedEntity(EntityRef entity) {
+        this.passedEntity = entity;
+    }
+
+    public EntityRef getPassedEntity() {
+        return passedEntity;
+    }
 }

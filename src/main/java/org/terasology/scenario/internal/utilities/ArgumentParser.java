@@ -113,6 +113,9 @@ public class ArgumentParser {
             else if (type.equals("Comparator")) {
                 args.arguments.put(key, entityManager.create(assetManager.getAsset("scenario:scenarioConstantComparator", Prefab.class).get()));
             }
+            else if (type.equals("Region")) {
+                args.arguments.put(key, entityManager.create(assetManager.getAsset("scenario:scenarioConstantRegion", Prefab.class).get()));
+            }
             else {
                 //String parsed incorrectly, should throw some kind of exception probably
                 return;

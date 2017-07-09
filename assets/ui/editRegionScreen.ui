@@ -109,6 +109,26 @@
               ]
             },
             {
+              "type": "RowLayout",
+              "id": "teleportLayout",
+              "layoutInfo": {
+                "position-top": {
+                  "widget": "colorLayout",
+                  "target": "BOTTOM",
+                  "offset": 40
+                },
+                "use-content-height": true
+              },
+              "contents": [
+                {
+                  "type": "engine:UIButton",
+                  "id": "teleportButton",
+                  "layoutInfo": {},
+                  "text": "Teleport to region"
+                }
+              ]
+            },
+            {
               "type": "engine:RowLayout",
               "id": "buttonLayout",
               "layoutInfo": {

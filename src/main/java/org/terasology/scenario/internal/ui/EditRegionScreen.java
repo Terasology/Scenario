@@ -23,6 +23,9 @@ import org.slf4j.LoggerFactory;
 import org.terasology.assets.ResourceUrn;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.logic.characters.CharacterMovementComponent;
+import org.terasology.logic.characters.CharacterTeleportEvent;
+import org.terasology.logic.players.LocalPlayer;
 import org.terasology.registry.In;
 import org.terasology.rendering.assets.texture.Texture;
 import org.terasology.rendering.assets.texture.TextureUtil;
@@ -37,11 +40,13 @@ import org.terasology.rendering.nui.widgets.UISlider;
 import org.terasology.rendering.nui.widgets.UIText;
 import org.terasology.scenario.components.VisibilityComponent;
 import org.terasology.scenario.components.regions.RegionColorComponent;
+import org.terasology.scenario.components.regions.RegionLocationComponent;
 import org.terasology.scenario.components.regions.RegionNameComponent;
 import org.terasology.scenario.internal.events.RegionRecolorEvent;
 import org.terasology.scenario.internal.events.RegionRenameEvent;
 import org.terasology.scenario.internal.utilities.CieCamColorsScenario;
 import org.terasology.utilities.Assets;
+import org.terasology.world.WorldProvider;
 
 import java.math.RoundingMode;
 import java.util.List;
@@ -61,6 +66,10 @@ public class EditRegionScreen extends CoreScreenLayer {
     private UICheckbox visiblity;
     private UISlider colorSlider;
     private UIImage colorImage;
+
+    @In
+    private LocalPlayer localPlayer;
+
 
     private final List<Color> colors = CieCamColorsScenario.L65C65;
 
@@ -83,6 +92,7 @@ public class EditRegionScreen extends CoreScreenLayer {
 
         WidgetUtil.trySubscribe(this, "okButton", this::onOkButton);
         WidgetUtil.trySubscribe(this, "cancelButton", this::onCancelButton);
+        WidgetUtil.trySubscribe(this, "teleportButton", this::onTeleportButton);
     }
 
     public void setupDisplay(EntityRef entity, HubToolScreen returnScreen) {
@@ -122,6 +132,12 @@ public class EditRegionScreen extends CoreScreenLayer {
 
     public void onCancelButton(UIWidget button) {
         getManager().popScreen();
+    }
+
+    public void onTeleportButton(UIWidget button) {
+        org.terasology.math.geom.Vector3f location = baseEntity.getComponent(RegionLocationComponent.class).region.center();
+        CharacterTeleportEvent tele = new CharacterTeleportEvent(location);
+        localPlayer.getCharacterEntity().send(tele);
     }
 
     @Override

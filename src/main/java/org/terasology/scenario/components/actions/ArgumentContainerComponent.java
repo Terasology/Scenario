@@ -20,6 +20,9 @@ import org.terasology.entitySystem.entity.EntityRef;
 
 import java.util.Map;
 
+/**
+ * Component that contains the arguments for the variables indicated in the text of the entity
+ */
 public class ArgumentContainerComponent implements Component {
     public Map<String, EntityRef> arguments;
 }
