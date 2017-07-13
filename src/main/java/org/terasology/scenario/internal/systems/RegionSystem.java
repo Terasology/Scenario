@@ -39,6 +39,7 @@ import org.terasology.rendering.FontColor;
 import org.terasology.rendering.nui.Color;
 import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.components.regions.RegionBeingCreatedComponent;
+import org.terasology.scenario.components.regions.RegionContainingEntitiesComponent;
 import org.terasology.scenario.components.regions.RegionLocationComponent;
 import org.terasology.scenario.internal.events.RegionTreeFullAddEvent;
 
@@ -73,6 +74,7 @@ public class RegionSystem extends BaseComponentSystem {
                     ColorComponent color = new ColorComponent();
                     color.color = Color.RED;
                     EntityRef ent = entityManager.create(name, color);
+
 
                     EntityRef clientInfo = event.getInstigator().getOwner().getComponent(ClientComponent.class).clientInfo;
                     String displayName = FontColor.getColored(clientInfo.getComponent(DisplayNameComponent.class).name, clientInfo.getComponent(ColorComponent.class).color);

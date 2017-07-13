@@ -1,0 +1,11 @@
+{
+    "ScenarioString":{},
+    "ShortName":{
+        "name":"Region Name"
+    },
+    "RegionNameString":{},
+    "Text":{
+        "text":"Name of [region:Region]"
+    },
+    "ArgumentContainer":{}
+}

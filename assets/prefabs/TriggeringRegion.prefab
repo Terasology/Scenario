@@ -1,0 +1,10 @@
+{
+    "ScenarioRegion":{},
+    "ShortName":{
+        "name":"Triggered Region"
+    },
+    "TriggeringRegion":{},
+    "Text":{
+        "text":"Triggered Region"
+    }
+}

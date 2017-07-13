@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.terasology.entitySystem.entity.EntityBuilder;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.entitySystem.entity.lifecycleEvents.OnActivatedComponent;
 import org.terasology.entitySystem.entity.lifecycleEvents.OnChangedComponent;
 import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
@@ -52,13 +53,15 @@ public class RegionDisplaySystem extends BaseComponentSystem {
     private List<EntityRef> regionOutlineAndTextEntities = new ArrayList<>();
 
     private Logger logger = LoggerFactory.getLogger(RegionDisplaySystem.class);
-
+    
     @ReceiveEvent
     public void onChangedVisiblityComponent(OnChangedComponent event, EntityRef entity, VisibilityComponent component) {
         if (entity.getOwner().equals(localPlayer.getCharacterEntity())) { //Only want to watch hub tool visiblity of local player
             updateOutlineEntities(component);
         }
     }
+
+
 
     private void updateOutlineEntities(VisibilityComponent component) {
         destroyOutlineEntities();

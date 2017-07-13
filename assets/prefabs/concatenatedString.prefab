@@ -1,0 +1,11 @@
+{
+    "ScenarioString":{},
+    "ShortName":{
+        "name":"Concatenated String"
+    },
+    "ConcatString":{},
+    "Text":{
+        "text":"[string1:String] + [string2:String]"
+    },
+    "ArgumentContainer":{}
+}

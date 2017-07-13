@@ -26,6 +26,7 @@ import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.registry.In;
 import org.terasology.scenario.components.actions.ArgumentContainerComponent;
 import org.terasology.scenario.components.information.BlockComponent;
+import org.terasology.scenario.components.information.ConcatStringComponent;
 import org.terasology.scenario.components.information.ConstBlockComponent;
 import org.terasology.scenario.components.information.ConstComparatorComponent;
 import org.terasology.scenario.components.information.ConstIntegerComponent;
@@ -36,9 +37,12 @@ import org.terasology.scenario.components.information.ItemCountComponent;
 import org.terasology.scenario.components.information.PlayerComponent;
 import org.terasology.scenario.components.information.PlayerNameComponent;
 import org.terasology.scenario.components.information.RandomIntComponent;
+import org.terasology.scenario.components.information.RegionNameStringComponent;
 import org.terasology.scenario.components.information.TriggeringBlockComponent;
+import org.terasology.scenario.components.information.TriggeringRegionComponent;
 import org.terasology.scenario.components.regions.RegionNameComponent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateDisplayEvent;
+import org.terasology.scenario.internal.events.evaluationEvents.EvaluateStringEvent;
 import org.terasology.world.block.BlockManager;
 
 import java.util.Map;
@@ -143,5 +147,36 @@ public class EvaluationDisplaySystem extends BaseComponentSystem {
         else {
             event.setResult("No region selected");
         }
+    }
+
+    @ReceiveEvent //ConcatString
+    public void onEvaluateConcatStringEvent(EvaluateDisplayEvent event, EntityRef entity, ConcatStringComponent comp) {
+        Map<String, EntityRef> args = entity.getComponent(ArgumentContainerComponent.class).arguments;
+
+        EvaluateDisplayEvent evalStr1 = new EvaluateDisplayEvent();
+        args.get("string1").send(evalStr1);
+        String str1 = evalStr1.getResult();
+
+        EvaluateDisplayEvent evalStr2 = new EvaluateDisplayEvent();
+        args.get("string2").send(evalStr2);
+        String str2 = evalStr2.getResult();
+
+        event.setResult(str1 + str2);
+    }
+
+    @ReceiveEvent //Triggering Region
+    public void onEvaluateDisplayTriggeringRegionEvent(EvaluateDisplayEvent event, EntityRef entity, TriggeringRegionComponent comp) {
+        event.setResult("TRIGGERING REGION");
+    }
+
+    @ReceiveEvent //Name of Region
+    public void OnEvaluateNameOfRegion(EvaluateDisplayEvent event, EntityRef entity, RegionNameStringComponent comp) {
+        Map<String, EntityRef> args = entity.getComponent(ArgumentContainerComponent.class).arguments;
+
+        EvaluateDisplayEvent evalName = new EvaluateDisplayEvent();
+        args.get("region").send(evalName);
+        String region = evalName.getResult();
+
+        event.setResult("Name of " + region);
     }
 }
