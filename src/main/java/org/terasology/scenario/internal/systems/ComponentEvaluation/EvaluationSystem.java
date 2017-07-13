@@ -32,12 +32,15 @@ import org.terasology.logic.location.LocationComponent;
 import org.terasology.math.geom.Vector3f;
 import org.terasology.network.ClientComponent;
 import org.terasology.registry.In;
+import org.terasology.rendering.FontColor;
 import org.terasology.scenario.components.actions.ArgumentContainerComponent;
 import org.terasology.scenario.components.conditionals.BlockConditionalComponent;
 import org.terasology.scenario.components.conditionals.IntComparisonConditionalComponent;
 import org.terasology.scenario.components.conditionals.PlayerRegionComponent;
 import org.terasology.scenario.components.events.triggerInformation.DestroyedBlockComponent;
+import org.terasology.scenario.components.events.triggerInformation.TriggeredRegionComponent;
 import org.terasology.scenario.components.events.triggerInformation.TriggeringEntityComponent;
+import org.terasology.scenario.components.information.ConcatStringComponent;
 import org.terasology.scenario.components.information.ConstBlockComponent;
 import org.terasology.scenario.components.information.ConstComparatorComponent;
 import org.terasology.scenario.components.information.ConstIntegerComponent;
@@ -48,11 +51,16 @@ import org.terasology.scenario.components.information.IndentificationComponents.
 import org.terasology.scenario.components.information.ItemCountComponent;
 import org.terasology.scenario.components.information.PlayerNameComponent;
 import org.terasology.scenario.components.information.RandomIntComponent;
+import org.terasology.scenario.components.information.RegionNameStringComponent;
 import org.terasology.scenario.components.information.TriggeringBlockComponent;
+import org.terasology.scenario.components.information.TriggeringRegionComponent;
+import org.terasology.scenario.components.regions.RegionColorComponent;
 import org.terasology.scenario.components.regions.RegionLocationComponent;
+import org.terasology.scenario.components.regions.RegionNameComponent;
 import org.terasology.scenario.internal.events.evaluationEvents.ConditionalCheckEvent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateBlockEvent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateComparatorEvent;
+import org.terasology.scenario.internal.events.evaluationEvents.EvaluateDisplayEvent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateIntEvent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateItemPrefabEvent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateRegionEvent;
@@ -218,5 +226,39 @@ public class EvaluationSystem extends BaseComponentSystem {
     @ReceiveEvent
     public void onEvaluateRegion(EvaluateRegionEvent event, EntityRef entity, ConstRegionComponent comp) {
         event.setResult(comp.regionEntity);
+    }
+
+    @ReceiveEvent
+    public void onEvaluateConcatStringEvent(EvaluateStringEvent event, EntityRef entity, ConcatStringComponent comp) {
+        Map<String, EntityRef> args = entity.getComponent(ArgumentContainerComponent.class).arguments;
+
+        EvaluateStringEvent evalStr1 = new EvaluateStringEvent(event.getPassedEntity());
+        args.get("string1").send(evalStr1);
+        String str1 = evalStr1.getResult();
+
+        EvaluateStringEvent evalStr2 = new EvaluateStringEvent(event.getPassedEntity());
+        args.get("string2").send(evalStr2);
+        String str2 = evalStr2.getResult();
+
+        event.setResult(str1 + str2);
+    }
+
+    @ReceiveEvent
+    public void onEvaluateTriggeringRegion(EvaluateRegionEvent event, EntityRef entity, TriggeringRegionComponent comp) {
+        event.setResult(event.getPassedEntity().getComponent(TriggeredRegionComponent.class).region);
+    }
+
+    @ReceiveEvent //Name of Region
+    public void OnEvaluateNameOfRegion(EvaluateStringEvent event, EntityRef entity, RegionNameStringComponent comp) {
+        Map<String, EntityRef> args = entity.getComponent(ArgumentContainerComponent.class).arguments;
+
+        EvaluateRegionEvent evalRegion = new EvaluateRegionEvent(event.getPassedEntity());
+        args.get("region").send(evalRegion);
+        EntityRef region = evalRegion.getResult();
+
+        RegionNameComponent name = region.getComponent(RegionNameComponent.class);
+        RegionColorComponent color = region.getComponent(RegionColorComponent.class);
+
+        event.setResult(FontColor.getColored(name.regionName, color.color));
     }
 }

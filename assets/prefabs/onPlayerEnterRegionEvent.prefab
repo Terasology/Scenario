@@ -1,0 +1,11 @@
+{
+    "Event":{},
+    "ShortName":{
+        "name":"On Player Enter Region"
+    },
+    "OnEnterRegion":{},
+    "Text":{
+        "text":"Player enters [region:Region]"
+    },
+    "ArgumentContainer":{}
+}

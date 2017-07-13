@@ -1,0 +1,11 @@
+{
+    "Event":{},
+    "ShortName":{
+        "name":"On Player Leave Region"
+    },
+    "OnLeaveRegion":{},
+    "Text":{
+        "text":"Player leaves [region:Region]"
+    },
+    "ArgumentContainer":{}
+}

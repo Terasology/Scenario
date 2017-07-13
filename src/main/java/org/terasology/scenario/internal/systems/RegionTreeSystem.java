@@ -32,6 +32,7 @@ import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.components.VisibilityComponent;
 import org.terasology.scenario.components.regions.RegionBeingCreatedComponent;
 import org.terasology.scenario.components.regions.RegionColorComponent;
+import org.terasology.scenario.components.regions.RegionContainingEntitiesComponent;
 import org.terasology.scenario.components.regions.RegionLocationComponent;
 import org.terasology.scenario.components.regions.RegionNameComponent;
 import org.terasology.scenario.internal.events.RegionRecolorEvent;
@@ -56,6 +57,7 @@ public class RegionTreeSystem extends BaseComponentSystem {
         RegionColorComponent colorComponent = new RegionColorComponent();
         RegionLocationComponent locationComponent = new RegionLocationComponent();
         RegionNameComponent nameComponent = new RegionNameComponent();
+        RegionContainingEntitiesComponent contain = new RegionContainingEntitiesComponent();
         RegionBeingCreatedComponent editComponent = new RegionBeingCreatedComponent();
 
         //Will need to be fixed once creating multiple regions is allowed, should only delete regions
@@ -65,7 +67,7 @@ public class RegionTreeSystem extends BaseComponentSystem {
         }
 
 
-        entityManager.create(colorComponent, locationComponent, nameComponent, editComponent);
+        entityManager.create(colorComponent, locationComponent, nameComponent, contain, editComponent);
 
         if (event.getHubScreen() != null) {
             event.getHubScreen().getManager().closeScreen(event.getHubScreen());

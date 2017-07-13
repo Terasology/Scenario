@@ -28,14 +28,21 @@ import org.terasology.registry.In;
 import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.components.TriggerActionListComponent;
 import org.terasology.scenario.components.TriggerConditionListComponent;
+import org.terasology.scenario.components.actions.ArgumentContainerComponent;
 import org.terasology.scenario.components.events.OnBlockDestroyComponent;
+import org.terasology.scenario.components.events.OnEnterRegionComponent;
+import org.terasology.scenario.components.events.OnLeaveRegionComponent;
 import org.terasology.scenario.components.events.OnRespawnComponent;
 import org.terasology.scenario.components.events.OnSpawnComponent;
 import org.terasology.scenario.components.events.triggerInformation.DestroyedBlockComponent;
+import org.terasology.scenario.components.events.triggerInformation.TriggeredRegionComponent;
 import org.terasology.scenario.components.events.triggerInformation.TriggeringEntityComponent;
 import org.terasology.scenario.internal.events.EventTriggerEvent;
 import org.terasology.scenario.internal.events.evaluationEvents.ConditionalCheckEvent;
+import org.terasology.scenario.internal.events.evaluationEvents.EvaluateRegionEvent;
 import org.terasology.scenario.internal.events.scenarioEvents.DoDestroyScenarioEvent;
+import org.terasology.scenario.internal.events.scenarioEvents.PlayerEnterRegionEvent;
+import org.terasology.scenario.internal.events.scenarioEvents.PlayerLeaveRegionEvent;
 import org.terasology.scenario.internal.events.scenarioEvents.PlayerRespawnScenarioEvent;
 import org.terasology.scenario.internal.events.scenarioEvents.PlayerSpawnScenarioEvent;
 
@@ -96,5 +103,39 @@ public class ScenarioRootManagementSystem extends BaseComponentSystem {
         destroyed.directCause = event.getDirectCause();
         EntityRef passEntity = entityManager.create(triggerEntity, destroyed);
         entityList.forEach(e -> e.getOwner().send(new EventTriggerEvent(passEntity)));
+    }
+
+    @ReceiveEvent
+    public void onPlayerEnterRegionEvent(PlayerEnterRegionEvent event, EntityRef entity, ScenarioComponent component) {
+        Iterable<EntityRef> entityList = entityManager.getEntitiesWith(OnEnterRegionComponent.class);
+        TriggeringEntityComponent triggerEntity = new TriggeringEntityComponent();
+        triggerEntity.entity = event.getTriggerEntity();
+        TriggeredRegionComponent triggerRegion = new TriggeredRegionComponent();
+        triggerRegion.region = event.getRegion();
+        EntityRef passEntity = entityManager.create(triggerEntity, triggerRegion);
+        entityList.forEach(e -> {
+            EvaluateRegionEvent reg = new EvaluateRegionEvent(passEntity);
+            e.getComponent(ArgumentContainerComponent.class).arguments.get("region").send(reg);
+            if (reg.getResult().equals(event.getRegion())) {
+                e.getOwner().send(new EventTriggerEvent(passEntity));
+            }
+        });
+    }
+
+    @ReceiveEvent
+    public void onPlayerLeaveRegionEvent(PlayerLeaveRegionEvent event, EntityRef entity, ScenarioComponent component) {
+        Iterable<EntityRef> entityList = entityManager.getEntitiesWith(OnLeaveRegionComponent.class);
+        TriggeringEntityComponent triggerEntity = new TriggeringEntityComponent();
+        triggerEntity.entity = event.getTriggerEntity();
+        TriggeredRegionComponent triggerRegion = new TriggeredRegionComponent();
+        triggerRegion.region = event.getRegion();
+        EntityRef passEntity = entityManager.create(triggerEntity, triggerRegion);
+        entityList.forEach(e -> {
+            EvaluateRegionEvent reg = new EvaluateRegionEvent(passEntity);
+            e.getComponent(ArgumentContainerComponent.class).arguments.get("region").send(reg);
+            if (reg.getResult().equals(event.getRegion())) {
+                e.getOwner().send(new EventTriggerEvent(passEntity));
+            }
+        });
     }
 }
