@@ -23,9 +23,9 @@ import org.slf4j.LoggerFactory;
 import org.terasology.assets.ResourceUrn;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.logic.characters.CharacterMovementComponent;
 import org.terasology.logic.characters.CharacterTeleportEvent;
 import org.terasology.logic.players.LocalPlayer;
+import org.terasology.network.ClientComponent;
 import org.terasology.registry.In;
 import org.terasology.rendering.assets.texture.Texture;
 import org.terasology.rendering.assets.texture.TextureUtil;
@@ -38,7 +38,7 @@ import org.terasology.rendering.nui.widgets.UICheckbox;
 import org.terasology.rendering.nui.widgets.UIImage;
 import org.terasology.rendering.nui.widgets.UISlider;
 import org.terasology.rendering.nui.widgets.UIText;
-import org.terasology.scenario.components.VisibilityComponent;
+import org.terasology.scenario.components.ScenarioRegionVisibilityComponent;
 import org.terasology.scenario.components.regions.RegionColorComponent;
 import org.terasology.scenario.components.regions.RegionLocationComponent;
 import org.terasology.scenario.components.regions.RegionNameComponent;
@@ -46,7 +46,6 @@ import org.terasology.scenario.internal.events.RegionRecolorEvent;
 import org.terasology.scenario.internal.events.RegionRenameEvent;
 import org.terasology.scenario.internal.utilities.CieCamColorsScenario;
 import org.terasology.utilities.Assets;
-import org.terasology.world.WorldProvider;
 
 import java.math.RoundingMode;
 import java.util.List;
@@ -100,7 +99,7 @@ public class EditRegionScreen extends CoreScreenLayer {
         this.returnScreen = returnScreen;
 
         nameEntry.setText(entity.getComponent(RegionNameComponent.class).regionName);
-        visiblity.setChecked(returnScreen.getEntity().getComponent(VisibilityComponent.class).visibleList.contains(entity));
+        visiblity.setChecked(returnScreen.getEntity().getOwner().getComponent(ScenarioRegionVisibilityComponent.class).visibleList.contains(entity));
 
         if (colorSlider != null) {
             Color color = entity.getComponent(RegionColorComponent.class).color;
@@ -118,14 +117,14 @@ public class EditRegionScreen extends CoreScreenLayer {
             returnScreen.getScenarioEntity().send(new RegionRecolorEvent(baseEntity, colorImage.getTint(), returnScreen));
         }
         if (visiblity.isChecked()) {
-            VisibilityComponent vis = returnScreen.getEntity().getComponent(VisibilityComponent.class);
+            ScenarioRegionVisibilityComponent vis = returnScreen.getEntity().getOwner().getComponent(ScenarioRegionVisibilityComponent.class);
             vis.visibleList.add(baseEntity);
-            returnScreen.getEntity().saveComponent(vis);
+            returnScreen.getEntity().getOwner().saveComponent(vis);
         }
         else {
-            VisibilityComponent vis = returnScreen.getEntity().getComponent(VisibilityComponent.class);
+            ScenarioRegionVisibilityComponent vis = returnScreen.getEntity().getOwner().getComponent(ScenarioRegionVisibilityComponent.class);
             vis.visibleList.remove(baseEntity);
-            returnScreen.getEntity().saveComponent(vis);
+            returnScreen.getEntity().getOwner().saveComponent(vis);
         }
         getManager().popScreen();
     }

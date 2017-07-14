@@ -29,7 +29,7 @@ import org.terasology.registry.In;
 import org.terasology.rendering.FontColor;
 import org.terasology.rendering.nui.Color;
 import org.terasology.scenario.components.ScenarioComponent;
-import org.terasology.scenario.components.VisibilityComponent;
+import org.terasology.scenario.components.ScenarioRegionVisibilityComponent;
 import org.terasology.scenario.components.regions.RegionBeingCreatedComponent;
 import org.terasology.scenario.components.regions.RegionColorComponent;
 import org.terasology.scenario.components.regions.RegionContainingEntitiesComponent;
@@ -80,9 +80,9 @@ public class RegionTreeSystem extends BaseComponentSystem {
         entity.saveComponent(component);
 
 
-        for (EntityRef e : entityManager.getEntitiesWith(VisibilityComponent.class)) {
-            e.getComponent(VisibilityComponent.class).visibleList.remove(event.getDeleteEntity());
-            e.saveComponent(e.getComponent(VisibilityComponent.class));
+        for (EntityRef e : entityManager.getEntitiesWith(ScenarioRegionVisibilityComponent.class)) {
+            e.getComponent(ScenarioRegionVisibilityComponent.class).visibleList.remove(event.getDeleteEntity());
+            e.saveComponent(e.getComponent(ScenarioRegionVisibilityComponent.class));
         }
 
         event.getDeleteEntity().destroy();
@@ -135,10 +135,10 @@ public class RegionTreeSystem extends BaseComponentSystem {
         }
 
         entity.saveComponent(component);
-        for (EntityRef e : entityManager.getEntitiesWith(VisibilityComponent.class)) {
-            e.getComponent(VisibilityComponent.class).visibleList.add(event.getAddEntity());
-            e.saveComponent(e.getComponent(VisibilityComponent.class));
-        }
+        EntityRef addingCharacter = event.getAdder().getOwner().getComponent(ClientComponent.class).character;
+
+        addingCharacter.getComponent(ScenarioRegionVisibilityComponent.class).visibleList.add(event.getAddEntity());
+        addingCharacter.saveComponent(addingCharacter.getComponent(ScenarioRegionVisibilityComponent.class));
 
         ent.destroy();
     }
