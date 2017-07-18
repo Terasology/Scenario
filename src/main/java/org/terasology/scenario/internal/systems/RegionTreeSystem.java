@@ -15,9 +15,11 @@
  */
 package org.terasology.scenario.internal.systems;
 
+import org.terasology.assets.management.AssetManager;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
+import org.terasology.entitySystem.prefab.Prefab;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
@@ -29,6 +31,7 @@ import org.terasology.registry.In;
 import org.terasology.rendering.FontColor;
 import org.terasology.rendering.nui.Color;
 import org.terasology.scenario.components.ScenarioComponent;
+import org.terasology.scenario.components.ScenarioHubToolUpdateComponent;
 import org.terasology.scenario.components.ScenarioRegionVisibilityComponent;
 import org.terasology.scenario.components.regions.RegionBeingCreatedComponent;
 import org.terasology.scenario.components.regions.RegionColorComponent;
@@ -52,13 +55,12 @@ public class RegionTreeSystem extends BaseComponentSystem {
     @In
     private EntityManager entityManager;
 
+    @In
+    private AssetManager assetManager;
+
     @ReceiveEvent
     public void onRegionTreeAddEvent(RegionTreeAddEvent event, EntityRef entity, ScenarioComponent component) {
-        RegionColorComponent colorComponent = new RegionColorComponent();
-        RegionLocationComponent locationComponent = new RegionLocationComponent();
-        RegionNameComponent nameComponent = new RegionNameComponent();
-        RegionContainingEntitiesComponent contain = new RegionContainingEntitiesComponent();
-        RegionBeingCreatedComponent editComponent = new RegionBeingCreatedComponent();
+
 
         //Will need to be fixed once creating multiple regions is allowed, should only delete regions
         //currently being created by the person wanting to create a new one
@@ -67,11 +69,7 @@ public class RegionTreeSystem extends BaseComponentSystem {
         }
 
 
-        entityManager.create(colorComponent, locationComponent, nameComponent, contain, editComponent);
-
-        if (event.getHubScreen() != null) {
-            event.getHubScreen().getManager().closeScreen(event.getHubScreen());
-        }
+        entityManager.create(assetManager.getAsset("scenario:scenarioCreationEntity", Prefab.class).get());
     }
 
     @ReceiveEvent
@@ -87,11 +85,10 @@ public class RegionTreeSystem extends BaseComponentSystem {
 
         event.getDeleteEntity().destroy();
 
-        if (event.getHubScreen() != null) {
-            event.getHubScreen().updateRegionTree(entity);
+        for (EntityRef e : entityManager.getEntitiesWith(ScenarioHubToolUpdateComponent.class)) {
+            e.getComponent(ScenarioHubToolUpdateComponent.class).dirtyRegions = true;
+            e.saveComponent(e.getComponent(ScenarioHubToolUpdateComponent.class));
         }
-
-
     }
 
     @ReceiveEvent
@@ -111,8 +108,9 @@ public class RegionTreeSystem extends BaseComponentSystem {
 
         entity.saveComponent(component);
 
-        if (event.getHubScreen() != null) {
-            event.getHubScreen().updateRegionTree(entity);
+        for (EntityRef e : entityManager.getEntitiesWith(ScenarioHubToolUpdateComponent.class)) {
+            e.getComponent(ScenarioHubToolUpdateComponent.class).dirtyRegions = true;
+            e.saveComponent(e.getComponent(ScenarioHubToolUpdateComponent.class));
         }
     }
 
@@ -121,11 +119,11 @@ public class RegionTreeSystem extends BaseComponentSystem {
         component.regionEntities.add(event.getAddEntity());
         entity.saveComponent(component);
 
-        DisplayNameComponent name = new DisplayNameComponent();
-        name.name = "Scenario System";
-        ColorComponent color = new ColorComponent();
-        color.color = Color.RED;
-        EntityRef ent = entityManager.create(name, color);
+        EntityRef ent = entityManager.create(assetManager.getAsset("scenario:scenarioSampleName", Prefab.class).get());
+        ent.getComponent(DisplayNameComponent.class).name = "Scenario System";
+        ent.saveComponent(ent.getComponent(DisplayNameComponent.class));
+        ent.getComponent(ColorComponent.class).color = Color.RED;
+        ent.saveComponent(ent.getComponent(ColorComponent.class));
 
         EntityRef clientInfo = event.getAdder().getOwner().getComponent(ClientComponent.class).clientInfo;
         String displayName = FontColor.getColored(clientInfo.getComponent(DisplayNameComponent.class).name, clientInfo.getComponent(ColorComponent.class).color);
@@ -141,6 +139,11 @@ public class RegionTreeSystem extends BaseComponentSystem {
         addingCharacter.saveComponent(addingCharacter.getComponent(ScenarioRegionVisibilityComponent.class));
 
         ent.destroy();
+
+        for (EntityRef e : entityManager.getEntitiesWith(ScenarioHubToolUpdateComponent.class)) {
+            e.getComponent(ScenarioHubToolUpdateComponent.class).dirtyRegions = true;
+            e.saveComponent(e.getComponent(ScenarioHubToolUpdateComponent.class));
+        }
     }
 
     @ReceiveEvent
@@ -149,8 +152,9 @@ public class RegionTreeSystem extends BaseComponentSystem {
         event.getRegionEntity().saveComponent(event.getRegionEntity().getComponent(RegionNameComponent.class));
 
         entity.saveComponent(component);
-        if (event.getHubScreen() != null) {
-            event.getHubScreen().updateRegionTree(entity);
+        for (EntityRef e : entityManager.getEntitiesWith(ScenarioHubToolUpdateComponent.class)) {
+            e.getComponent(ScenarioHubToolUpdateComponent.class).dirtyRegions = true;
+            e.saveComponent(e.getComponent(ScenarioHubToolUpdateComponent.class));
         }
     }
 
@@ -160,8 +164,9 @@ public class RegionTreeSystem extends BaseComponentSystem {
         event.getRegionEntity().saveComponent(event.getRegionEntity().getComponent(RegionColorComponent.class));
 
         entity.saveComponent(component);
-        if (event.getHubScreen() != null) {
-            event.getHubScreen().updateRegionTree(entity);
+        for (EntityRef e : entityManager.getEntitiesWith(ScenarioHubToolUpdateComponent.class)) {
+            e.getComponent(ScenarioHubToolUpdateComponent.class).dirtyRegions = true;
+            e.saveComponent(e.getComponent(ScenarioHubToolUpdateComponent.class));
         }
     }
 }

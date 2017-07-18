@@ -17,7 +17,10 @@ package org.terasology.scenario.components.regions;
 
 import org.terasology.entitySystem.Component;
 import org.terasology.math.Region3i;
+import org.terasology.network.FieldReplicateType;
+import org.terasology.network.Replicate;
 
 public class RegionLocationComponent implements Component {
+    @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public Region3i region;
 }

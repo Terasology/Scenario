@@ -17,10 +17,15 @@ package org.terasology.scenario.internal.events;
 
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
+import org.terasology.network.ServerEvent;
 
+@ServerEvent
 public class RegionTreeFullAddEvent implements Event {
     private EntityRef addEntity;
     private EntityRef adder;
+
+    public RegionTreeFullAddEvent() {
+    }
 
     public RegionTreeFullAddEvent(EntityRef addEntity, EntityRef adder) {
         this.addEntity = addEntity;

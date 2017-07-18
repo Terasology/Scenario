@@ -17,18 +17,21 @@ package org.terasology.scenario.internal.events;
 
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
+import org.terasology.network.ServerEvent;
 import org.terasology.rendering.nui.Color;
 import org.terasology.scenario.internal.ui.HubToolScreen;
 
+@ServerEvent
 public class RegionRecolorEvent implements Event {
     private EntityRef entity;
     private Color newColor;
-    private HubToolScreen hubToolScreen;
 
-    public RegionRecolorEvent(EntityRef entity, Color newColor, HubToolScreen hubToolScreen) {
+    public RegionRecolorEvent() {
+    }
+
+    public RegionRecolorEvent(EntityRef entity, Color newColor) {
         this.entity = entity;
         this.newColor = newColor;
-        this.hubToolScreen = hubToolScreen;
     }
 
     public EntityRef getRegionEntity() {
@@ -37,9 +40,5 @@ public class RegionRecolorEvent implements Event {
 
     public Color getNewColor() {
         return newColor;
-    }
-
-    public HubToolScreen getHubScreen() {
-        return hubToolScreen;
     }
 }

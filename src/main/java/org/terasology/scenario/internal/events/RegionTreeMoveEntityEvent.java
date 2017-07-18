@@ -17,17 +17,20 @@ package org.terasology.scenario.internal.events;
 
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
+import org.terasology.network.ServerEvent;
 import org.terasology.scenario.internal.ui.HubToolScreen;
 
+@ServerEvent
 public class RegionTreeMoveEntityEvent implements Event {
     private EntityRef moveEntity;
     private int index;
-    private HubToolScreen hubToolScreen;
 
-    public RegionTreeMoveEntityEvent(EntityRef moveEntity, int index, HubToolScreen hubToolScreen) {
+    public RegionTreeMoveEntityEvent() {
+    }
+
+    public RegionTreeMoveEntityEvent(EntityRef moveEntity, int index) {
         this.moveEntity = moveEntity;
         this.index = index;
-        this.hubToolScreen = hubToolScreen;
     }
 
     public EntityRef getMoveEntity() {
@@ -36,9 +39,5 @@ public class RegionTreeMoveEntityEvent implements Event {
 
     public int getIndex() {
         return index;
-    }
-
-    public HubToolScreen getHubScreen() {
-        return hubToolScreen;
     }
 }

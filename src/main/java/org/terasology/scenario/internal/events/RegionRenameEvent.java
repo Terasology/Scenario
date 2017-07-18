@@ -17,17 +17,20 @@ package org.terasology.scenario.internal.events;
 
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
+import org.terasology.network.ServerEvent;
 import org.terasology.scenario.internal.ui.HubToolScreen;
 
+@ServerEvent
 public class RegionRenameEvent implements Event {
     private EntityRef entity;
     private String newName;
-    private HubToolScreen hubToolScreen;
 
-    public RegionRenameEvent(EntityRef entity, String newName, HubToolScreen hubToolScreen) {
+    public RegionRenameEvent() {
+    }
+
+    public RegionRenameEvent(EntityRef entity, String newName) {
         this.entity = entity;
         this.newName = newName;
-        this.hubToolScreen = hubToolScreen;
     }
 
     public EntityRef getRegionEntity() {
@@ -36,9 +39,5 @@ public class RegionRenameEvent implements Event {
 
     public String getNewName() {
         return newName;
-    }
-
-    public HubToolScreen getHubScreen() {
-        return hubToolScreen;
     }
 }

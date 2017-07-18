@@ -17,6 +17,8 @@ package org.terasology.scenario.components;
 
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.network.FieldReplicateType;
+import org.terasology.network.Replicate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,5 +26,6 @@ import java.util.List;
  * List for actions in a trigger
  */
 public class TriggerActionListComponent implements Component {
+    @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public List<EntityRef> actions = new ArrayList<>();
 }
