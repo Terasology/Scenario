@@ -1,4 +1,5 @@
 {
+    "Network":{},
     "Event":{},
     "ShortName":{
         "name":"On Block Destroyed"

@@ -15,17 +15,12 @@
  */
 package org.terasology.scenario.internal.events;
 
+import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
+import org.terasology.network.ServerEvent;
 import org.terasology.scenario.internal.ui.HubToolScreen;
 
+@ServerEvent
 public class RegionTreeAddEvent implements Event {
-    private HubToolScreen hubScreen;
-
-    public RegionTreeAddEvent(HubToolScreen hubScreen) {
-        this.hubScreen = hubScreen;
-    }
-
-    public HubToolScreen getHubScreen() {
-        return hubScreen;
-    }
+    public RegionTreeAddEvent() {}
 }

@@ -25,9 +25,12 @@ import org.terasology.entitySystem.prefab.Prefab;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
+import org.terasology.logic.characters.interactions.InteractionScreenComponent;
+import org.terasology.logic.characters.interactions.InteractionTargetComponent;
 import org.terasology.registry.In;
 import org.terasology.scenario.components.ExpandedComponent;
 import org.terasology.scenario.components.ScenarioComponent;
+import org.terasology.scenario.components.ScenarioHubToolUpdateComponent;
 import org.terasology.scenario.components.TriggerActionListComponent;
 import org.terasology.scenario.components.TriggerConditionListComponent;
 import org.terasology.scenario.components.TriggerEventListComponent;
@@ -42,6 +45,7 @@ import org.terasology.scenario.internal.events.LogicTreeAddTriggerEvent;
 import org.terasology.scenario.internal.events.LogicTreeDeleteEvent;
 import org.terasology.scenario.internal.events.LogicTreeMoveEntityEvent;
 import org.terasology.scenario.internal.events.ReplaceEntityEvent;
+import org.terasology.scenario.internal.ui.LogicTree.LogicTree;
 import org.terasology.scenario.internal.utilities.ArgumentParser;
 import org.terasology.world.block.BlockManager;
 
@@ -62,6 +66,15 @@ public class EntityTreeSystem extends BaseComponentSystem{
 
     @In
     private BlockManager blockManager;
+
+    @Override
+    public void postBegin() {
+        Iterable<EntityRef> scenario = entityManager.getEntitiesWith(ScenarioComponent.class); // Checks for existing Scenario
+
+        if (!scenario.iterator().hasNext()) { //No scenario exists yet
+            entityManager.create(assetManager.getAsset("scenario:scenarioEntity", Prefab.class).get());
+        }
+    }
 
     /**
      * Adding event, attaches to the scenarioComponent.actions in the Scenario root and then adds a new empty list
@@ -87,11 +100,17 @@ public class EntityTreeSystem extends BaseComponentSystem{
         entity.saveComponent(component);
 
         if (event.getHubScreen() != null) {
-            event.getHubScreen().getEntity().getComponent(ExpandedComponent.class).expandedList.add(event.getTriggerEntity());
-            event.getHubScreen().getEntity().getComponent(ExpandedComponent.class).expandedList.add(event.getTriggerEntity().getComponent(TriggerNameComponent.class).entityForEvent);
-            event.getHubScreen().getEntity().saveComponent(event.getHubScreen().getEntity().getComponent(ExpandedComponent.class));
-            event.getHubScreen().setAddedEntity(newEventEntity);
-            event.getHubScreen().updateTree(entity);
+            event.getHubScreen().getComponent(ExpandedComponent.class).expandedList.add(event.getTriggerEntity());
+            event.getHubScreen().getComponent(ExpandedComponent.class).expandedList.add(event.getTriggerEntity().getComponent(TriggerNameComponent.class).entityForEvent);
+            event.getHubScreen().saveComponent(event.getHubScreen().getComponent(ExpandedComponent.class));
+            event.getHubScreen().getComponent(ScenarioHubToolUpdateComponent.class).dirtyLogic = true;
+            event.getHubScreen().getComponent(ScenarioHubToolUpdateComponent.class).addedEntity = newEventEntity;
+            event.getHubScreen().saveComponent(event.getHubScreen().getComponent(ScenarioHubToolUpdateComponent.class));
+        }
+
+        for (EntityRef e : entityManager.getEntitiesWith(ScenarioHubToolUpdateComponent.class)) {
+            e.getComponent(ScenarioHubToolUpdateComponent.class).dirtyLogic = true;
+            e.saveComponent(e.getComponent(ScenarioHubToolUpdateComponent.class));
         }
     }
 
@@ -101,6 +120,7 @@ public class EntityTreeSystem extends BaseComponentSystem{
      */
     @ReceiveEvent
     public void onLogicTreeAddActionEvent(LogicTreeAddActionEvent event, EntityRef entity, ScenarioComponent component) {
+        logger.info("add action");
         TriggerActionListComponent actions = event.getTriggerEntity().getComponent(TriggerActionListComponent.class);
         //Sets up basic action as a give block component
         EntityRef newActionEntity = entityManager.create(assetManager.getAsset("scenario:givePlayerBlockAction", Prefab.class).get());
@@ -119,11 +139,17 @@ public class EntityTreeSystem extends BaseComponentSystem{
         entity.saveComponent(component);
 
         if (event.getHubScreen() != null) {
-            event.getHubScreen().getEntity().getComponent(ExpandedComponent.class).expandedList.add(event.getTriggerEntity());
-            event.getHubScreen().getEntity().getComponent(ExpandedComponent.class).expandedList.add(event.getTriggerEntity().getComponent(TriggerNameComponent.class).entityForAction);
-            event.getHubScreen().getEntity().saveComponent(event.getHubScreen().getEntity().getComponent(ExpandedComponent.class));
-            event.getHubScreen().setAddedEntity(newActionEntity);
-            event.getHubScreen().updateTree(entity);
+            event.getHubScreen().getComponent(ExpandedComponent.class).expandedList.add(event.getTriggerEntity());
+            event.getHubScreen().getComponent(ExpandedComponent.class).expandedList.add(event.getTriggerEntity().getComponent(TriggerNameComponent.class).entityForAction);
+            event.getHubScreen().saveComponent(event.getHubScreen().getComponent(ExpandedComponent.class));
+            event.getHubScreen().getComponent(ScenarioHubToolUpdateComponent.class).dirtyLogic = true;
+            event.getHubScreen().getComponent(ScenarioHubToolUpdateComponent.class).addedEntity = newActionEntity;
+            event.getHubScreen().saveComponent(event.getHubScreen().getComponent(ScenarioHubToolUpdateComponent.class));
+        }
+
+        for (EntityRef e : entityManager.getEntitiesWith(ScenarioHubToolUpdateComponent.class)) {
+            e.getComponent(ScenarioHubToolUpdateComponent.class).dirtyLogic = true;
+            e.saveComponent(e.getComponent(ScenarioHubToolUpdateComponent.class));
         }
     }
 
@@ -152,11 +178,17 @@ public class EntityTreeSystem extends BaseComponentSystem{
         entity.saveComponent(component);
 
         if (event.getHubScreen() != null) {
-            event.getHubScreen().getEntity().getComponent(ExpandedComponent.class).expandedList.add(event.getTriggerEntity());
-            event.getHubScreen().getEntity().getComponent(ExpandedComponent.class).expandedList.add(event.getTriggerEntity().getComponent(TriggerNameComponent.class).entityForCondition);
-            event.getHubScreen().getEntity().saveComponent(event.getHubScreen().getEntity().getComponent(ExpandedComponent.class));
-            event.getHubScreen().setAddedEntity(newCondEntity);
-            event.getHubScreen().updateTree(entity);
+            event.getHubScreen().getComponent(ExpandedComponent.class).expandedList.add(event.getTriggerEntity());
+            event.getHubScreen().getComponent(ExpandedComponent.class).expandedList.add(event.getTriggerEntity().getComponent(TriggerNameComponent.class).entityForCondition);
+            event.getHubScreen().saveComponent(event.getHubScreen().getComponent(ExpandedComponent.class));
+            event.getHubScreen().getComponent(ScenarioHubToolUpdateComponent.class).dirtyLogic = true;
+            event.getHubScreen().getComponent(ScenarioHubToolUpdateComponent.class).addedEntity = newCondEntity;
+            event.getHubScreen().saveComponent(event.getHubScreen().getComponent(ScenarioHubToolUpdateComponent.class));
+        }
+
+        for (EntityRef e : entityManager.getEntitiesWith(ScenarioHubToolUpdateComponent.class)) {
+            e.getComponent(ScenarioHubToolUpdateComponent.class).dirtyLogic = true;
+            e.saveComponent(e.getComponent(ScenarioHubToolUpdateComponent.class));
         }
     }
 
@@ -173,19 +205,25 @@ public class EntityTreeSystem extends BaseComponentSystem{
 
         TriggerNameComponent temp = trigger.getComponent(TriggerNameComponent.class);
 
-        temp.entityForEvent = entityManager.create();
-        temp.entityForCondition = entityManager.create();
-        temp.entityForAction = entityManager.create();
+        temp.entityForEvent = entityManager.create(assetManager.getAsset("scenario:emptyNetworkEntity", Prefab.class).get());
+        temp.entityForCondition = entityManager.create(assetManager.getAsset("scenario:emptyNetworkEntity", Prefab.class).get());
+        temp.entityForAction = entityManager.create(assetManager.getAsset("scenario:emptyNetworkEntity", Prefab.class).get());
         trigger.saveComponent(temp);
 
         component.triggerEntities.add(trigger);
         entity.saveComponent(component);
 
         if (event.getHubScreen() != null) {
-            event.getHubScreen().getEntity().getComponent(ExpandedComponent.class).expandedList.add(entity);
-            event.getHubScreen().getEntity().getComponent(ExpandedComponent.class).expandedList.add(trigger);
-            event.getHubScreen().getEntity().saveComponent(event.getHubScreen().getEntity().getComponent(ExpandedComponent.class));
-            event.getHubScreen().updateTree(entity);
+            event.getHubScreen().getComponent(ExpandedComponent.class).expandedList.add(entity);
+            event.getHubScreen().getComponent(ExpandedComponent.class).expandedList.add(trigger);
+            event.getHubScreen().saveComponent(event.getHubScreen().getComponent(ExpandedComponent.class));
+            event.getHubScreen().getComponent(ScenarioHubToolUpdateComponent.class).dirtyLogic = true;
+            event.getHubScreen().saveComponent(event.getHubScreen().getComponent(ScenarioHubToolUpdateComponent.class));
+        }
+
+        for (EntityRef e : entityManager.getEntitiesWith(ScenarioHubToolUpdateComponent.class)) {
+            e.getComponent(ScenarioHubToolUpdateComponent.class).dirtyLogic = true;
+            e.saveComponent(e.getComponent(ScenarioHubToolUpdateComponent.class));
         }
     }
 
@@ -223,8 +261,9 @@ public class EntityTreeSystem extends BaseComponentSystem{
             event.getDeleteEntity().destroy();
         }
 
-        if (event.getHubScreen() != null) {
-            event.getHubScreen().updateTree(entity);
+        for (EntityRef e : entityManager.getEntitiesWith(ScenarioHubToolUpdateComponent.class)) {
+            e.getComponent(ScenarioHubToolUpdateComponent.class).dirtyLogic = true;
+            e.saveComponent(e.getComponent(ScenarioHubToolUpdateComponent.class));
         }
     }
 
@@ -245,8 +284,9 @@ public class EntityTreeSystem extends BaseComponentSystem{
                 list = component.triggerEntities;
                 break;
             default:
-                if (event.getHubScreen() != null) {
-                    event.getHubScreen().updateTree(entity);
+                for (EntityRef e : entityManager.getEntitiesWith(ScenarioHubToolUpdateComponent.class)) {
+                    e.getComponent(ScenarioHubToolUpdateComponent.class).dirtyLogic = true;
+                    e.saveComponent(e.getComponent(ScenarioHubToolUpdateComponent.class));
                 }
                 return;
         }
@@ -278,14 +318,16 @@ public class EntityTreeSystem extends BaseComponentSystem{
                 entity.saveComponent(component);
                 break;
             default:
-                if (event.getHubScreen() != null) {
-                    event.getHubScreen().updateTree(entity);
+                for (EntityRef e : entityManager.getEntitiesWith(ScenarioHubToolUpdateComponent.class)) {
+                    e.getComponent(ScenarioHubToolUpdateComponent.class).dirtyLogic = true;
+                    e.saveComponent(e.getComponent(ScenarioHubToolUpdateComponent.class));
                 }
                 return;
         }
 
-        if (event.getHubScreen() != null) {
-            event.getHubScreen().updateTree(entity);
+        for (EntityRef e : entityManager.getEntitiesWith(ScenarioHubToolUpdateComponent.class)) {
+            e.getComponent(ScenarioHubToolUpdateComponent.class).dirtyLogic = true;
+            e.saveComponent(e.getComponent(ScenarioHubToolUpdateComponent.class));
         }
     }
 
@@ -325,10 +367,9 @@ public class EntityTreeSystem extends BaseComponentSystem{
         }
 
 
-        if (event.getHubtool() != null) {
-            event.getHubtool().updateTree(entity);
+        for (EntityRef e : entityManager.getEntitiesWith(ScenarioHubToolUpdateComponent.class)) {
+            e.getComponent(ScenarioHubToolUpdateComponent.class).dirtyLogic = true;
+            e.saveComponent(e.getComponent(ScenarioHubToolUpdateComponent.class));
         }
     }
-
-
 }

@@ -16,10 +16,13 @@
 package org.terasology.scenario.components;
 
 import org.terasology.entitySystem.Component;
+import org.terasology.network.FieldReplicateType;
+import org.terasology.network.Replicate;
 
 /**
  * The name for the prefab for what it should be called in dropdown for editing
  */
 public class ShortNameComponent implements Component {
+    @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public String name;
 }

@@ -1,4 +1,5 @@
 {
+    "Network":{},
     "Conditional":{},
     "ShortName":{
         "name":"Player in region"

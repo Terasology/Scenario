@@ -146,7 +146,7 @@ public class EditLogicScreen extends CoreScreenLayer {
 
     private void onOkButton(UIWidget button) {
         if (!temporaryEntity.equals(targetEntity)) {
-            ReplaceEntityEvent event = new ReplaceEntityEvent(targetEntity, temporaryEntity, hubtool);
+            ReplaceEntityEvent event = new ReplaceEntityEvent(targetEntity, temporaryEntity);
             scenarioEntity.send(event);
         }
         else {

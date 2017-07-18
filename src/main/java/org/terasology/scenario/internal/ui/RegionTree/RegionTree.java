@@ -43,7 +43,7 @@ public class RegionTree extends Tree<RegionTreeValue> {
 
     @Override
     public void addChild(int index, Tree<RegionTreeValue> child) { //Allows for re-ordering of regions to actually maintain
-        hubToolScreen.getScenarioEntity().send(new RegionTreeMoveEntityEvent(child.getValue().getEntity(), index, hubToolScreen));
+        hubToolScreen.getScenarioEntity().send(new RegionTreeMoveEntityEvent(child.getValue().getEntity(), index));
     }
 
     @Override

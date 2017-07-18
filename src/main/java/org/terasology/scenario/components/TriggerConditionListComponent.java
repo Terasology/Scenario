@@ -17,6 +17,8 @@ package org.terasology.scenario.components;
 
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.network.FieldReplicateType;
+import org.terasology.network.Replicate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,5 +27,6 @@ import java.util.List;
  * List for conditions in a trigger
  */
 public class TriggerConditionListComponent implements Component {
+    @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public List<EntityRef> conditions = new ArrayList<>();
 }

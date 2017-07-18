@@ -16,6 +16,7 @@
 package org.terasology.scenario.internal.systems;
 
 import org.slf4j.LoggerFactory;
+import org.terasology.assets.management.AssetManager;
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
@@ -42,6 +43,7 @@ import org.terasology.scenario.components.events.triggerInformation.TriggeringEn
 import org.terasology.scenario.components.information.BlockComponent;
 import org.terasology.scenario.components.information.InformationEnums;
 import org.terasology.scenario.components.information.PlayerComponent;
+import org.terasology.scenario.components.regions.RegionColorComponent;
 import org.terasology.scenario.internal.events.EventTriggerEvent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateBlockEvent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateIntEvent;
@@ -65,6 +67,9 @@ public class ActionEventSystem extends BaseComponentSystem {
 
     @In
     private BlockManager blockManager;
+
+    @In
+    private AssetManager assetManager;
 
     private BlockItemFactory blockItemFactory;
 
@@ -147,11 +152,11 @@ public class ActionEventSystem extends BaseComponentSystem {
         variables.get("owner").send(stringEvaluateEvent2);
         String from = stringEvaluateEvent2.getResult();
 
-        DisplayNameComponent name = new DisplayNameComponent();
-        name.name = from;
-        ColorComponent color = new ColorComponent();
-        color.color = Color.CYAN;
-        EntityRef ent = entityManager.create(name, color);
+        EntityRef ent = entityManager.create(assetManager.getAsset("scenario:scenarioSampleName", Prefab.class).get());
+        ent.getComponent(DisplayNameComponent.class).name = from;
+        ent.saveComponent(ent.getComponent(DisplayNameComponent.class));
+        ent.getComponent(ColorComponent.class).color = Color.CYAN;
+        ent.saveComponent(ent.getComponent(ColorComponent.class));
 
         for (EntityRef client : entityManager.getEntitiesWith(ClientComponent.class)) {
             client.send(new ChatMessageEvent(message, ent));

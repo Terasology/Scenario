@@ -13,13 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.components.regions;
+package org.terasology.scenario.components;
 
 import org.terasology.entitySystem.Component;
+import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.network.FieldReplicateType;
 import org.terasology.network.Replicate;
 
-public class RegionNameComponent implements Component {
+/**
+ * Component that lets the client know that the scenario entity was updated and therefore it should redraw on the next update
+ */
+public class ScenarioHubToolUpdateComponent implements Component {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
-    public String regionName = "New Region";
+    public boolean dirtyLogic = true;
+
+    @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
+    public boolean dirtyRegions = true;
+
+    @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
+    public EntityRef addedEntity;
 }

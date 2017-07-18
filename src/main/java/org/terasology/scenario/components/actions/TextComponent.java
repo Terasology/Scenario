@@ -16,7 +16,10 @@
 package org.terasology.scenario.components.actions;
 
 import org.terasology.entitySystem.Component;
+import org.terasology.network.FieldReplicateType;
+import org.terasology.network.Replicate;
 
 public class TextComponent implements Component {
+    @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public String text;
 }

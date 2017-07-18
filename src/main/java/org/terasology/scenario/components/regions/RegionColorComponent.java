@@ -16,8 +16,11 @@
 package org.terasology.scenario.components.regions;
 
 import org.terasology.entitySystem.Component;
+import org.terasology.network.FieldReplicateType;
+import org.terasology.network.Replicate;
 import org.terasology.rendering.nui.Color;
 
 public class RegionColorComponent implements Component {
+    @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public Color color = Color.WHITE;
 }

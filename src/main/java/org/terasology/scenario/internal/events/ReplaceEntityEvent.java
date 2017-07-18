@@ -17,17 +17,20 @@ package org.terasology.scenario.internal.events;
 
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
+import org.terasology.network.ServerEvent;
 import org.terasology.scenario.internal.ui.HubToolScreen;
 
+@ServerEvent
 public class ReplaceEntityEvent implements Event {
     private EntityRef replaced;
     private EntityRef replacer;
-    private HubToolScreen hubtool;
 
-    public ReplaceEntityEvent(EntityRef replaced, EntityRef replacer, HubToolScreen hubtool) {
+    public ReplaceEntityEvent() {
+    }
+
+    public ReplaceEntityEvent(EntityRef replaced, EntityRef replacer) {
         this.replaced = replaced;
         this.replacer = replacer;
-        this.hubtool = hubtool;
     }
 
     public EntityRef getReplaced() {
@@ -36,9 +39,5 @@ public class ReplaceEntityEvent implements Event {
 
     public EntityRef getReplacer() {
         return replacer;
-    }
-
-    public HubToolScreen getHubtool() {
-        return hubtool;
     }
 }

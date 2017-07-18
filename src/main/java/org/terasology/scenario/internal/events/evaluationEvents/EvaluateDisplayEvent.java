@@ -15,7 +15,6 @@
  */
 package org.terasology.scenario.internal.events.evaluationEvents;
 
-import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 
 public class EvaluateDisplayEvent implements Event {
