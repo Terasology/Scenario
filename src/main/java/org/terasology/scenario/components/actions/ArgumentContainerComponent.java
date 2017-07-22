@@ -17,12 +17,15 @@ package org.terasology.scenario.components.actions;
 
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.network.Replicate;
 
 import java.util.Map;
 
 /**
  * Component that contains the arguments for the variables indicated in the text of the entity
  */
+@Replicate
 public class ArgumentContainerComponent implements Component {
+    @Replicate
     public Map<String, EntityRef> arguments;
 }

@@ -31,6 +31,7 @@ import org.terasology.rendering.nui.widgets.UIButton;
 import org.terasology.rendering.nui.widgets.treeView.Tree;
 import org.terasology.scenario.components.ExpandedComponent;
 import org.terasology.scenario.components.ScenarioComponent;
+import org.terasology.scenario.components.ScenarioHubToolUpdateComponent;
 import org.terasology.scenario.components.TriggerActionListComponent;
 import org.terasology.scenario.components.TriggerConditionListComponent;
 import org.terasology.scenario.components.TriggerEventListComponent;
@@ -318,7 +319,7 @@ public class HubToolScreen extends BaseInteractionScreen {
         Integer selectedIndex = treeView.getSelectedIndex();
 
         Tree<LogicTreeValue> tree = treeView.getModel().getNode(selectedIndex);
-        scenarioEntity.send(new LogicTreeAddEventEvent(this, tree.getValue().getEntity()));
+        getEntity().send(new LogicTreeAddEventEvent(getEntity(), tree.getValue().getEntity()));
     }
 
     /**
@@ -351,7 +352,7 @@ public class HubToolScreen extends BaseInteractionScreen {
         Integer selectedIndex = treeView.getSelectedIndex();
 
         Tree<LogicTreeValue> tree = treeView.getModel().getNode(selectedIndex);
-        scenarioEntity.send(new LogicTreeAddActionEvent(this, tree.getValue().getEntity()));
+        getEntity().send(new LogicTreeAddActionEvent(getEntity(), tree.getValue().getEntity()));
     }
 
     private boolean checkCanAddAction() {
@@ -373,7 +374,7 @@ public class HubToolScreen extends BaseInteractionScreen {
         Integer selectedIndex = treeView.getSelectedIndex();
 
         Tree<LogicTreeValue> tree = treeView.getModel().getNode(selectedIndex);
-        scenarioEntity.send(new LogicTreeAddConditionEvent(this, tree.getValue().getEntity()));
+        getEntity().send(new LogicTreeAddConditionEvent(getEntity(), tree.getValue().getEntity()));
     }
 
     private void addTrigger(LogicTree node) {
@@ -384,7 +385,7 @@ public class HubToolScreen extends BaseInteractionScreen {
         Integer selectedIndex = treeView.getSelectedIndex();
 
         Tree<LogicTreeValue> tree = treeView.getModel().getNode(selectedIndex);
-        scenarioEntity.send(new LogicTreeAddTriggerEvent(this));
+        getEntity().send(new LogicTreeAddTriggerEvent(getEntity()));
     }
 
     private void onDeleteButton(UIWidget button) {
@@ -399,7 +400,7 @@ public class HubToolScreen extends BaseInteractionScreen {
         Integer selectedIndex = treeView.getSelectedIndex();
 
         Tree<LogicTreeValue> tree = treeView.getModel().getNode(selectedIndex);
-        scenarioEntity.send(new LogicTreeDeleteEvent(tree.getValue().getEntity(), tree.getParent().getValue().getEntity(), this));
+        getEntity().send(new LogicTreeDeleteEvent(tree.getValue().getEntity(), tree.getParent().getValue().getEntity()));
     }
 
     private boolean checkCanDelete() {
@@ -449,6 +450,27 @@ public class HubToolScreen extends BaseInteractionScreen {
         if (tempScenComponent.triggerEntities == null) {
             tempScenComponent.triggerEntities = new ArrayList<>();
             scenarioEntity.saveComponent(tempScenComponent);
+        }
+    }
+
+
+    @Override
+    public void update(float delta) {
+        super.update(delta);
+        ScenarioHubToolUpdateComponent component = getEntity().getComponent(ScenarioHubToolUpdateComponent.class);
+        if (component.dirtyLogic) {
+            if (component.addedEntity != null) { //This hubtool added the entity
+                setAddedEntity(component.addedEntity);
+                component.addedEntity = null;
+            }
+            updateTree(scenarioEntity);
+            component.dirtyLogic = false;
+            getEntity().saveComponent(component);
+        }
+        if (component.dirtyRegions) {
+            updateRegionTree(scenarioEntity);
+            component.dirtyRegions = false;
+            getEntity().saveComponent(component);
         }
     }
 
@@ -590,11 +612,12 @@ public class HubToolScreen extends BaseInteractionScreen {
     }
 
     public void regionAdd(RegionTree node) {
-        scenarioEntity.send(new RegionTreeAddEvent(this));
+        getEntity().send(new RegionTreeAddEvent());
+        getManager().closeScreen(this);
     }
 
     public void regionDelete(RegionTree node) {
-        scenarioEntity.send(new RegionTreeDeleteEvent(this, node.getValue().getEntity()));
+        getEntity().send(new RegionTreeDeleteEvent(node.getValue().getEntity()));
     }
 
     public boolean canEditRegion(RegionTree node) {
@@ -612,4 +635,6 @@ public class HubToolScreen extends BaseInteractionScreen {
     public void requestPop() {
         getManager().popScreen();
     }
+
+
 }

@@ -17,10 +17,13 @@ package org.terasology.scenario.components.regions;
 
 import org.terasology.entitySystem.Component;
 import org.terasology.math.geom.Vector3i;
+import org.terasology.network.FieldReplicateType;
+import org.terasology.network.Replicate;
 
 /**
  * Component indicating that this region is the one currently being created and should listen to edits
  */
 public class RegionBeingCreatedComponent implements Component {
+    @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public Vector3i firstHit;
 }

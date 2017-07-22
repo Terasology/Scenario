@@ -35,6 +35,7 @@ import org.terasology.registry.In;
 import org.terasology.rendering.logic.FloatingTextComponent;
 import org.terasology.rendering.logic.RegionOutlineComponent;
 import org.terasology.rendering.nui.Color;
+import org.terasology.scenario.components.ScenarioAttachedEntityComponent;
 import org.terasology.scenario.components.ScenarioRegionVisibilityComponent;
 import org.terasology.scenario.components.regions.RegionColorComponent;
 import org.terasology.scenario.components.regions.RegionLocationComponent;
@@ -74,6 +75,11 @@ public class RegionDisplaySystem extends BaseComponentSystem {
             }
         } else { //Character doesn't have a visibility for regions, so add one
             ScenarioRegionVisibilityComponent newComp = new ScenarioRegionVisibilityComponent();
+            entity.addComponent(newComp);
+        }
+
+        if (!entity.hasComponent(ScenarioAttachedEntityComponent.class)) { //Character doesn't exist yet
+            ScenarioAttachedEntityComponent newComp = new ScenarioAttachedEntityComponent();
             entity.addComponent(newComp);
         }
 

@@ -1,4 +1,5 @@
 {
+    "Network":{},
     "ScenarioInteger":{},
     "ShortName":{
         "name":"Count items inventory"

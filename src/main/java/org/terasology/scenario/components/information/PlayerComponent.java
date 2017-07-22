@@ -16,7 +16,10 @@
 package org.terasology.scenario.components.information;
 
 import org.terasology.entitySystem.Component;
+import org.terasology.network.FieldReplicateType;
+import org.terasology.network.Replicate;
 
 public class PlayerComponent implements Component {
-    public InformationEnums.PlayerType type;
+    @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
+    public InformationEnums.PlayerType type = InformationEnums.PlayerType.TRIGGERING_PLAYER;
 }

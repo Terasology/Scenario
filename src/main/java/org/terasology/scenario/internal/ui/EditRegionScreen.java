@@ -111,10 +111,10 @@ public class EditRegionScreen extends CoreScreenLayer {
 
     public void onOkButton(UIWidget button) {
         if (!nameEntry.getText().equals(baseEntity.getComponent(RegionNameComponent.class).regionName)) {
-            returnScreen.getScenarioEntity().send(new RegionRenameEvent(baseEntity, nameEntry.getText(), returnScreen));
+            returnScreen.getEntity().send(new RegionRenameEvent(baseEntity, nameEntry.getText()));
         }
         if (!colorImage.getTint().equals(baseEntity.getComponent(RegionColorComponent.class).color)) {
-            returnScreen.getScenarioEntity().send(new RegionRecolorEvent(baseEntity, colorImage.getTint(), returnScreen));
+            returnScreen.getEntity().send(new RegionRecolorEvent(baseEntity, colorImage.getTint()));
         }
         if (visiblity.isChecked()) {
             ScenarioRegionVisibilityComponent vis = returnScreen.getEntity().getOwner().getComponent(ScenarioRegionVisibilityComponent.class);

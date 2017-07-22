@@ -16,6 +16,8 @@
 package org.terasology.scenario.components.events;
 
 import org.terasology.entitySystem.Component;
+import org.terasology.network.Replicate;
 
+@Replicate
 public class OnEnterRegionComponent implements Component {
 }

@@ -17,19 +17,18 @@ package org.terasology.scenario.internal.events;
 
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
+import org.terasology.network.ServerEvent;
 import org.terasology.scenario.internal.ui.HubToolScreen;
 
+@ServerEvent
 public class RegionTreeDeleteEvent implements Event {
-    private HubToolScreen hubScreen;
     private EntityRef deleteEntity;
 
-    public RegionTreeDeleteEvent(HubToolScreen hubScreen, EntityRef deleteEntity) {
-        this.hubScreen = hubScreen;
-        this.deleteEntity = deleteEntity;
+    public RegionTreeDeleteEvent() {
     }
 
-    public HubToolScreen getHubScreen() {
-        return hubScreen;
+    public RegionTreeDeleteEvent(EntityRef deleteEntity) {
+        this.deleteEntity = deleteEntity;
     }
 
     public EntityRef getDeleteEntity() {

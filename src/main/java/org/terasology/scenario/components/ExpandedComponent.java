@@ -17,6 +17,8 @@ package org.terasology.scenario.components;
 
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.network.FieldReplicateType;
+import org.terasology.network.Replicate;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,5 +27,6 @@ import java.util.Set;
  * Expanded component that is attached to a hubtool to include which entities should be expanded in the treeview
  */
 public class ExpandedComponent implements Component{
+    @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public Set<EntityRef> expandedList = new HashSet<>();
 }

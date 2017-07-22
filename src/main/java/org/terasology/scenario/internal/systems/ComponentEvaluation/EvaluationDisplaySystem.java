@@ -47,7 +47,7 @@ import org.terasology.world.block.BlockManager;
 
 import java.util.Map;
 
-@RegisterSystem(RegisterMode.AUTHORITY)
+@RegisterSystem(RegisterMode.CLIENT)
 public class EvaluationDisplaySystem extends BaseComponentSystem {
 
     private static Logger logger = LoggerFactory.getLogger(EvaluationDisplaySystem.class);

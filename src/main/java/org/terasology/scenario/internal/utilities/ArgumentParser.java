@@ -90,8 +90,6 @@ public class ArgumentParser {
             int indexColon = group.indexOf(":");
             String key = group.substring(0, indexColon);
             String type = group.substring(indexColon+1);
-            Component defaultComponent;
-            Component indicatorComponent;
             if (type.equals("Integer")) {
                 args.arguments.put(key, entityManager.create(assetManager.getAsset("scenario:scenarioConstantInt", Prefab.class).get()));
             }
@@ -99,10 +97,7 @@ public class ArgumentParser {
                 args.arguments.put(key, entityManager.create(assetManager.getAsset("scenario:scenarioConstantBlock", Prefab.class).get()));
             }
             else if (type.equals("Player")) {
-                defaultComponent = new PlayerComponent();
-                ((PlayerComponent)defaultComponent).type = InformationEnums.PlayerType.TRIGGERING_PLAYER;
-                indicatorComponent = new ScenarioPlayerEntityComponent();
-                args.arguments.put(key, entityManager.create(defaultComponent, indicatorComponent));
+                args.arguments.put(key, entityManager.create(assetManager.getAsset("scenario:scenarioConstantPlayer", Prefab.class).get()));
             }
             else if (type.equals("String")) {
                 args.arguments.put(key, entityManager.create(assetManager.getAsset("scenario:scenarioConstantString", Prefab.class).get()));

@@ -60,6 +60,7 @@ public class RegionSystem extends BaseComponentSystem {
 
     @ReceiveEvent(priority = EventPriority.PRIORITY_CRITICAL)
     public void onAttackEntity(AttackEvent event, EntityRef targetEntity, org.terasology.world.block.BlockComponent blockComponent) {
+        logger.info("trigger");
         Iterator<EntityRef> entities = entityManager.getEntitiesWith(RegionBeingCreatedComponent.class).iterator();
         if (entities.hasNext()) {
             if (event.getDirectCause().getParentPrefab() != null && event.getDirectCause().getParentPrefab().equals(assetManager.getAsset("scenario:hubtool", Prefab.class).get())) {

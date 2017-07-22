@@ -141,7 +141,7 @@ public class LogicTree extends Tree<LogicTreeValue> {
 
     @Override
     public void addChild(int index, Tree<LogicTreeValue> child) { //Should only send if moving entities on UI view
-        hubToolScreen.getScenarioEntity().send(new LogicTreeMoveEntityEvent(this.getValue().getEntity(), child.getValue().getEntity(), child.getValue().getValueType(), index, hubToolScreen));
+        hubToolScreen.getEntity().send(new LogicTreeMoveEntityEvent(this.getValue().getEntity(), child.getValue().getEntity(), child.getValue().getValueType(), index));
     }
 
     @Override

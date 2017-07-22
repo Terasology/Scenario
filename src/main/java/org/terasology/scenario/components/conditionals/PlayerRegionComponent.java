@@ -16,9 +16,11 @@
 package org.terasology.scenario.components.conditionals;
 
 import org.terasology.entitySystem.Component;
+import org.terasology.network.Replicate;
 
 /**
  * Component to denote that a conditional is of type player in region conditional
  */
+@Replicate
 public class PlayerRegionComponent implements Component {
 }

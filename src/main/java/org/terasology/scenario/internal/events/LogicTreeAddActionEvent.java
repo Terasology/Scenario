@@ -17,6 +17,7 @@ package org.terasology.scenario.internal.events;
 
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
+import org.terasology.network.ServerEvent;
 import org.terasology.scenario.internal.ui.HubToolScreen;
 
 /**
@@ -25,16 +26,20 @@ import org.terasology.scenario.internal.ui.HubToolScreen;
  *            if not passed(null) then it will not update immediately.
  * triggerEntity: The entity of the trigger that the action will be attached to
  */
+@ServerEvent
 public class LogicTreeAddActionEvent implements Event {
     private EntityRef triggerEntity;
-    private HubToolScreen hubScreen;
+    private EntityRef hubScreen;
 
-    public LogicTreeAddActionEvent(HubToolScreen hubScreen, EntityRef triggerEntity) {
+    public LogicTreeAddActionEvent() {
+    }
+
+    public LogicTreeAddActionEvent(EntityRef hubScreen, EntityRef triggerEntity) {
         this.hubScreen = hubScreen;
         this.triggerEntity = triggerEntity;
     }
 
-    public HubToolScreen getHubScreen() {
+    public EntityRef getHubScreen() {
         return hubScreen;
     }
 
