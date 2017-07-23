@@ -77,10 +77,35 @@
             },
             {
               "type": "RowLayout",
-              "id": "colorLayout",
+              "id": "protectedLayout",
               "layoutInfo": {
                 "position-top": {
                   "widget": "visibilityLayout",
+                  "target": "BOTTOM",
+                  "offset": 5
+                },
+                "use-content-height": true
+              },
+              "contents": [
+                {
+                  "type": "engine:UILabel",
+                  "id": "protectedLabel",
+                  "layoutInfo": {},
+                  "text": "Protected"
+                },
+                {
+                  "type": "engine:UICheckbox",
+                  "id": "protected",
+                  "layoutInfo": {}
+                }
+              ]
+            },
+            {
+              "type": "RowLayout",
+              "id": "colorLayout",
+              "layoutInfo": {
+                "position-top": {
+                  "widget": "protectedLayout",
                   "target": "BOTTOM",
                   "offset": 5
                 },

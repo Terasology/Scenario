@@ -63,6 +63,7 @@ public class EditRegionScreen extends CoreScreenLayer {
 
     private UIText nameEntry;
     private UICheckbox visiblity;
+    private UICheckbox protectedRegion;
     private UISlider colorSlider;
     private UIImage colorImage;
 
@@ -76,6 +77,7 @@ public class EditRegionScreen extends CoreScreenLayer {
     public void initialise() {
         nameEntry = find("nameEntry", UIText.class);
         visiblity = find("visibility", UICheckbox.class);
+        protectedRegion = find("protected", UICheckbox.class);
         colorSlider = find("colorSlider", UISlider.class);
         colorImage = find("colorImage", UIImage.class);
 
