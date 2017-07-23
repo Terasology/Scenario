@@ -27,6 +27,8 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.characters.CharacterTeleportEvent;
 import org.terasology.logic.players.LocalPlayer;
 import org.terasology.math.Region3i;
+import org.terasology.math.geom.BaseVector3i;
+import org.terasology.math.geom.Vector3i;
 import org.terasology.network.ClientComponent;
 import org.terasology.registry.In;
 import org.terasology.rendering.assets.texture.Texture;
@@ -44,8 +46,10 @@ import org.terasology.scenario.components.ScenarioRegionVisibilityComponent;
 import org.terasology.scenario.components.regions.RegionColorComponent;
 import org.terasology.scenario.components.regions.RegionLocationComponent;
 import org.terasology.scenario.components.regions.RegionNameComponent;
+import org.terasology.scenario.internal.events.RegionProtectEvent;
 import org.terasology.scenario.internal.events.RegionRecolorEvent;
 import org.terasology.scenario.internal.events.RegionRenameEvent;
+import org.terasology.scenario.internal.events.RegionResizeEvent;
 import org.terasology.scenario.internal.utilities.CieCamColorsScenario;
 import org.terasology.structureTemplates.components.ProtectedRegionsComponent;
 import org.terasology.utilities.Assets;
@@ -69,6 +73,12 @@ public class EditRegionScreen extends CoreScreenLayer {
     private UICheckbox protectedRegion;
     private UISlider colorSlider;
     private UIImage colorImage;
+    private UIText minXField;
+    private UIText minYField;
+    private UIText minZField;
+    private UIText sizeXField;
+    private UIText sizeYField;
+    private UIText sizeZField;
 
     @In
     private LocalPlayer localPlayer;
@@ -83,6 +93,14 @@ public class EditRegionScreen extends CoreScreenLayer {
         protectedRegion = find("protected", UICheckbox.class);
         colorSlider = find("colorSlider", UISlider.class);
         colorImage = find("colorImage", UIImage.class);
+
+        minXField = find("minX", UIText.class);
+        minYField = find("minY", UIText.class);
+        minZField = find("minZ", UIText.class);
+
+        sizeXField = find("sizeX", UIText.class);
+        sizeYField = find("sizeY", UIText.class);
+        sizeZField = find("sizeZ", UIText.class);
 
         colorSlider.setIncrement(0.01f);
         Function<Object, String> constant = Functions.constant("  ");   // ensure a certain width
@@ -107,6 +125,15 @@ public class EditRegionScreen extends CoreScreenLayer {
         visiblity.setChecked(returnScreen.getEntity().getOwner().getComponent(ScenarioRegionVisibilityComponent.class).visibleList.contains(entity));
         protectedRegion.setChecked(entity.hasComponent(ProtectedRegionsComponent.class));
 
+        Region3i region = entity.getComponent(RegionLocationComponent.class).region;
+
+        minXField.setText(Integer.toString(region.minX()));
+        minYField.setText(Integer.toString(region.minY()));
+        minZField.setText(Integer.toString(region.minZ()));
+        sizeXField.setText(Integer.toString(region.sizeX()));
+        sizeYField.setText(Integer.toString(region.sizeY()));
+        sizeZField.setText(Integer.toString(region.sizeZ()));
+
         if (colorSlider != null) {
             Color color = entity.getComponent(RegionColorComponent.class).color;
             colorSlider.bindValue(new NotifyingBinding(findClosestIndex(color)));
@@ -116,6 +143,8 @@ public class EditRegionScreen extends CoreScreenLayer {
     }
 
     public void onOkButton(UIWidget button) {
+        returnScreen.getScenarioEntity().send(new RegionResizeEvent(baseEntity, getRegion(), returnScreen));
+
         if (!nameEntry.getText().equals(baseEntity.getComponent(RegionNameComponent.class).regionName)) {
             returnScreen.getEntity().send(new RegionRenameEvent(baseEntity, nameEntry.getText()));
         }
@@ -131,19 +160,8 @@ public class EditRegionScreen extends CoreScreenLayer {
             vis.visibleList.remove(baseEntity);
             returnScreen.getEntity().getOwner().saveComponent(vis);
         }
-        if (protectedRegion.isChecked()) {
-            if (!baseEntity.hasComponent(ProtectedRegionsComponent.class)) {
-                ProtectedRegionsComponent protectedRegionsComponent = new ProtectedRegionsComponent();
-                List<Region3i> absoluteRegions = Lists.newArrayList();
-                absoluteRegions.add(baseEntity.getComponent(RegionLocationComponent.class).region);
-                protectedRegionsComponent.regions = absoluteRegions;
-                baseEntity.addComponent(protectedRegionsComponent);
-            }
-        } else {
-            if (baseEntity.hasComponent(ProtectedRegionsComponent.class)) {
-                baseEntity.removeComponent(ProtectedRegionsComponent.class);
-            }
-        }
+        returnScreen.getScenarioEntity().send(new RegionProtectEvent(baseEntity, protectedRegion.isChecked(), returnScreen));
+
         getManager().popScreen();
     }
 
@@ -155,6 +173,21 @@ public class EditRegionScreen extends CoreScreenLayer {
         org.terasology.math.geom.Vector3f location = baseEntity.getComponent(RegionLocationComponent.class).region.center();
         CharacterTeleportEvent tele = new CharacterTeleportEvent(location);
         localPlayer.getCharacterEntity().send(tele);
+    }
+
+    public Region3i getRegion() {
+        return Region3i.createFromMinAndSize(
+                new Vector3i(integerFromField(minXField), integerFromField(minYField), integerFromField(minZField)),
+                new Vector3i(integerFromField(sizeXField), integerFromField(sizeYField), integerFromField(sizeZField))
+        );
+    }
+
+    private Integer integerFromField(UIText field) {
+        try {
+            return Integer.parseInt(field.getText());
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 
     @Override
