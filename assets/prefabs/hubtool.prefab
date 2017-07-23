@@ -1,4 +1,5 @@
 {
+    "Network":{},
     "parent": "engine:iconItem",
     "DisplayName": {
         "name": "Hub Tool"
@@ -11,5 +12,6 @@
         "screen": "Scenario:HubToolScreen"
     },
     "Expanded": {},
-    "Visibility": {}
+    "ScenarioRegionVisibility": {},
+    "ScenarioHubToolUpdate":{}
 }

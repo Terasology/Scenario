@@ -15,10 +15,13 @@
  */
 package org.terasology.scenario.components.information;
 
+import org.terasology.network.Replicate;
+
 /**
  * This is not actually a component, it details all enums for any action/condition/event components along with the editing screens
  * that will be used between different types
  */
+@Replicate
 public final class InformationEnums {
     /**
      * Any types that are used as components, also includes any managers that might need to be passed at some point for

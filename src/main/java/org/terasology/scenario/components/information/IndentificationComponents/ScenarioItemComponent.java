@@ -16,6 +16,8 @@
 package org.terasology.scenario.components.information.IndentificationComponents;
 
 import org.terasology.entitySystem.Component;
+import org.terasology.network.Replicate;
 
+@Replicate
 public class ScenarioItemComponent implements Component {
 }

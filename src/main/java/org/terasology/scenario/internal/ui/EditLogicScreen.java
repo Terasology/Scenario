@@ -18,10 +18,12 @@ package org.terasology.scenario.internal.ui;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.assets.ResourceUrn;
+import org.terasology.assets.management.AssetManager;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.prefab.Prefab;
 import org.terasology.entitySystem.prefab.PrefabManager;
+import org.terasology.logic.players.LocalPlayer;
 import org.terasology.math.geom.Rect2i;
 import org.terasology.math.geom.Vector2i;
 import org.terasology.registry.In;
@@ -41,7 +43,8 @@ import org.terasology.scenario.components.actions.ActionComponent;
 import org.terasology.scenario.components.actions.ArgumentContainerComponent;
 import org.terasology.scenario.components.conditionals.ConditionalComponent;
 import org.terasology.scenario.components.events.EventComponent;
-import org.terasology.scenario.internal.events.ReplaceEntityEvent;
+import org.terasology.scenario.internal.events.ConvertScenarioEntityEvent;
+import org.terasology.scenario.internal.events.ReplaceEntityFromConstructionStringsEvent;
 import org.terasology.scenario.internal.ui.LogicTree.LogicTreeValue;
 import org.terasology.scenario.internal.utilities.ArgumentParser;
 
@@ -57,6 +60,12 @@ public class EditLogicScreen extends CoreScreenLayer {
 
     @In
     EntityManager entityManager;
+
+    @In
+    AssetManager assetManager;
+
+    @In
+    private LocalPlayer localPlayer;
 
     private EntityRef scenarioEntity;
     private EntityRef targetEntity;
@@ -146,8 +155,10 @@ public class EditLogicScreen extends CoreScreenLayer {
 
     private void onOkButton(UIWidget button) {
         if (!temporaryEntity.equals(targetEntity)) {
-            ReplaceEntityEvent event = new ReplaceEntityEvent(targetEntity, temporaryEntity, hubtool);
-            scenarioEntity.send(event);
+            ConvertScenarioEntityEvent convertEvent = new ConvertScenarioEntityEvent();
+            temporaryEntity.send(convertEvent);
+            ReplaceEntityFromConstructionStringsEvent event = new ReplaceEntityFromConstructionStringsEvent(targetEntity, convertEvent.getOutputList());
+            hubtool.getEntity().send(event);
         }
         else {
             if (temporaryEntity.exists()) {

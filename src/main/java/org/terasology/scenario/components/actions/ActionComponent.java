@@ -16,9 +16,11 @@
 package org.terasology.scenario.components.actions;
 
 import org.terasology.entitySystem.Component;
+import org.terasology.network.Replicate;
 
 /**
  * Component that indicates if something is an action
  */
+@Replicate
 public class ActionComponent implements Component {
 }

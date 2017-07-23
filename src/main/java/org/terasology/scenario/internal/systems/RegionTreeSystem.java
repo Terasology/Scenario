@@ -15,9 +15,13 @@
  */
 package org.terasology.scenario.internal.systems;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.terasology.assets.management.AssetManager;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
+import org.terasology.entitySystem.prefab.Prefab;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
@@ -29,6 +33,7 @@ import org.terasology.registry.In;
 import org.terasology.rendering.FontColor;
 import org.terasology.rendering.nui.Color;
 import org.terasology.scenario.components.ScenarioComponent;
+import org.terasology.scenario.components.ScenarioHubToolUpdateComponent;
 import org.terasology.scenario.components.ScenarioRegionVisibilityComponent;
 import org.terasology.scenario.components.regions.RegionBeingCreatedComponent;
 import org.terasology.scenario.components.regions.RegionColorComponent;
@@ -52,13 +57,27 @@ public class RegionTreeSystem extends BaseComponentSystem {
     @In
     private EntityManager entityManager;
 
+    @In
+    private AssetManager assetManager;
+
+    private EntityRef scenarioEntity;
+
+    private Logger logger = LoggerFactory.getLogger(RegionTreeSystem.class);
+
+    @Override
+    public void postBegin() {
+        Iterable<EntityRef> scenario = entityManager.getEntitiesWith(ScenarioComponent.class); // Checks for existing Scenario
+
+        if (!scenario.iterator().hasNext()) { //No scenario exists yet
+            scenarioEntity = entityManager.create(assetManager.getAsset("scenario:scenarioEntity", Prefab.class).get());
+        }
+        else {
+            scenarioEntity = scenario.iterator().next();
+        }
+    }
+
     @ReceiveEvent
-    public void onRegionTreeAddEvent(RegionTreeAddEvent event, EntityRef entity, ScenarioComponent component) {
-        RegionColorComponent colorComponent = new RegionColorComponent();
-        RegionLocationComponent locationComponent = new RegionLocationComponent();
-        RegionNameComponent nameComponent = new RegionNameComponent();
-        RegionContainingEntitiesComponent contain = new RegionContainingEntitiesComponent();
-        RegionBeingCreatedComponent editComponent = new RegionBeingCreatedComponent();
+    public void onRegionTreeAddEvent(RegionTreeAddEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
 
         //Will need to be fixed once creating multiple regions is allowed, should only delete regions
         //currently being created by the person wanting to create a new one
@@ -66,18 +85,13 @@ public class RegionTreeSystem extends BaseComponentSystem {
             e.destroy();
         }
 
-
-        entityManager.create(colorComponent, locationComponent, nameComponent, contain, editComponent);
-
-        if (event.getHubScreen() != null) {
-            event.getHubScreen().getManager().closeScreen(event.getHubScreen());
-        }
+        entityManager.create(assetManager.getAsset("scenario:scenarioCreationEntity", Prefab.class).get());
     }
 
     @ReceiveEvent
-    public void onRegionTreeDeleteEvent(RegionTreeDeleteEvent event, EntityRef entity, ScenarioComponent component) {
-        component.regionEntities.remove(event.getDeleteEntity());
-        entity.saveComponent(component);
+    public void onRegionTreeDeleteEvent(RegionTreeDeleteEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
+        scenarioEntity.getComponent(ScenarioComponent.class).regionEntities.remove(event.getDeleteEntity());
+        scenarioEntity.saveComponent(scenarioEntity.getComponent(ScenarioComponent.class));
 
 
         for (EntityRef e : entityManager.getEntitiesWith(ScenarioRegionVisibilityComponent.class)) {
@@ -87,16 +101,17 @@ public class RegionTreeSystem extends BaseComponentSystem {
 
         event.getDeleteEntity().destroy();
 
-        if (event.getHubScreen() != null) {
-            event.getHubScreen().updateRegionTree(entity);
+        for (EntityRef e : entityManager.getEntitiesWith(ScenarioHubToolUpdateComponent.class)) {
+            e.getComponent(ScenarioHubToolUpdateComponent.class).dirtyRegions = true;
+            e.saveComponent(e.getComponent(ScenarioHubToolUpdateComponent.class));
         }
 
 
     }
 
     @ReceiveEvent
-    public void onRegionTreeMoveEntityEvent(RegionTreeMoveEntityEvent event, EntityRef entity, ScenarioComponent component) {
-        List<EntityRef> list = component.regionEntities;
+    public void onRegionTreeMoveEntityEvent(RegionTreeMoveEntityEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
+        List<EntityRef> list = scenarioEntity.getComponent(ScenarioComponent.class).regionEntities;
 
         int startIndex = list.indexOf(event.getMoveEntity());
         int endIndex = event.getIndex();
@@ -109,10 +124,11 @@ public class RegionTreeSystem extends BaseComponentSystem {
             list.remove(startIndex + 1);
         }
 
-        entity.saveComponent(component);
+        scenarioEntity.saveComponent(scenarioEntity.getComponent(ScenarioComponent.class));
 
-        if (event.getHubScreen() != null) {
-            event.getHubScreen().updateRegionTree(entity);
+        for (EntityRef e : entityManager.getEntitiesWith(ScenarioHubToolUpdateComponent.class)) {
+            e.getComponent(ScenarioHubToolUpdateComponent.class).dirtyRegions = true;
+            e.saveComponent(e.getComponent(ScenarioHubToolUpdateComponent.class));
         }
     }
 
@@ -144,24 +160,25 @@ public class RegionTreeSystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent
-    public void onRegionRenameEvent(RegionRenameEvent event, EntityRef entity, ScenarioComponent component) {
+    public void onRegionRenameEvent(RegionRenameEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
         event.getRegionEntity().getComponent(RegionNameComponent.class).regionName = event.getNewName();
         event.getRegionEntity().saveComponent(event.getRegionEntity().getComponent(RegionNameComponent.class));
-
-        entity.saveComponent(component);
-        if (event.getHubScreen() != null) {
-            event.getHubScreen().updateRegionTree(entity);
+        scenarioEntity.saveComponent(scenarioEntity.getComponent(ScenarioComponent.class));
+        for (EntityRef e : entityManager.getEntitiesWith(ScenarioHubToolUpdateComponent.class)) {
+            e.getComponent(ScenarioHubToolUpdateComponent.class).dirtyRegions = true;
+            e.saveComponent(e.getComponent(ScenarioHubToolUpdateComponent.class));
         }
     }
 
     @ReceiveEvent
-    public void onRegionRecolorEvent(RegionRecolorEvent event, EntityRef entity, ScenarioComponent component) {
+    public void onRegionRecolorEvent(RegionRecolorEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
         event.getRegionEntity().getComponent(RegionColorComponent.class).color = event.getNewColor();
         event.getRegionEntity().saveComponent(event.getRegionEntity().getComponent(RegionColorComponent.class));
 
-        entity.saveComponent(component);
-        if (event.getHubScreen() != null) {
-            event.getHubScreen().updateRegionTree(entity);
+        scenarioEntity.saveComponent(scenarioEntity.getComponent(ScenarioComponent.class));
+        for (EntityRef e : entityManager.getEntitiesWith(ScenarioHubToolUpdateComponent.class)) {
+            e.getComponent(ScenarioHubToolUpdateComponent.class).dirtyRegions = true;
+            e.saveComponent(e.getComponent(ScenarioHubToolUpdateComponent.class));
         }
     }
 }

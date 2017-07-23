@@ -16,8 +16,11 @@
 package org.terasology.scenario.components.information;
 
 import org.terasology.entitySystem.Component;
+import org.terasology.network.FieldReplicateType;
+import org.terasology.network.Replicate;
 import org.terasology.world.block.family.BlockFamily;
 
 public class BlockComponent implements Component {
+    @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public BlockFamily value;
 }

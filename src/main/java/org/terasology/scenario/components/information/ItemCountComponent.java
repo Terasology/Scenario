@@ -16,6 +16,8 @@
 package org.terasology.scenario.components.information;
 
 import org.terasology.entitySystem.Component;
+import org.terasology.network.Replicate;
 
+@Replicate
 public class ItemCountComponent implements Component {
 }
