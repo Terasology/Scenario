@@ -17,6 +17,7 @@ package org.terasology.scenario.internal.ui;
 
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
+import com.google.common.collect.Lists;
 import com.google.common.math.DoubleMath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,7 @@ import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.characters.CharacterTeleportEvent;
 import org.terasology.logic.players.LocalPlayer;
+import org.terasology.math.Region3i;
 import org.terasology.network.ClientComponent;
 import org.terasology.registry.In;
 import org.terasology.rendering.assets.texture.Texture;
@@ -45,6 +47,7 @@ import org.terasology.scenario.components.regions.RegionNameComponent;
 import org.terasology.scenario.internal.events.RegionRecolorEvent;
 import org.terasology.scenario.internal.events.RegionRenameEvent;
 import org.terasology.scenario.internal.utilities.CieCamColorsScenario;
+import org.terasology.structureTemplates.components.ProtectedRegionsComponent;
 import org.terasology.utilities.Assets;
 
 import java.math.RoundingMode;
@@ -102,6 +105,7 @@ public class EditRegionScreen extends CoreScreenLayer {
 
         nameEntry.setText(entity.getComponent(RegionNameComponent.class).regionName);
         visiblity.setChecked(returnScreen.getEntity().getOwner().getComponent(ScenarioRegionVisibilityComponent.class).visibleList.contains(entity));
+        protectedRegion.setChecked(entity.hasComponent(ProtectedRegionsComponent.class));
 
         if (colorSlider != null) {
             Color color = entity.getComponent(RegionColorComponent.class).color;
@@ -122,11 +126,23 @@ public class EditRegionScreen extends CoreScreenLayer {
             ScenarioRegionVisibilityComponent vis = returnScreen.getEntity().getOwner().getComponent(ScenarioRegionVisibilityComponent.class);
             vis.visibleList.add(baseEntity);
             returnScreen.getEntity().getOwner().saveComponent(vis);
-        }
-        else {
+        } else {
             ScenarioRegionVisibilityComponent vis = returnScreen.getEntity().getOwner().getComponent(ScenarioRegionVisibilityComponent.class);
             vis.visibleList.remove(baseEntity);
             returnScreen.getEntity().getOwner().saveComponent(vis);
+        }
+        if (protectedRegion.isChecked()) {
+            if (!baseEntity.hasComponent(ProtectedRegionsComponent.class)) {
+                ProtectedRegionsComponent protectedRegionsComponent = new ProtectedRegionsComponent();
+                List<Region3i> absoluteRegions = Lists.newArrayList();
+                absoluteRegions.add(baseEntity.getComponent(RegionLocationComponent.class).region);
+                protectedRegionsComponent.regions = absoluteRegions;
+                baseEntity.addComponent(protectedRegionsComponent);
+            }
+        } else {
+            if (baseEntity.hasComponent(ProtectedRegionsComponent.class)) {
+                baseEntity.removeComponent(ProtectedRegionsComponent.class);
+            }
         }
         getManager().popScreen();
     }
