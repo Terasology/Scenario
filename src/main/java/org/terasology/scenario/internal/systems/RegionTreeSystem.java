@@ -185,7 +185,7 @@ public class RegionTreeSystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent
-    public void onRegionProtectEvent(RegionProtectEvent event, EntityRef entity, ScenarioComponent component) {
+    public void onRegionProtectEvent(RegionProtectEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
         event.getRegionEntity().removeComponent(ProtectedRegionsComponent.class);
         if (event.isProtected()) {
             ProtectedRegionsComponent protectedRegionsComponent = new ProtectedRegionsComponent();
@@ -203,7 +203,7 @@ public class RegionTreeSystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent
-    public void onRegionResizeEvent(RegionResizeEvent event, EntityRef entity, ScenarioComponent component) {
+    public void onRegionResizeEvent(RegionResizeEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
         RegionLocationComponent regionLocationComponent = event.getRegionEntity().getComponent(RegionLocationComponent.class);
         regionLocationComponent.region = event.getRegion();
         event.getRegionEntity().saveComponent(regionLocationComponent);
