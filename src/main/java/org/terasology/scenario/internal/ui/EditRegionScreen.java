@@ -143,7 +143,7 @@ public class EditRegionScreen extends CoreScreenLayer {
     }
 
     public void onOkButton(UIWidget button) {
-        returnScreen.getScenarioEntity().send(new RegionResizeEvent(baseEntity, getRegion(), returnScreen));
+        returnScreen.getEntity().send(new RegionResizeEvent(baseEntity, getRegion(), returnScreen));
 
         if (!nameEntry.getText().equals(baseEntity.getComponent(RegionNameComponent.class).regionName)) {
             returnScreen.getEntity().send(new RegionRenameEvent(baseEntity, nameEntry.getText()));
@@ -160,7 +160,7 @@ public class EditRegionScreen extends CoreScreenLayer {
             vis.visibleList.remove(baseEntity);
             returnScreen.getEntity().getOwner().saveComponent(vis);
         }
-        returnScreen.getScenarioEntity().send(new RegionProtectEvent(baseEntity, protectedRegion.isChecked(), returnScreen));
+        returnScreen.getEntity().send(new RegionProtectEvent(baseEntity, protectedRegion.isChecked(), returnScreen));
 
         getManager().popScreen();
     }

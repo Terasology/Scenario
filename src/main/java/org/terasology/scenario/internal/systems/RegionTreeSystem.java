@@ -194,8 +194,11 @@ public class RegionTreeSystem extends BaseComponentSystem {
             protectedRegionsComponent.regions = absoluteRegions;
             event.getRegionEntity().addComponent(protectedRegionsComponent);
         }
-        if (event.getHubScreen() != null) {
-            event.getHubScreen().updateRegionTree(entity);
+
+        scenarioEntity.saveComponent(scenarioEntity.getComponent(ScenarioComponent.class));
+        for (EntityRef e : entityManager.getEntitiesWith(ScenarioHubToolUpdateComponent.class)) {
+            e.getComponent(ScenarioHubToolUpdateComponent.class).dirtyRegions = true;
+            e.saveComponent(e.getComponent(ScenarioHubToolUpdateComponent.class));
         }
     }
 
@@ -204,8 +207,11 @@ public class RegionTreeSystem extends BaseComponentSystem {
         RegionLocationComponent regionLocationComponent = event.getRegionEntity().getComponent(RegionLocationComponent.class);
         regionLocationComponent.region = event.getRegion();
         event.getRegionEntity().saveComponent(regionLocationComponent);
-        if (event.getHubScreen() != null) {
-            event.getHubScreen().updateRegionTree(entity);
+
+        scenarioEntity.saveComponent(scenarioEntity.getComponent(ScenarioComponent.class));
+        for (EntityRef e : entityManager.getEntitiesWith(ScenarioHubToolUpdateComponent.class)) {
+            e.getComponent(ScenarioHubToolUpdateComponent.class).dirtyRegions = true;
+            e.saveComponent(e.getComponent(ScenarioHubToolUpdateComponent.class));
         }
     }
 }
