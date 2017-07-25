@@ -15,6 +15,7 @@
  */
 package org.terasology.scenario.internal.systems;
 
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.assets.management.AssetManager;
@@ -27,6 +28,7 @@ import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.chat.ChatMessageEvent;
 import org.terasology.logic.common.DisplayNameComponent;
+import org.terasology.math.Region3i;
 import org.terasology.network.ClientComponent;
 import org.terasology.network.ColorComponent;
 import org.terasology.registry.In;
@@ -37,15 +39,17 @@ import org.terasology.scenario.components.ScenarioHubToolUpdateComponent;
 import org.terasology.scenario.components.ScenarioRegionVisibilityComponent;
 import org.terasology.scenario.components.regions.RegionBeingCreatedComponent;
 import org.terasology.scenario.components.regions.RegionColorComponent;
-import org.terasology.scenario.components.regions.RegionContainingEntitiesComponent;
 import org.terasology.scenario.components.regions.RegionLocationComponent;
 import org.terasology.scenario.components.regions.RegionNameComponent;
+import org.terasology.scenario.internal.events.RegionProtectEvent;
 import org.terasology.scenario.internal.events.RegionRecolorEvent;
 import org.terasology.scenario.internal.events.RegionRenameEvent;
+import org.terasology.scenario.internal.events.RegionResizeEvent;
 import org.terasology.scenario.internal.events.RegionTreeAddEvent;
 import org.terasology.scenario.internal.events.RegionTreeDeleteEvent;
 import org.terasology.scenario.internal.events.RegionTreeFullAddEvent;
 import org.terasology.scenario.internal.events.RegionTreeMoveEntityEvent;
+import org.terasology.structureTemplates.components.ProtectedRegionsComponent;
 
 import java.util.List;
 
@@ -70,8 +74,7 @@ public class RegionTreeSystem extends BaseComponentSystem {
 
         if (!scenario.iterator().hasNext()) { //No scenario exists yet
             scenarioEntity = entityManager.create(assetManager.getAsset("scenario:scenarioEntity", Prefab.class).get());
-        }
-        else {
+        } else {
             scenarioEntity = scenario.iterator().next();
         }
     }
@@ -118,8 +121,7 @@ public class RegionTreeSystem extends BaseComponentSystem {
         if (startIndex < endIndex) {
             list.add(endIndex, list.get(startIndex));
             list.remove(startIndex);
-        }
-        else {
+        } else {
             list.add(endIndex, list.get(startIndex));
             list.remove(startIndex + 1);
         }
@@ -174,6 +176,37 @@ public class RegionTreeSystem extends BaseComponentSystem {
     public void onRegionRecolorEvent(RegionRecolorEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
         event.getRegionEntity().getComponent(RegionColorComponent.class).color = event.getNewColor();
         event.getRegionEntity().saveComponent(event.getRegionEntity().getComponent(RegionColorComponent.class));
+
+        scenarioEntity.saveComponent(scenarioEntity.getComponent(ScenarioComponent.class));
+        for (EntityRef e : entityManager.getEntitiesWith(ScenarioHubToolUpdateComponent.class)) {
+            e.getComponent(ScenarioHubToolUpdateComponent.class).dirtyRegions = true;
+            e.saveComponent(e.getComponent(ScenarioHubToolUpdateComponent.class));
+        }
+    }
+
+    @ReceiveEvent
+    public void onRegionProtectEvent(RegionProtectEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
+        event.getRegionEntity().removeComponent(ProtectedRegionsComponent.class);
+        if (event.isProtected()) {
+            ProtectedRegionsComponent protectedRegionsComponent = new ProtectedRegionsComponent();
+            List<Region3i> absoluteRegions = Lists.newArrayList();
+            absoluteRegions.add(event.getRegionEntity().getComponent(RegionLocationComponent.class).region);
+            protectedRegionsComponent.regions = absoluteRegions;
+            event.getRegionEntity().addComponent(protectedRegionsComponent);
+        }
+
+        scenarioEntity.saveComponent(scenarioEntity.getComponent(ScenarioComponent.class));
+        for (EntityRef e : entityManager.getEntitiesWith(ScenarioHubToolUpdateComponent.class)) {
+            e.getComponent(ScenarioHubToolUpdateComponent.class).dirtyRegions = true;
+            e.saveComponent(e.getComponent(ScenarioHubToolUpdateComponent.class));
+        }
+    }
+
+    @ReceiveEvent
+    public void onRegionResizeEvent(RegionResizeEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
+        RegionLocationComponent regionLocationComponent = event.getRegionEntity().getComponent(RegionLocationComponent.class);
+        regionLocationComponent.region = event.getRegion();
+        event.getRegionEntity().saveComponent(regionLocationComponent);
 
         scenarioEntity.saveComponent(scenarioEntity.getComponent(ScenarioComponent.class));
         for (EntityRef e : entityManager.getEntitiesWith(ScenarioHubToolUpdateComponent.class)) {

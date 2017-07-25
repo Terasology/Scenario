@@ -7,7 +7,7 @@
         "type": "engine:UIBox",
         "id": "newWidget",
         "layoutInfo": {
-          "width": 400,
+          "width": 500,
           "height": 300,
           "position-vertical-center": {},
           "position-horizontal-center": {}
@@ -52,10 +52,89 @@
             },
             {
               "type": "RowLayout",
-              "id": "visibilityLayout",
+              "id": "sizeLayout",
               "layoutInfo": {
                 "position-top": {
                   "widget": "selectionLayout",
+                  "target": "BOTTOM",
+                  "offset": 5
+                },
+                "use-content-height": true
+              },
+              "contents": [
+                {
+                  "type": "engine:UILabel",
+                  "layoutInfo": {
+                    "relativeWidth": 0.15
+                  },
+                  "text": "Min- X:"
+                },
+                {
+                  "type": "engine:UIText",
+                  "id": "minX",
+                  "layoutInfo": {}
+                },
+                {
+                  "type": "engine:UILabel",
+                  "layoutInfo": {},
+                  "text": "Y:"
+                },
+                {
+                  "type": "engine:UIText",
+                  "id": "minY",
+                  "layoutInfo": {}
+                },
+                {
+                  "type": "engine:UILabel",
+                  "layoutInfo": {},
+                  "text": "Z:"
+                },
+                {
+                  "type": "engine:UIText",
+                  "id": "minZ",
+                  "layoutInfo": {}
+                },
+                {
+                  "type": "engine:UILabel",
+                  "layoutInfo": {
+                    "relativeWidth": 0.15
+                  },
+                  "text": "Size- X:"
+                },
+                {
+                  "type": "engine:UIText",
+                  "id": "sizeX",
+                  "layoutInfo": {}
+                },
+                {
+                  "type": "engine:UILabel",
+                  "layoutInfo": {},
+                  "text": "Y:"
+                },
+                {
+                  "type": "engine:UIText",
+                  "id": "sizeY",
+                  "layoutInfo": {}
+                },
+                {
+                  "type": "engine:UILabel",
+                  "id": "selectLabel",
+                  "layoutInfo": {},
+                  "text": "Z:"
+                },
+                {
+                  "type": "engine:UIText",
+                  "id": "sizeZ",
+                  "layoutInfo": {}
+                }
+              ]
+            },
+            {
+              "type": "RowLayout",
+              "id": "visibilityLayout",
+              "layoutInfo": {
+                "position-top": {
+                  "widget": "sizeLayout",
                   "target": "BOTTOM",
                   "offset": 5
                 },
@@ -77,10 +156,35 @@
             },
             {
               "type": "RowLayout",
-              "id": "colorLayout",
+              "id": "protectedLayout",
               "layoutInfo": {
                 "position-top": {
                   "widget": "visibilityLayout",
+                  "target": "BOTTOM",
+                  "offset": 5
+                },
+                "use-content-height": true
+              },
+              "contents": [
+                {
+                  "type": "engine:UILabel",
+                  "id": "protectedLabel",
+                  "layoutInfo": {},
+                  "text": "Protected"
+                },
+                {
+                  "type": "engine:UICheckbox",
+                  "id": "protected",
+                  "layoutInfo": {}
+                }
+              ]
+            },
+            {
+              "type": "RowLayout",
+              "id": "colorLayout",
+              "layoutInfo": {
+                "position-top": {
+                  "widget": "protectedLayout",
                   "target": "BOTTOM",
                   "offset": 5
                 },
@@ -115,7 +219,7 @@
                 "position-top": {
                   "widget": "colorLayout",
                   "target": "BOTTOM",
-                  "offset": 40
+                  "offset": 5
                 },
                 "use-content-height": true
               },
