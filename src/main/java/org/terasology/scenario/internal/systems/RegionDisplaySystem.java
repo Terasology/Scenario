@@ -84,29 +84,6 @@ public class RegionDisplaySystem extends BaseComponentSystem implements UpdateSu
         }
     }
 
-    @ReceiveEvent //Check to see if a character has a visibility component, if not then add one, if they do then do cleanup to check for old regions
-    public void onComponentActivated(OnActivatedComponent event, EntityRef entity, CharacterComponent component) {
-        if (entity.hasComponent(ScenarioRegionVisibilityComponent.class)) { //Character already exists
-            ScenarioRegionVisibilityComponent comp = entity.getComponent(ScenarioRegionVisibilityComponent.class);
-            List<EntityRef> removalList = new ArrayList<>();
-            for (EntityRef e : comp.visibleList) { //Check if any regions were in visible list that don't exist anymore and remove
-                if (!e.exists()) {
-                    removalList.add(e);
-                }
-            }
-            if (!removalList.isEmpty()) {
-                for (EntityRef e : removalList) {
-                    comp.visibleList.remove(e);
-                }
-
-                entity.saveComponent(comp);
-            }
-        } else { //Character doesn't have a visibility for regions, so add one
-            ScenarioRegionVisibilityComponent newComp = new ScenarioRegionVisibilityComponent();
-            entity.addComponent(newComp);
-        }
-    }
-
     @ReceiveEvent
     public void onChangedVisiblityComponent(OnChangedComponent event, EntityRef entity, ScenarioRegionVisibilityComponent component) {
         if (entity.equals(localPlayer.getCharacterEntity())) { //Only want to watch hub tool visiblity of local player.

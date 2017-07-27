@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.terasology.assets.management.AssetManager;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.entitySystem.entity.lifecycleEvents.OnActivatedComponent;
 import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.prefab.Prefab;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
@@ -52,6 +53,7 @@ import org.terasology.scenario.internal.events.RegionTreeFullAddEvent;
 import org.terasology.scenario.internal.events.RegionTreeMoveEntityEvent;
 import org.terasology.structureTemplates.components.ProtectedRegionsComponent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -70,6 +72,29 @@ public class RegionTreeSystem extends BaseComponentSystem {
     private Logger logger = LoggerFactory.getLogger(RegionTreeSystem.class);
 
     private EntityRef chatMessageEntity;
+
+    @ReceiveEvent //Check to see if a character has a visibility component, if not then add one, if they do then do cleanup to check for old regions
+    public void onComponentActivated(OnActivatedComponent event, EntityRef entity, CharacterComponent component) {
+        if (entity.hasComponent(ScenarioRegionVisibilityComponent.class)) { //Character already exists
+            ScenarioRegionVisibilityComponent comp = entity.getComponent(ScenarioRegionVisibilityComponent.class);
+            List<EntityRef> removalList = new ArrayList<>();
+            for (EntityRef e : comp.visibleList) { //Check if any regions were in visible list that don't exist anymore and remove
+                if (!e.exists()) {
+                    removalList.add(e);
+                }
+            }
+            if (!removalList.isEmpty()) {
+                for (EntityRef e : removalList) {
+                    comp.visibleList.remove(e);
+                }
+
+                entity.saveComponent(comp);
+            }
+        } else { //Character doesn't have a visibility for regions, so add one
+            ScenarioRegionVisibilityComponent newComp = new ScenarioRegionVisibilityComponent();
+            entity.addComponent(newComp);
+        }
+    }
 
     @Override
     public void postBegin() {
