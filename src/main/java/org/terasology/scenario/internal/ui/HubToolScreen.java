@@ -20,6 +20,8 @@ import org.slf4j.LoggerFactory;
 import org.terasology.assets.management.AssetManager;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.entitySystem.systems.BaseComponentSystem;
+import org.terasology.logic.players.LocalPlayer;
 import org.terasology.registry.In;
 import org.terasology.rendering.assets.texture.Texture;
 import org.terasology.rendering.nui.BaseInteractionScreen;
@@ -57,6 +59,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+/**
+ * The main screen for the hubtool. Holds the three tabs(Scenario, logic, and regions) and sets up the logic for each
+ * one of these tabs, displaying the logic and regions as treeViews and allows for editing using the context menus of the tree nodes
+ * Is designed around a server-side entity tree to store the data which allows for multiple clients to edit the same tree and all have the same visual display
+ * while keeping the client side changes (region visibility or the actual expansion/contractions of the tree views)
+ */
 public class HubToolScreen extends BaseInteractionScreen {
     private UIBox overviewBox;
     private UIBox logicBox;
@@ -87,6 +95,9 @@ public class HubToolScreen extends BaseInteractionScreen {
 
     @In
     private BlockManager blockManager;
+
+    @In
+    private LocalPlayer localPlayer;
 
     private Logger logger = LoggerFactory.getLogger(HubToolScreen.class);
 
@@ -454,6 +465,12 @@ public class HubToolScreen extends BaseInteractionScreen {
     }
 
 
+    /**
+     * The RegionTreeSystem and EntityTree system when changes are made that required redrawing will update the dirty booleans
+     * Will test with using an event to trigger the redraws in the future. Initial testing with using an event did not actually work, will have
+     * to do more testing and will eventually switch to that if it works
+     * @param delta
+     */
     @Override
     public void update(float delta) {
         super.update(delta);
@@ -612,7 +629,7 @@ public class HubToolScreen extends BaseInteractionScreen {
     }
 
     public void regionAdd(RegionTree node) {
-        getEntity().send(new RegionTreeAddEvent());
+        getEntity().send(new RegionTreeAddEvent(localPlayer.getCharacterEntity()));
         getManager().closeScreen(this);
     }
 

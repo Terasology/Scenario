@@ -24,12 +24,12 @@ import org.terasology.network.Replicate;
  * Component that lets the client know that the scenario entity was updated and therefore it should redraw on the next update
  */
 public class ScenarioHubToolUpdateComponent implements Component {
-    @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
+    @Replicate(FieldReplicateType.SERVER_TO_OWNER)
     public boolean dirtyLogic = true;
 
-    @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
+    @Replicate(FieldReplicateType.SERVER_TO_OWNER)
     public boolean dirtyRegions = true;
 
-    @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
+    @Replicate(FieldReplicateType.SERVER_TO_OWNER)
     public EntityRef addedEntity;
 }

@@ -18,6 +18,9 @@ package org.terasology.scenario.components.information;
 import org.terasology.entitySystem.Component;
 import org.terasology.network.Replicate;
 
+/**
+ * Component that contains a constant comparator
+ */
 @Replicate
 public class ConstComparatorComponent implements Component {
     public enum comparison {

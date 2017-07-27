@@ -35,6 +35,9 @@ import org.terasology.scenario.internal.events.scenarioEvents.PlayerLeaveRegionE
 
 import java.util.List;
 
+/**
+ * System that will watch regions for all the player entities that enter and leave regions
+ */
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class RegionEventSystem extends BaseComponentSystem implements UpdateSubscriberSystem{
     @In
@@ -44,6 +47,12 @@ public class RegionEventSystem extends BaseComponentSystem implements UpdateSubs
 
     private EntityRef scenario;
 
+    /**
+     * Region system's update that monitors the regions and updates them with players entering and leaving regions and triggering
+     * events when the respective event occurs to pass to the scenario
+     *
+     * @param delta The time (in seconds) since the last engine update.
+     */
     public void update(float delta) {
         if (scenario == null) {
             if (entityManager.getEntitiesWith(ScenarioComponent.class).iterator().hasNext()) {

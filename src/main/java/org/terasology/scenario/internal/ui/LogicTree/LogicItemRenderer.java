@@ -27,9 +27,8 @@ import org.terasology.scenario.internal.ui.LogicTree.LogicTreeValue;
 import java.util.List;
 
 /**
- * Renderer for the treeview represention of a logicTreeValue.
- * Currently it doesn't do much, just attach an image prior to the name of the trigger.
- * Will eventually have some complexities for visual help for the user interface and then it will be more usefull.
+ * Renderer for the treeview representation of a logicTreeValue.
+ * Holds the different ways to display different types of logic
  */
 public class LogicItemRenderer extends AbstractItemRenderer<LogicTreeValue> {
     private final int marginTop;

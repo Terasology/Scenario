@@ -18,7 +18,6 @@ package org.terasology.scenario.internal.utilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.assets.management.AssetManager;
-import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.prefab.Prefab;
@@ -29,10 +28,7 @@ import org.terasology.rendering.nui.UIWidget;
 import org.terasology.rendering.nui.widgets.UIButton;
 import org.terasology.rendering.nui.widgets.UILabel;
 import org.terasology.scenario.components.actions.ArgumentContainerComponent;
-import org.terasology.scenario.components.actions.TextComponent;
-import org.terasology.scenario.components.information.IndentificationComponents.ScenarioPlayerEntityComponent;
-import org.terasology.scenario.components.information.InformationEnums;
-import org.terasology.scenario.components.information.PlayerComponent;
+import org.terasology.scenario.components.TextComponent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateDisplayEvent;
 import org.terasology.scenario.internal.ui.EditParameterScreen;
 import org.terasology.world.block.BlockManager;
@@ -43,6 +39,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * A parser designed to parse a TextComponent's text of a scenario prefab
+ */
 public class ArgumentParser {
     private Logger logger = LoggerFactory.getLogger(ArgumentParser.class);
 
@@ -155,6 +154,11 @@ public class ArgumentParser {
         return sb.toString();
     }
 
+
+    /**
+     * Takes in an entity with a textComponent and argumentContainerComponent and parses the arguments from the text
+     * and generates a list of widgets to allow for editing the parameters or just text on elements that do not have a parameter
+     */
     public List<UIWidget> generateWidgets(EntityRef entity, CoreScreenLayer editScreen) {
         List<UIWidget> output = new ArrayList<>();
         String text = entity.getComponent(TextComponent.class).text;

@@ -16,12 +16,13 @@
 package org.terasology.scenario.components;
 
 import org.terasology.entitySystem.Component;
-import org.terasology.entitySystem.Owns;
-import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.network.FieldReplicateType;
 import org.terasology.network.Replicate;
 
-public class ScenarioAttachedEntityComponent implements Component {
-    @Replicate(FieldReplicateType.OWNER_TO_SERVER)
-    public EntityRef ent;
+/**
+ * Component that includes the text that is parsed for arguments
+ */
+public class TextComponent implements Component {
+    @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
+    public String text;
 }

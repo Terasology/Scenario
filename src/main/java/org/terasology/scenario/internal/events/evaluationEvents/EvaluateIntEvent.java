@@ -18,6 +18,9 @@ package org.terasology.scenario.internal.events.evaluationEvents;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 
+/**
+ * Event for evaluating an integer entity
+ */
 public class EvaluateIntEvent implements Event {
     private int result;
     private EntityRef passedEntity;

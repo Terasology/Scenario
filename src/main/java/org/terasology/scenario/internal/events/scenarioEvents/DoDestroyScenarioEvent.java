@@ -19,6 +19,9 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 import org.terasology.entitySystem.prefab.Prefab;
 
+/**
+ * Event that is triggered on a block destruction
+ */
 public class DoDestroyScenarioEvent implements Event {
     private EntityRef instigator;
     private EntityRef directCause;

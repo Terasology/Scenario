@@ -51,6 +51,10 @@ import org.terasology.scenario.internal.utilities.ArgumentParser;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The screen that pops up on editing an initial logic entity. Edits are made client side and then sent to the server in
+ * a list of serialised strings in order for the changes to be made on the server's side
+ */
 public class EditLogicScreen extends CoreScreenLayer {
     public static final ResourceUrn ASSET_URI = new ResourceUrn("scenario:editLogicScreen!instance");
     private static Logger logger = LoggerFactory.getLogger(EditLogicScreen.class);

@@ -26,6 +26,7 @@ import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
+import org.terasology.entitySystem.systems.UpdateSubscriberSystem;
 import org.terasology.logic.characters.CharacterComponent;
 import org.terasology.logic.location.LocationComponent;
 import org.terasology.logic.players.LocalPlayer;
@@ -35,7 +36,7 @@ import org.terasology.registry.In;
 import org.terasology.rendering.logic.FloatingTextComponent;
 import org.terasology.rendering.logic.RegionOutlineComponent;
 import org.terasology.rendering.nui.Color;
-import org.terasology.scenario.components.ScenarioAttachedEntityComponent;
+import org.terasology.scenario.components.ScenarioHubToolUpdateComponent;
 import org.terasology.scenario.components.ScenarioRegionVisibilityComponent;
 import org.terasology.scenario.components.regions.RegionColorComponent;
 import org.terasology.scenario.components.regions.RegionLocationComponent;
@@ -44,8 +45,11 @@ import org.terasology.scenario.components.regions.RegionNameComponent;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * System that displays the regions to a client(the 3d box representation and name in the world)
+ */
 @RegisterSystem(RegisterMode.CLIENT)
-public class RegionDisplaySystem extends BaseComponentSystem {
+public class RegionDisplaySystem extends BaseComponentSystem implements UpdateSubscriberSystem {
     @In
     private EntityManager entityManager;
 
@@ -55,6 +59,30 @@ public class RegionDisplaySystem extends BaseComponentSystem {
     private List<EntityRef> regionOutlineAndTextEntities = new ArrayList<>();
 
     private Logger logger = LoggerFactory.getLogger(RegionDisplaySystem.class);
+
+    private boolean updateDrawingCheck = false;
+
+    /**
+     * Checks if the regions have been updated since they were last displayed to the client, dirtyRegionsDraw is updated by the
+     * RegionTreeSystem and indicates a change has been made that would require a redraw. Initial testing with using an event did not actually work, will have
+     * to do more testing and will eventually switch to that if it works
+     * @param delta The time (in seconds) since the last engine update.
+     */
+    @Override
+    public void update(float delta) {
+        if (updateDrawingCheck) { //Trade size of boolean to save hasComponent check every update cycle, might be worth the optimization
+            if (localPlayer.getCharacterEntity().getComponent(ScenarioRegionVisibilityComponent.class).dirtyRegionsDraw) {
+                updateOutlineEntities(localPlayer.getCharacterEntity().getComponent(ScenarioRegionVisibilityComponent.class));
+                localPlayer.getCharacterEntity().getComponent(ScenarioRegionVisibilityComponent.class).dirtyRegionsDraw = false;
+                localPlayer.getCharacterEntity().saveComponent(localPlayer.getCharacterEntity().getComponent(ScenarioRegionVisibilityComponent.class));
+            }
+        }
+        else {
+            if (localPlayer.getCharacterEntity().hasComponent(ScenarioHubToolUpdateComponent.class)) {
+                updateDrawingCheck = true;
+            }
+        }
+    }
 
     @ReceiveEvent //Check to see if a character has a visibility component, if not then add one, if they do then do cleanup to check for old regions
     public void onComponentActivated(OnActivatedComponent event, EntityRef entity, CharacterComponent component) {
@@ -77,13 +105,6 @@ public class RegionDisplaySystem extends BaseComponentSystem {
             ScenarioRegionVisibilityComponent newComp = new ScenarioRegionVisibilityComponent();
             entity.addComponent(newComp);
         }
-
-        if (!entity.hasComponent(ScenarioAttachedEntityComponent.class)) { //Character doesn't exist yet
-            ScenarioAttachedEntityComponent newComp = new ScenarioAttachedEntityComponent();
-            entity.addComponent(newComp);
-        }
-
-        updateOutlineEntities(entity.getComponent(ScenarioRegionVisibilityComponent.class));
     }
 
     @ReceiveEvent
@@ -92,8 +113,6 @@ public class RegionDisplaySystem extends BaseComponentSystem {
             updateOutlineEntities(component);
         }
     }
-
-
 
     private void updateOutlineEntities(ScenarioRegionVisibilityComponent component) {
         destroyOutlineEntities();
@@ -131,7 +150,6 @@ public class RegionDisplaySystem extends BaseComponentSystem {
             }
         }
     }
-
 
     private class ColoredRegion {
         public Region3i region;

@@ -18,6 +18,9 @@ package org.terasology.scenario.components.events.triggerInformation;
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
 
+/**
+ * Component that contains the entity that triggers an event
+ */
 public class TriggeringEntityComponent implements Component {
     public EntityRef entity;
 }

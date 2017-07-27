@@ -18,17 +18,24 @@ package org.terasology.scenario.internal.events;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 import org.terasology.math.Region3i;
+import org.terasology.math.geom.Vector3f;
+import org.terasology.math.geom.Vector3i;
+import org.terasology.network.ServerEvent;
 import org.terasology.scenario.internal.ui.HubToolScreen;
 
+/**
+ * Event that is called to resize a region entity
+ */
+@ServerEvent
 public class RegionResizeEvent implements Event {
     private EntityRef entity;
     private Region3i region;
-    private HubToolScreen hubToolScreen;
 
-    public RegionResizeEvent(EntityRef entity, Region3i region, HubToolScreen hubToolScreen) {
+    public RegionResizeEvent() {}
+
+    public RegionResizeEvent(EntityRef entity, Region3i region) {
         this.entity = entity;
         this.region = region;
-        this.hubToolScreen = hubToolScreen;
     }
 
     public EntityRef getRegionEntity() {
@@ -37,9 +44,5 @@ public class RegionResizeEvent implements Event {
 
     public Region3i getRegion() {
         return region;
-    }
-
-    public HubToolScreen getHubScreen() {
-        return hubToolScreen;
     }
 }

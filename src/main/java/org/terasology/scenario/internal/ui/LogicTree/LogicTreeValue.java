@@ -19,7 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.rendering.assets.texture.TextureRegion;
-import org.terasology.scenario.components.actions.TextComponent;
+import org.terasology.scenario.components.TextComponent;
 import org.terasology.scenario.internal.utilities.ArgumentParser;
 
 /**

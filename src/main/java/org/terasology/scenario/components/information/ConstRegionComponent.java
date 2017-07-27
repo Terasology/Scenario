@@ -20,6 +20,9 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.network.FieldReplicateType;
 import org.terasology.network.Replicate;
 
+/**
+ * Component that includes a constant region entity
+ */
 public class ConstRegionComponent implements Component {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public EntityRef regionEntity;

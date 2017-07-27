@@ -23,6 +23,9 @@ import org.terasology.rendering.nui.widgets.UITreeView;
 
 import java.util.function.Function;
 
+/**
+ * Setting up the display and context menu of the region entity tree on a hubtool
+ */
 public class RegionTreeView extends UITreeView<RegionTreeValue> {
     private Function<RegionTree, MenuTree> contextMenuTreeProducer;
 

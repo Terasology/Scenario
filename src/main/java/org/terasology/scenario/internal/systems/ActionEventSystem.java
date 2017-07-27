@@ -16,7 +16,7 @@
 package org.terasology.scenario.internal.systems;
 
 import org.slf4j.LoggerFactory;
-import org.terasology.entitySystem.Component;
+import org.terasology.assets.management.AssetManager;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
@@ -26,8 +26,6 @@ import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.chat.ChatMessageEvent;
 import org.terasology.logic.common.DisplayNameComponent;
-import org.terasology.logic.inventory.InventoryComponent;
-import org.terasology.logic.inventory.ItemComponent;
 import org.terasology.logic.inventory.events.GiveItemEvent;
 import org.terasology.network.ClientComponent;
 import org.terasology.network.ColorComponent;
@@ -39,8 +37,6 @@ import org.terasology.scenario.components.actions.GiveItemActionComponent;
 import org.terasology.scenario.components.actions.LogInfoComponent;
 import org.terasology.scenario.components.actions.SendChatActionComponent;
 import org.terasology.scenario.components.events.triggerInformation.TriggeringEntityComponent;
-import org.terasology.scenario.components.information.BlockComponent;
-import org.terasology.scenario.components.information.InformationEnums;
 import org.terasology.scenario.components.information.PlayerComponent;
 import org.terasology.scenario.internal.events.EventTriggerEvent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateBlockEvent;
@@ -51,8 +47,6 @@ import org.terasology.world.block.BlockManager;
 import org.terasology.world.block.family.BlockFamily;
 import org.terasology.world.block.items.BlockItemFactory;
 
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -67,6 +61,9 @@ public class ActionEventSystem extends BaseComponentSystem {
     private BlockManager blockManager;
 
     private BlockItemFactory blockItemFactory;
+
+    @In
+    private AssetManager assetManager;
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ActionEventSystem.class);
 
@@ -90,8 +87,8 @@ public class ActionEventSystem extends BaseComponentSystem {
 
         EntityRef item = blockItemFactory.newInstance(block, amount);
 
-        InformationEnums.PlayerType player = variables.get("player").getComponent(PlayerComponent.class).type;
-        if (player == InformationEnums.PlayerType.TRIGGERING_PLAYER) {
+        PlayerComponent.PlayerType player = variables.get("player").getComponent(PlayerComponent.class).type;
+        if (player == PlayerComponent.PlayerType.TRIGGERING_PLAYER) {
             EntityRef giveEntity = event.informationEntity.getComponent(TriggeringEntityComponent.class).entity;
             GiveItemEvent giveItemEvent = new GiveItemEvent(giveEntity);
             item.send(giveItemEvent);
@@ -110,13 +107,13 @@ public class ActionEventSystem extends BaseComponentSystem {
         variables.get("amount").send(intEvaluateEvent);
         int amount = intEvaluateEvent.getResult();
 
-        InformationEnums.PlayerType player = variables.get("player").getComponent(PlayerComponent.class).type;
+        PlayerComponent.PlayerType player = variables.get("player").getComponent(PlayerComponent.class).type;
 
         for (int i = 0; i < amount; i++) {
             EntityRef item = entityManager.create(itemPrefab);
 
 
-            if (player == InformationEnums.PlayerType.TRIGGERING_PLAYER) {
+            if (player == PlayerComponent.PlayerType.TRIGGERING_PLAYER) {
                 EntityRef giveEntity = event.informationEntity.getComponent(TriggeringEntityComponent.class).entity;
                 GiveItemEvent giveItemEvent = new GiveItemEvent(giveEntity);
                 item.send(giveItemEvent);
@@ -147,14 +144,14 @@ public class ActionEventSystem extends BaseComponentSystem {
         variables.get("owner").send(stringEvaluateEvent2);
         String from = stringEvaluateEvent2.getResult();
 
-        DisplayNameComponent name = new DisplayNameComponent();
-        name.name = from;
-        ColorComponent color = new ColorComponent();
-        color.color = Color.CYAN;
-        EntityRef ent = entityManager.create(name, color);
+        EntityRef chatMessageEntity = entityManager.create(assetManager.getAsset("scenario:scenarioChatEntity", Prefab.class).get());
+        chatMessageEntity.getComponent(DisplayNameComponent.class).name = from;
+        chatMessageEntity.saveComponent(chatMessageEntity.getComponent(DisplayNameComponent.class));
+        chatMessageEntity.getComponent(ColorComponent.class).color = Color.CYAN;
+        chatMessageEntity.saveComponent(chatMessageEntity.getComponent(ColorComponent.class));
 
         for (EntityRef client : entityManager.getEntitiesWith(ClientComponent.class)) {
-            client.send(new ChatMessageEvent(message, ent));
+            client.send(new ChatMessageEvent(message, chatMessageEntity));
         }
     }
 }

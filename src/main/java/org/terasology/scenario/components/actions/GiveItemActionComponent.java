@@ -18,6 +18,9 @@ package org.terasology.scenario.components.actions;
 import org.terasology.entitySystem.Component;
 import org.terasology.network.Replicate;
 
+/**
+ * Component indicating if the action is a give item action
+ */
 @Replicate
 public class GiveItemActionComponent implements Component {
 }

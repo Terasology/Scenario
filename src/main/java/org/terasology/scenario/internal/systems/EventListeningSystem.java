@@ -43,7 +43,7 @@ public class EventListeningSystem extends BaseComponentSystem {
 
     private Logger logger = LoggerFactory.getLogger(EventListeningSystem.class);
 
-    @ReceiveEvent
+    @ReceiveEvent //Respawn (On death or on rejoin a server)
     public void onPlayerRejoinEvent(OnPlayerRespawnedEvent event, EntityRef entity) {
         if (entityManager.getEntitiesWith(ScenarioComponent.class).iterator().hasNext()) {
             EntityRef scenario = entityManager.getEntitiesWith(ScenarioComponent.class).iterator().next();
@@ -54,7 +54,7 @@ public class EventListeningSystem extends BaseComponentSystem {
         }
     }
 
-    @ReceiveEvent
+    @ReceiveEvent //Spawn, initial spawn on joining a server
     public void onPlayerSpawnEvent(OnPlayerSpawnedEvent event, EntityRef entity) {
         if (entityManager.getEntitiesWith(ScenarioComponent.class).iterator().hasNext()) {
             EntityRef scenario = entityManager.getEntitiesWith(ScenarioComponent.class).iterator().next();
@@ -65,7 +65,7 @@ public class EventListeningSystem extends BaseComponentSystem {
         }
     }
 
-    @ReceiveEvent
+    @ReceiveEvent //On block detruction
     public void onDoDestroyEvent(DoDestroyEvent event, EntityRef entity) {
         if (entityManager.getEntitiesWith(ScenarioComponent.class).iterator().hasNext()) {
             EntityRef scenario = entityManager.getEntitiesWith(ScenarioComponent.class).iterator().next();

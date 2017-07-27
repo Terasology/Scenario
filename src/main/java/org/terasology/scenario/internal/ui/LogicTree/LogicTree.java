@@ -23,7 +23,9 @@ import org.terasology.scenario.components.TriggerNameComponent;
 import org.terasology.scenario.internal.events.LogicTreeMoveEntityEvent;
 import org.terasology.scenario.internal.ui.HubToolScreen;
 
-
+/**
+ * Tree data structure for displaying on a logic entity tree on a hubtool
+ */
 public class LogicTree extends Tree<LogicTreeValue> {
 
     private HubToolScreen hubToolScreen;
@@ -38,6 +40,11 @@ public class LogicTree extends Tree<LogicTreeValue> {
         this.hubToolScreen = hubToolScreen;
     }
 
+    /**
+     * Expansion needs to be saved within an external component because the tree is constantly rebuilt and the expansion should
+     * be saved to best provide usability for a client
+     * @param expanded The new expanded state of this tree.
+     */
     @Override
     public void setExpanded(boolean expanded) {
         super.setExpanded(expanded);
@@ -90,6 +97,11 @@ public class LogicTree extends Tree<LogicTreeValue> {
         }
     }
 
+    /**
+     * Verifies that the event types match where they should be
+     * @param child The child to be added.
+     * @return
+     */
     @Override
     public boolean acceptsChild(Tree<LogicTreeValue> child) {
         boolean thisReturn = false;
@@ -139,6 +151,11 @@ public class LogicTree extends Tree<LogicTreeValue> {
         super.addChild(child);
     }
 
+    /**
+     * Client is requesting a movement of entities, not a new child and therefore this must be managed by the server to re-order the entities
+     * @param index The index of the child to be added.
+     * @param child The child to be added.
+     */
     @Override
     public void addChild(int index, Tree<LogicTreeValue> child) { //Should only send if moving entities on UI view
         hubToolScreen.getEntity().send(new LogicTreeMoveEntityEvent(this.getValue().getEntity(), child.getValue().getEntity(), child.getValue().getValueType(), index));

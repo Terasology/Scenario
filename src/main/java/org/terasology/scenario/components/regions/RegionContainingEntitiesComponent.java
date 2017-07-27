@@ -23,6 +23,9 @@ import org.terasology.network.Replicate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Component that is the region's entities that are contained within the region(Only watches players)
+ */
 public class RegionContainingEntitiesComponent implements Component {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public List<EntityRef> entities = new ArrayList<>();

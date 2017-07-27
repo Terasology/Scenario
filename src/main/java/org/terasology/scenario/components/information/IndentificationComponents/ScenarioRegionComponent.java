@@ -18,6 +18,9 @@ package org.terasology.scenario.components.information.IndentificationComponents
 import org.terasology.entitySystem.Component;
 import org.terasology.network.Replicate;
 
+/**
+ * Indicates a variable type or prefab is a region
+ */
 @Replicate
 public class ScenarioRegionComponent implements Component {
 }

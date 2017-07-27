@@ -18,6 +18,9 @@ package org.terasology.scenario.components.events;
 import org.terasology.entitySystem.Component;
 import org.terasology.network.Replicate;
 
+/**
+ * Component indicating the logic is an event
+ */
 @Replicate
 public class EventComponent implements Component {
 }

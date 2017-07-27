@@ -18,6 +18,9 @@ package org.terasology.scenario.components.information;
 import org.terasology.entitySystem.Component;
 import org.terasology.network.Replicate;
 
+/**
+ * Component that denotes a player's name
+ */
 @Replicate
 public class PlayerNameComponent implements Component {
 }

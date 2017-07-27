@@ -17,5 +17,8 @@ package org.terasology.scenario.components.information;
 
 import org.terasology.entitySystem.Component;
 
+/**
+ * Component that denotes a triggering region
+ */
 public class TriggeringRegionComponent implements Component {
 }

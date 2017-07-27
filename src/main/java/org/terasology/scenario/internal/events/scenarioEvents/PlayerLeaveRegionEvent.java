@@ -18,6 +18,9 @@ package org.terasology.scenario.internal.events.scenarioEvents;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 
+/**
+ * Event that is triggered on a player leaving a region
+ */
 public class PlayerLeaveRegionEvent implements Event {
     private EntityRef entity;
     private EntityRef region;

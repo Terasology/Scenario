@@ -18,6 +18,9 @@ package org.terasology.scenario.components.conditionals;
 import org.terasology.entitySystem.Component;
 import org.terasology.network.Replicate;
 
+/**
+ * Component indicating if the conditional compares two blocks
+ */
 @Replicate
 public class BlockConditionalComponent implements Component {
 }

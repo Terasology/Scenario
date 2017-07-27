@@ -72,6 +72,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Screen for editing a parameter/argument of a logic entity, this screen is designed to be recursive in case parameters
+ * can have multiple values, such as a random int being an integer parameter, but itself also needs two integer parameters. Does not
+ * need to be sent to the server like the logic screen because this is still client side editing and will return to a logic screen before
+ * finishing an edit, which that screen would be the one to send to the server
+ */
 public class EditParameterScreen extends CoreScreenLayer {
     public static final ResourceUrn ASSET_URI = new ResourceUrn("scenario:editParameterScreen!instance");
 

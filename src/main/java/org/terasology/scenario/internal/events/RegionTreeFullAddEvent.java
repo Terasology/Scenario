@@ -19,6 +19,9 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 import org.terasology.network.ServerEvent;
 
+/**
+ * Event that is called when a region is fully created and needs to be added to the region tree
+ */
 @ServerEvent
 public class RegionTreeFullAddEvent implements Event {
     private EntityRef addEntity;

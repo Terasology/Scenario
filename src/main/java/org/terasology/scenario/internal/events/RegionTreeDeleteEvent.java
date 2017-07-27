@@ -20,6 +20,9 @@ import org.terasology.entitySystem.event.Event;
 import org.terasology.network.ServerEvent;
 import org.terasology.scenario.internal.ui.HubToolScreen;
 
+/**
+ * Event that is called to delete a region from the region tree
+ */
 @ServerEvent
 public class RegionTreeDeleteEvent implements Event {
     private EntityRef deleteEntity;

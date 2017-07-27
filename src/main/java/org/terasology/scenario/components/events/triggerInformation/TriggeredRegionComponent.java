@@ -17,7 +17,9 @@ package org.terasology.scenario.components.events.triggerInformation;
 
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
-
+/**
+ * Component that contains the triggered region for an event
+ */
 public class TriggeredRegionComponent implements Component {
     public EntityRef region;
 }

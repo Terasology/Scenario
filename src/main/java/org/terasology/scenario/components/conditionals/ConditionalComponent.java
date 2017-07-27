@@ -18,6 +18,9 @@ package org.terasology.scenario.components.conditionals;
 import org.terasology.entitySystem.Component;
 import org.terasology.network.Replicate;
 
+/**
+ * Component indicating that it is a conditional
+ */
 @Replicate
 public class ConditionalComponent implements Component {
 }

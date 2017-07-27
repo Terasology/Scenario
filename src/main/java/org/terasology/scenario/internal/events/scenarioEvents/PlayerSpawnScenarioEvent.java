@@ -19,7 +19,7 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 
 /**
- * Scenario event for when a player spawns
+ * Scenario event for when a player spawns for the first time
  */
 public class PlayerSpawnScenarioEvent implements Event {
     private EntityRef spawningEntity;

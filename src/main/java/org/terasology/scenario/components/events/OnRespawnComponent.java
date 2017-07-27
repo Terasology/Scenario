@@ -18,6 +18,9 @@ package org.terasology.scenario.components.events;
 import org.terasology.entitySystem.Component;
 import org.terasology.network.Replicate;
 
+/**
+ * Component indicating if the event is when a player respawns (spawn from death or rejoining the game)
+ */
 @Replicate
 public class OnRespawnComponent implements Component {
 }

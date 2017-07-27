@@ -19,7 +19,15 @@ import org.terasology.entitySystem.Component;
 import org.terasology.network.FieldReplicateType;
 import org.terasology.network.Replicate;
 
+/**
+ * Component that denotes a player
+ */
 public class PlayerComponent implements Component {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
-    public InformationEnums.PlayerType type = InformationEnums.PlayerType.TRIGGERING_PLAYER;
+    public PlayerType type = PlayerType.TRIGGERING_PLAYER;
+
+    public enum PlayerType {
+        TRIGGERING_PLAYER,
+        TARGETED_PLAYER,
+    }
 }

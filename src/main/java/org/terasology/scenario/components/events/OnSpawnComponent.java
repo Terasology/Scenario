@@ -19,7 +19,8 @@ import org.terasology.entitySystem.Component;
 import org.terasology.network.Replicate;
 
 /**
- * Component attached to an event entity that indicates the tracked event is a player spawning
- */@Replicate
+ * Component attached to an event entity that indicates the tracked event is a player spawning for the first time
+ */
+@Replicate
 public class OnSpawnComponent implements Component {
 }

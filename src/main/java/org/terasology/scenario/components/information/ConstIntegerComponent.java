@@ -19,6 +19,9 @@ import org.terasology.entitySystem.Component;
 import org.terasology.network.FieldReplicateType;
 import org.terasology.network.Replicate;
 
+/**
+ * Component that includes a constant integer
+ */
 public class ConstIntegerComponent implements Component {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public int value;

@@ -30,4 +30,7 @@ import java.util.Set;
 public class ScenarioRegionVisibilityComponent implements Component {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public Set<EntityRef> visibleList = new HashSet<>();
+
+    @Replicate(FieldReplicateType.SERVER_TO_OWNER)
+    public boolean dirtyRegionsDraw = true;
 }

@@ -18,9 +18,11 @@ package org.terasology.scenario.internal.events;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 import org.terasology.network.ServerEvent;
-import org.terasology.scenario.internal.ui.HubToolScreen;
 import org.terasology.scenario.internal.ui.LogicTree.LogicTreeValue;
 
+/**
+ * Event that is called to move an entity around on the logic screen
+ */
 @ServerEvent
 public class LogicTreeMoveEntityEvent implements Event {
     private EntityRef triggerEntity;

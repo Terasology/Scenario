@@ -45,6 +45,9 @@ import org.terasology.scenario.internal.events.RegionTreeFullAddEvent;
 
 import java.util.Iterator;
 
+/**
+ * System that monitors attack hits and consumes them if they are being used to create a region.
+ */
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class RegionSystem extends BaseComponentSystem {
     @In
@@ -58,53 +61,54 @@ public class RegionSystem extends BaseComponentSystem {
 
     private Logger logger = LoggerFactory.getLogger(RegionSystem.class);
 
+    private EntityRef chatMessageEntity;
+
+    /**
+     * Setting up the entity that is used to send chat messages (Red-colored "Scenario System")
+     */
+    @Override
+    public void postBegin() {
+        chatMessageEntity = entityManager.create(assetManager.getAsset("scenario:scenarioChatEntity", Prefab.class).get());
+        chatMessageEntity.getComponent(DisplayNameComponent.class).name = "Scenario System";
+        chatMessageEntity.saveComponent(chatMessageEntity.getComponent(DisplayNameComponent.class));
+        chatMessageEntity.getComponent(ColorComponent.class).color = Color.RED;
+        chatMessageEntity.saveComponent(chatMessageEntity.getComponent(ColorComponent.class));
+    }
+
     @ReceiveEvent(priority = EventPriority.PRIORITY_CRITICAL)
     public void onAttackEntity(AttackEvent event, EntityRef targetEntity, org.terasology.world.block.BlockComponent blockComponent) {
-        logger.info("trigger");
         Iterator<EntityRef> entities = entityManager.getEntitiesWith(RegionBeingCreatedComponent.class).iterator();
-        if (entities.hasNext()) {
-            if (event.getDirectCause().getParentPrefab() != null && event.getDirectCause().getParentPrefab().equals(assetManager.getAsset("scenario:hubtool", Prefab.class).get())) {
-                EntityRef editedRegion = entities.next(); //SHOULD only have one region that can be edited for now, will have to change this in future with multiplayer
-                RegionBeingCreatedComponent create = editedRegion.getComponent(RegionBeingCreatedComponent.class);
-                Vector3i pos = blockComponent.getPosition();
-                if (create.firstHit == null) {
-                    create.firstHit = pos;
+        while (entities.hasNext()) {
+            EntityRef editedRegion = entities.next();
+            if (editedRegion.getComponent(RegionBeingCreatedComponent.class).creatingEntity.equals(event.getInstigator())) {
+                if (event.getDirectCause().getParentPrefab() != null && event.getDirectCause().getParentPrefab().equals(assetManager.getAsset("scenario:hubtool", Prefab.class).get())) {
+                    RegionBeingCreatedComponent create = editedRegion.getComponent(RegionBeingCreatedComponent.class);
+                    Vector3i pos = blockComponent.getPosition();
+                    if (create.firstHit == null) {
+                        create.firstHit = pos;
 
-                    DisplayNameComponent name = new DisplayNameComponent();
-                    name.name = "Scenario System";
-                    ColorComponent color = new ColorComponent();
-                    color.color = Color.RED;
-                    EntityRef ent = entityManager.create(name, color);
+                        event.getInstigator().getOwner().send(new ChatMessageEvent("Region started, left click next location", chatMessageEntity));
 
-
-                    EntityRef clientInfo = event.getInstigator().getOwner().getComponent(ClientComponent.class).clientInfo;
-                    String displayName = FontColor.getColored(clientInfo.getComponent(DisplayNameComponent.class).name, clientInfo.getComponent(ColorComponent.class).color);
-
-                    for (EntityRef client : entityManager.getEntitiesWith(ClientComponent.class)) {
-                        client.send(new ChatMessageEvent("Region start registered by " + displayName, ent));
-                    }
-
-                    ent.destroy();
-
-                    event.consume();
-                }
-                else {
-                    if (!pos.equals(create.firstHit)) {
-                        RegionLocationComponent loc = editedRegion.getComponent(RegionLocationComponent.class);
-                        loc.region = Region3i.createBounded(pos, create.firstHit);
-                        editedRegion.saveComponent(loc);
-                        editedRegion.removeComponent(RegionBeingCreatedComponent.class);
-                        if (entityManager.getEntitiesWith(ScenarioComponent.class).iterator().hasNext()) {
-                            EntityRef scenario = entityManager.getEntitiesWith(ScenarioComponent.class).iterator().next();
-                            if (scenario == null) {
-                                return;
-                            }
-                            scenario.send(new RegionTreeFullAddEvent(editedRegion, event.getInstigator()));
-                        }
                         event.consume();
+                    } else {
+                        if (!pos.equals(create.firstHit)) {
+                            RegionLocationComponent loc = editedRegion.getComponent(RegionLocationComponent.class);
+                            loc.region = Region3i.createBounded(pos, create.firstHit);
+                            editedRegion.saveComponent(loc);
+                            editedRegion.removeComponent(RegionBeingCreatedComponent.class);
+                            if (entityManager.getEntitiesWith(ScenarioComponent.class).iterator().hasNext()) {
+                                EntityRef scenario = entityManager.getEntitiesWith(ScenarioComponent.class).iterator().next();
+                                if (scenario == null) {
+                                    return;
+                                }
+                                scenario.send(new RegionTreeFullAddEvent(editedRegion, event.getInstigator()));
+                            }
+                            event.consume();
+                        }
                     }
-                }
 
+                }
+                break; //Don't need to check any more regions if one already matched(only one region is allowed per person at a time)
             }
         }
     }

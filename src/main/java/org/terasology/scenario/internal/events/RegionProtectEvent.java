@@ -17,18 +17,22 @@ package org.terasology.scenario.internal.events;
 
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
-import org.terasology.rendering.nui.Color;
-import org.terasology.scenario.internal.ui.HubToolScreen;
+import org.terasology.network.ServerEvent;
 
+/**
+ * Event that is called in order to protect or unprotect a region
+ */
+@ServerEvent
 public class RegionProtectEvent implements Event {
     private EntityRef entity;
     private boolean isProtected;
-    private HubToolScreen hubToolScreen;
 
-    public RegionProtectEvent(EntityRef entity, boolean isProtected, HubToolScreen hubToolScreen) {
+
+    public RegionProtectEvent() {}
+
+    public RegionProtectEvent(EntityRef entity, boolean isProtected) {
         this.entity = entity;
         this.isProtected = isProtected;
-        this.hubToolScreen = hubToolScreen;
     }
 
     public EntityRef getRegionEntity() {
@@ -37,9 +41,5 @@ public class RegionProtectEvent implements Event {
 
     public boolean isProtected() {
         return isProtected;
-    }
-
-    public HubToolScreen getHubScreen() {
-        return hubToolScreen;
     }
 }

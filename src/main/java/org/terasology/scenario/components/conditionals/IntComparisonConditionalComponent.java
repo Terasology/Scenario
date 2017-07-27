@@ -18,6 +18,9 @@ package org.terasology.scenario.components.conditionals;
 import org.terasology.entitySystem.Component;
 import org.terasology.network.Replicate;
 
+/**
+ * Component indicating the conditional compares two integers
+ */
 @Replicate
 public class IntComparisonConditionalComponent implements Component {
 }

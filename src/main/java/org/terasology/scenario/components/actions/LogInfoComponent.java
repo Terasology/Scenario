@@ -18,6 +18,9 @@ package org.terasology.scenario.components.actions;
 import org.terasology.entitySystem.Component;
 import org.terasology.network.Replicate;
 
+/**
+ * Component indicating if the action is an action to log into the logger of the server
+ */
 @Replicate
 public class LogInfoComponent implements Component {
 }

@@ -19,6 +19,9 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 import org.terasology.scenario.components.information.ConstComparatorComponent;
 
+/**
+ * Event for evaluating a conditional entity into a comparison type
+ */
 public class EvaluateComparatorEvent implements Event {
     private ConstComparatorComponent.comparison result;
     private EntityRef passedEntity;

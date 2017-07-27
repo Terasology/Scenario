@@ -20,7 +20,20 @@ import org.terasology.entitySystem.event.Event;
 import org.terasology.network.ServerEvent;
 import org.terasology.scenario.internal.ui.HubToolScreen;
 
+/**
+ * Event that is called to begin a region creation
+ */
 @ServerEvent
 public class RegionTreeAddEvent implements Event {
+    private EntityRef creatingEntity;
+
     public RegionTreeAddEvent() {}
+
+    public RegionTreeAddEvent(EntityRef creatingEntity) {
+        this.creatingEntity = creatingEntity;
+    }
+
+    public EntityRef getCreatingEntity() {
+        return creatingEntity;
+    }
 }

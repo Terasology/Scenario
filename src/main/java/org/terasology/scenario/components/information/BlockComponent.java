@@ -20,6 +20,9 @@ import org.terasology.network.FieldReplicateType;
 import org.terasology.network.Replicate;
 import org.terasology.world.block.family.BlockFamily;
 
+/**
+ * Component that includes a block family
+ */
 public class BlockComponent implements Component {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public BlockFamily value;

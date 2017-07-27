@@ -20,6 +20,10 @@ import org.terasology.entitySystem.event.Event;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Event called to convert a logic entity into a list of serialised strings using ConvertEntitySystem that will allow for
+ * entity recreation using ConvertIntoEntitySystem
+ */
 public class ConvertScenarioEntityEvent implements Event {
     private List<String> outputList = new ArrayList<>();
     private String prefix;

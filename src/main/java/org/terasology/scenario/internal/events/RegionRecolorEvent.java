@@ -19,8 +19,10 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 import org.terasology.network.ServerEvent;
 import org.terasology.rendering.nui.Color;
-import org.terasology.scenario.internal.ui.HubToolScreen;
 
+/**
+ * Event that is called to recolor a region entity
+ */
 @ServerEvent
 public class RegionRecolorEvent implements Event {
     private EntityRef entity;

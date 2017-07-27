@@ -19,6 +19,9 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 import org.terasology.world.block.family.BlockFamily;
 
+/**
+ * Event for evaluating a block family entity
+ */
 public class EvaluateBlockEvent implements Event {
 
     private BlockFamily result;

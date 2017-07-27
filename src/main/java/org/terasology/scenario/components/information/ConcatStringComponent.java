@@ -18,6 +18,9 @@ package org.terasology.scenario.components.information;
 import org.terasology.entitySystem.Component;
 import org.terasology.network.Replicate;
 
+/**
+ * Component that denotes two strings to be concatenated
+ */
 @Replicate
 public class ConcatStringComponent implements Component {
 }

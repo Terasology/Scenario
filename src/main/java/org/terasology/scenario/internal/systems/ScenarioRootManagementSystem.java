@@ -46,7 +46,10 @@ import org.terasology.scenario.internal.events.scenarioEvents.PlayerLeaveRegionE
 import org.terasology.scenario.internal.events.scenarioEvents.PlayerRespawnScenarioEvent;
 import org.terasology.scenario.internal.events.scenarioEvents.PlayerSpawnScenarioEvent;
 
-
+/**
+ * System that relays game events into scenario events and sends them using a filled up entity that contains information of the trigger
+ * which could include who the triggering entity or region is, or block details for breaking the block
+ */
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class ScenarioRootManagementSystem extends BaseComponentSystem {
     @In

@@ -57,6 +57,11 @@ import org.terasology.utilities.Assets;
 import java.math.RoundingMode;
 import java.util.List;
 
+/**
+ * Screen displayed for editing a region, all changes are made client side and when the "OK" button is pressed the changed values
+ * are sent to the server using various events to alter the region entity on the server's side. The color display of the region
+ * utilizes a slider and box to generate the color, the rest are very simplistic widgets(number or text entries or checkboxes)
+ */
 public class EditRegionScreen extends CoreScreenLayer {
     public static final ResourceUrn ASSET_URI = new ResourceUrn("scenario:editRegionScreen!instance");
 
@@ -143,7 +148,7 @@ public class EditRegionScreen extends CoreScreenLayer {
     }
 
     public void onOkButton(UIWidget button) {
-        returnScreen.getEntity().send(new RegionResizeEvent(baseEntity, getRegion(), returnScreen));
+        returnScreen.getEntity().send(new RegionResizeEvent(baseEntity, getRegion()));
 
         if (!nameEntry.getText().equals(baseEntity.getComponent(RegionNameComponent.class).regionName)) {
             returnScreen.getEntity().send(new RegionRenameEvent(baseEntity, nameEntry.getText()));
@@ -160,7 +165,7 @@ public class EditRegionScreen extends CoreScreenLayer {
             vis.visibleList.remove(baseEntity);
             returnScreen.getEntity().getOwner().saveComponent(vis);
         }
-        returnScreen.getEntity().send(new RegionProtectEvent(baseEntity, protectedRegion.isChecked(), returnScreen));
+        returnScreen.getEntity().send(new RegionProtectEvent(baseEntity, protectedRegion.isChecked()));
 
         getManager().popScreen();
     }

@@ -20,6 +20,9 @@ import org.terasology.entitySystem.event.Event;
 import org.terasology.network.ServerEvent;
 import org.terasology.scenario.internal.ui.HubToolScreen;
 
+/**
+ * Event that is called to rename a region entity
+ */
 @ServerEvent
 public class RegionRenameEvent implements Event {
     private EntityRef entity;

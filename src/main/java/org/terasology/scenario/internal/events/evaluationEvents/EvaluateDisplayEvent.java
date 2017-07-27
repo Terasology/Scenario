@@ -17,6 +17,9 @@ package org.terasology.scenario.internal.events.evaluationEvents;
 
 import org.terasology.entitySystem.event.Event;
 
+/**
+ * Event for evaluating the display string of a logic entity
+ */
 public class EvaluateDisplayEvent implements Event {
     private String result;
 

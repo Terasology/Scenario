@@ -20,6 +20,9 @@ import org.terasology.math.Region3i;
 import org.terasology.network.FieldReplicateType;
 import org.terasology.network.Replicate;
 
+/**
+ * Component that is the region's region(location and size) component of a region entity
+ */
 public class RegionLocationComponent implements Component {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public Region3i region;

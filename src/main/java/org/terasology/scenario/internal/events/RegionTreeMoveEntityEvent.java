@@ -20,6 +20,9 @@ import org.terasology.entitySystem.event.Event;
 import org.terasology.network.ServerEvent;
 import org.terasology.scenario.internal.ui.HubToolScreen;
 
+/**
+ * Event that is called to move a region in the region tree
+ */
 @ServerEvent
 public class RegionTreeMoveEntityEvent implements Event {
     private EntityRef moveEntity;

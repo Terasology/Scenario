@@ -18,6 +18,9 @@ package org.terasology.scenario.components.events;
 import org.terasology.entitySystem.Component;
 import org.terasology.network.Replicate;
 
+/**
+ * Component indicating if the event is on destruction
+ */
 @Replicate
 public class OnBlockDestroyComponent implements Component {
 }

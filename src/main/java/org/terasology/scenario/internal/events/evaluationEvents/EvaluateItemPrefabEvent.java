@@ -19,6 +19,9 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 import org.terasology.entitySystem.prefab.Prefab;
 
+/**
+ * Event for evaluating a prefab entity
+ */
 public class EvaluateItemPrefabEvent implements Event {
     private Prefab result;
     private EntityRef passedEntity;

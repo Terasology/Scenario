@@ -19,6 +19,9 @@ import org.terasology.entitySystem.Component;
 import org.terasology.network.FieldReplicateType;
 import org.terasology.network.Replicate;
 
+/**
+ * Component that includes a constant item prefab URI
+ */
 public class ConstItemPrefabComponent implements Component {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public String prefabURI;
