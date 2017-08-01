@@ -25,6 +25,7 @@ import org.terasology.entitySystem.prefab.Prefab;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
+import org.terasology.network.NetworkComponent;
 import org.terasology.registry.In;
 import org.terasology.scenario.components.ScenarioHubToolUpdateComponent;
 import org.terasology.scenario.components.actions.ArgumentContainerComponent;
@@ -35,6 +36,7 @@ import org.terasology.scenario.components.information.ConstItemPrefabComponent;
 import org.terasology.scenario.components.information.ConstRegionComponent;
 import org.terasology.scenario.components.information.ConstStringComponent;
 import org.terasology.scenario.components.information.PlayerComponent;
+import org.terasology.scenario.components.regions.RegionNameComponent;
 import org.terasology.scenario.internal.events.ConvertIntoEntityConstantEvent;
 import org.terasology.scenario.internal.events.ConvertIntoEntityEvent;
 import org.terasology.scenario.internal.utilities.ArgumentParser;
@@ -159,7 +161,11 @@ public class ConvertIntoEntitySystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity, ConstRegionComponent component) {
-        component.regionEntity = entityManager.getEntity(Integer.parseInt(event.getValue()));
+        for (EntityRef e : entityManager.getEntitiesWith(RegionNameComponent.class)) {
+            if (e.getComponent(NetworkComponent.class).getNetworkId() == Integer.parseInt(event.getValue())) {
+                component.regionEntity = e;
+            }
+        }
         entity.saveComponent(component);
     }
 }

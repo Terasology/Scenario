@@ -43,8 +43,10 @@ import org.terasology.scenario.components.regions.RegionBeingCreatedComponent;
 import org.terasology.scenario.components.regions.RegionColorComponent;
 import org.terasology.scenario.components.regions.RegionLocationComponent;
 import org.terasology.scenario.components.regions.RegionNameComponent;
+import org.terasology.scenario.internal.events.RegionAddVisibilityEvent;
 import org.terasology.scenario.internal.events.RegionProtectEvent;
 import org.terasology.scenario.internal.events.RegionRecolorEvent;
+import org.terasology.scenario.internal.events.RegionRemoveVisibilityEvent;
 import org.terasology.scenario.internal.events.RegionRenameEvent;
 import org.terasology.scenario.internal.events.RegionResizeEvent;
 import org.terasology.scenario.internal.events.RegionTreeAddEvent;
@@ -72,29 +74,6 @@ public class RegionTreeSystem extends BaseComponentSystem {
     private Logger logger = LoggerFactory.getLogger(RegionTreeSystem.class);
 
     private EntityRef chatMessageEntity;
-
-    @ReceiveEvent //Check to see if a character has a visibility component, if not then add one, if they do then do cleanup to check for old regions
-    public void onComponentActivated(OnActivatedComponent event, EntityRef entity, CharacterComponent component) {
-        if (entity.hasComponent(ScenarioRegionVisibilityComponent.class)) { //Character already exists
-            ScenarioRegionVisibilityComponent comp = entity.getComponent(ScenarioRegionVisibilityComponent.class);
-            List<EntityRef> removalList = new ArrayList<>();
-            for (EntityRef e : comp.visibleList) { //Check if any regions were in visible list that don't exist anymore and remove
-                if (!e.exists()) {
-                    removalList.add(e);
-                }
-            }
-            if (!removalList.isEmpty()) {
-                for (EntityRef e : removalList) {
-                    comp.visibleList.remove(e);
-                }
-
-                entity.saveComponent(comp);
-            }
-        } else { //Character doesn't have a visibility for regions, so add one
-            ScenarioRegionVisibilityComponent newComp = new ScenarioRegionVisibilityComponent();
-            entity.addComponent(newComp);
-        }
-    }
 
     @Override
     public void postBegin() {
@@ -138,8 +117,9 @@ public class RegionTreeSystem extends BaseComponentSystem {
 
 
         for (EntityRef e : entityManager.getEntitiesWith(ScenarioRegionVisibilityComponent.class)) {
-            e.getComponent(ScenarioRegionVisibilityComponent.class).visibleList.remove(event.getDeleteEntity());
-            e.saveComponent(e.getComponent(ScenarioRegionVisibilityComponent.class));
+            e.send(new RegionRemoveVisibilityEvent(event.getDeleteEntity()));
+            //e.getComponent(ScenarioRegionVisibilityComponent.class).visibleList.remove(event.getDeleteEntity());
+            //e.saveComponent(e.getComponent(ScenarioRegionVisibilityComponent.class));
         }
 
         event.getDeleteEntity().destroy();
@@ -185,8 +165,7 @@ public class RegionTreeSystem extends BaseComponentSystem {
         entity.saveComponent(component);
         EntityRef addingCharacter = event.getAdder().getOwner().getComponent(ClientComponent.class).character;
 
-        addingCharacter.getComponent(ScenarioRegionVisibilityComponent.class).visibleList.add(event.getAddEntity());
-        addingCharacter.saveComponent(addingCharacter.getComponent(ScenarioRegionVisibilityComponent.class));
+        addingCharacter.send(new RegionAddVisibilityEvent(event.getAddEntity()));
 
         for (EntityRef e : entityManager.getEntitiesWith(ScenarioHubToolUpdateComponent.class)) {
             e.getComponent(ScenarioHubToolUpdateComponent.class).dirtyRegions = true;

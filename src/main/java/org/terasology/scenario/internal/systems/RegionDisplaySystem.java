@@ -38,9 +38,12 @@ import org.terasology.rendering.logic.RegionOutlineComponent;
 import org.terasology.rendering.nui.Color;
 import org.terasology.scenario.components.ScenarioHubToolUpdateComponent;
 import org.terasology.scenario.components.ScenarioRegionVisibilityComponent;
+import org.terasology.scenario.components.information.IndentificationComponents.ScenarioIntegerComponent;
 import org.terasology.scenario.components.regions.RegionColorComponent;
 import org.terasology.scenario.components.regions.RegionLocationComponent;
 import org.terasology.scenario.components.regions.RegionNameComponent;
+import org.terasology.scenario.internal.events.RegionAddVisibilityEvent;
+import org.terasology.scenario.internal.events.RegionRemoveVisibilityEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +64,33 @@ public class RegionDisplaySystem extends BaseComponentSystem implements UpdateSu
     private Logger logger = LoggerFactory.getLogger(RegionDisplaySystem.class);
 
     private boolean updateDrawingCheck = false;
+
+
+    @ReceiveEvent //Check to see if a character has a visibility component, if not then add one, if they do then do cleanup to check for old regions
+    public void onComponentActivated(OnActivatedComponent event, EntityRef entity, CharacterComponent component) {
+        if (entity.hasComponent(ScenarioRegionVisibilityComponent.class)) { //Character already exists
+            ScenarioRegionVisibilityComponent comp = entity.getComponent(ScenarioRegionVisibilityComponent.class);
+            List<EntityRef> removalList = new ArrayList<>();
+            for (EntityRef e : comp.visibleList) { //Check if any regions were in visible list that don't exist anymore and remove
+                if (!e.exists()) {
+                    removalList.add(e);
+                }
+            }
+            if (!removalList.isEmpty()) {
+                for (EntityRef e : removalList) {
+                    comp.visibleList.remove(e);
+                }
+
+                entity.saveComponent(comp);
+            }
+        } else { //Character doesn't have a visibility for regions, so add one
+            ScenarioRegionVisibilityComponent newComp = new ScenarioRegionVisibilityComponent();
+            entity.addComponent(newComp);
+        }
+
+        entity.getComponent(ScenarioRegionVisibilityComponent.class).dirtyRegionsDraw = true;
+        entity.saveComponent(entity.getComponent(ScenarioRegionVisibilityComponent.class));
+    }
 
     /**
      * Checks if the regions have been updated since they were last displayed to the client, dirtyRegionsDraw is updated by the
@@ -89,6 +119,18 @@ public class RegionDisplaySystem extends BaseComponentSystem implements UpdateSu
         if (entity.equals(localPlayer.getCharacterEntity())) { //Only want to watch hub tool visiblity of local player.
             updateOutlineEntities(component);
         }
+    }
+
+    @ReceiveEvent
+    public void onRegionRemovalVisibilityEvent(RegionRemoveVisibilityEvent event, EntityRef entity, ScenarioRegionVisibilityComponent component) {
+        component.visibleList.remove(event.getRemovalEntity());
+        entity.saveComponent(component);
+    }
+
+    @ReceiveEvent
+    public void onRegionAddVisibilityEvent(RegionAddVisibilityEvent event, EntityRef entity, ScenarioRegionVisibilityComponent component) {
+        component.visibleList.add(event.getAddEntity());
+        entity.saveComponent(component);
     }
 
     private void updateOutlineEntities(ScenarioRegionVisibilityComponent component) {

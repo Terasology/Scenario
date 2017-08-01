@@ -13,17 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.scenario.components.regions;
+package org.terasology.scenario.internal.events;
 
-import org.terasology.entitySystem.Component;
-import org.terasology.network.FieldReplicateType;
-import org.terasology.network.Replicate;
+import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.entitySystem.event.Event;
+import org.terasology.network.OwnerEvent;
 
-/**
- * Component that is the region's name component of a region entity
- */
-@Replicate
-public class RegionNameComponent implements Component {
-    @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
-    public String regionName = "New Region";
+@OwnerEvent
+public class RegionRemoveVisibilityEvent implements Event {
+    private EntityRef removalEntity;
+
+    public RegionRemoveVisibilityEvent() {}
+
+    public RegionRemoveVisibilityEvent(EntityRef removalEntity) {
+        this.removalEntity = removalEntity;
+    }
+
+    public EntityRef getRemovalEntity() {
+        return removalEntity;
+    }
 }

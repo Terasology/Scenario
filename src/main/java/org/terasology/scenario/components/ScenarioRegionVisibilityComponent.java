@@ -28,7 +28,7 @@ import java.util.Set;
  * local player (visibility of the regions are ticked to true)
  */
 public class ScenarioRegionVisibilityComponent implements Component {
-    @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
+    @Replicate(FieldReplicateType.OWNER_TO_SERVER)
     public Set<EntityRef> visibleList = new HashSet<>();
 
     @Replicate(FieldReplicateType.SERVER_TO_OWNER)
