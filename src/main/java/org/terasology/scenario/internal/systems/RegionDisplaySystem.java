@@ -42,6 +42,7 @@ import org.terasology.scenario.components.regions.RegionColorComponent;
 import org.terasology.scenario.components.regions.RegionLocationComponent;
 import org.terasology.scenario.components.regions.RegionNameComponent;
 import org.terasology.scenario.internal.events.RegionAddVisibilityEvent;
+import org.terasology.scenario.internal.events.RegionRedrawEvent;
 import org.terasology.scenario.internal.events.RegionRemoveVisibilityEvent;
 
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ import java.util.List;
  * Is done on a client to allow for each player to have their own set of displayed regions and not have any effect on other players
  */
 @RegisterSystem(RegisterMode.CLIENT)
-public class RegionDisplaySystem extends BaseComponentSystem implements UpdateSubscriberSystem {
+public class RegionDisplaySystem extends BaseComponentSystem {
     @In
     private EntityManager entityManager;
 
@@ -63,8 +64,6 @@ public class RegionDisplaySystem extends BaseComponentSystem implements UpdateSu
     private List<EntityRef> regionOutlineAndTextEntities = new ArrayList<>();
 
     private Logger logger = LoggerFactory.getLogger(RegionDisplaySystem.class);
-
-    private boolean updateDrawingCheck = false;
 
 
     @ReceiveEvent //Check to see if a character has a visibility component, if not then add one, if they do then do cleanup to check for old regions
@@ -81,37 +80,28 @@ public class RegionDisplaySystem extends BaseComponentSystem implements UpdateSu
                 for (EntityRef e : removalList) {
                     comp.visibleList.remove(e);
                 }
-
                 entity.saveComponent(comp);
             }
         } else { //Character doesn't have a visibility for regions, so add one
             ScenarioRegionVisibilityComponent newComp = new ScenarioRegionVisibilityComponent();
             entity.addComponent(newComp);
         }
-
-        entity.getComponent(ScenarioRegionVisibilityComponent.class).dirtyRegionsDraw = true;
-        entity.saveComponent(entity.getComponent(ScenarioRegionVisibilityComponent.class));
     }
 
-    /**
-     * Checks if the regions have been updated since they were last displayed to the client, dirtyRegionsDraw is updated by the
-     * RegionTreeSystem and indicates a change has been made that would require a redraw. Initial testing with using an event did not actually work, will have
-     * to do more testing and will eventually switch to that if it works
-     * @param delta The time (in seconds) since the last engine update.
-     */
-    @Override
-    public void update(float delta) {
-        if (updateDrawingCheck) { //Trade size of boolean to save hasComponent check every update cycle, might be worth the optimization
-            if (localPlayer.getCharacterEntity().getComponent(ScenarioRegionVisibilityComponent.class).dirtyRegionsDraw) {
-                updateOutlineEntities(localPlayer.getCharacterEntity().getComponent(ScenarioRegionVisibilityComponent.class));
-                localPlayer.getCharacterEntity().getComponent(ScenarioRegionVisibilityComponent.class).dirtyRegionsDraw = false;
-                localPlayer.getCharacterEntity().saveComponent(localPlayer.getCharacterEntity().getComponent(ScenarioRegionVisibilityComponent.class));
-            }
+    @ReceiveEvent
+    public void onComponentActivated(OnActivatedComponent event, EntityRef entity, ScenarioRegionVisibilityComponent component) {
+        logger.info("Activated");
+        if (!localPlayer.isValid()) { //Trick to make sure that the client isn't already connected, only want to activate on joining
+            logger.info("activate local");
+            logger.info(component.visibleList.toString());
+            updateOutlineEntities(component);
         }
-        else {
-            if (localPlayer.getCharacterEntity().hasComponent(ScenarioHubToolUpdateComponent.class)) {
-                updateDrawingCheck = true;
-            }
+    }
+
+    @ReceiveEvent
+    public void onRequestRegionRedrawEvent(RegionRedrawEvent event, EntityRef entity, ScenarioRegionVisibilityComponent component) {
+        if (entity.equals(localPlayer.getCharacterEntity())) {
+            updateOutlineEntities(component);
         }
     }
 

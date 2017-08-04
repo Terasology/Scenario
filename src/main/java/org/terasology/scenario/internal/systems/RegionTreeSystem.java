@@ -21,20 +21,18 @@ import org.slf4j.LoggerFactory;
 import org.terasology.assets.management.AssetManager;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.entity.lifecycleEvents.OnActivatedComponent;
 import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.prefab.Prefab;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
-import org.terasology.logic.characters.CharacterComponent;
+import org.terasology.logic.characters.CharacterTeleportEvent;
 import org.terasology.logic.chat.ChatMessageEvent;
 import org.terasology.logic.common.DisplayNameComponent;
 import org.terasology.math.Region3i;
 import org.terasology.network.ClientComponent;
 import org.terasology.network.ColorComponent;
 import org.terasology.registry.In;
-import org.terasology.rendering.FontColor;
 import org.terasology.rendering.nui.Color;
 import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.components.ScenarioHubToolUpdateComponent;
@@ -43,19 +41,21 @@ import org.terasology.scenario.components.regions.RegionBeingCreatedComponent;
 import org.terasology.scenario.components.regions.RegionColorComponent;
 import org.terasology.scenario.components.regions.RegionLocationComponent;
 import org.terasology.scenario.components.regions.RegionNameComponent;
+import org.terasology.scenario.internal.events.HubtoolRewriteRegionEvent;
 import org.terasology.scenario.internal.events.RegionAddVisibilityEvent;
 import org.terasology.scenario.internal.events.RegionProtectEvent;
 import org.terasology.scenario.internal.events.RegionRecolorEvent;
+import org.terasology.scenario.internal.events.RegionRedrawEvent;
 import org.terasology.scenario.internal.events.RegionRemoveVisibilityEvent;
 import org.terasology.scenario.internal.events.RegionRenameEvent;
 import org.terasology.scenario.internal.events.RegionResizeEvent;
+import org.terasology.scenario.internal.events.RegionTeleportationRequestEvent;
 import org.terasology.scenario.internal.events.RegionTreeAddEvent;
 import org.terasology.scenario.internal.events.RegionTreeDeleteEvent;
 import org.terasology.scenario.internal.events.RegionTreeFullAddEvent;
 import org.terasology.scenario.internal.events.RegionTreeMoveEntityEvent;
 import org.terasology.structureTemplates.components.ProtectedRegionsComponent;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -95,6 +95,13 @@ public class RegionTreeSystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent
+    public void onRegionTeleportationRequestEvent(RegionTeleportationRequestEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
+        org.terasology.math.geom.Vector3f location = event.getRequestedRegion().getComponent(RegionLocationComponent.class).region.center();
+        CharacterTeleportEvent tele = new CharacterTeleportEvent(location);
+        event.getTeleportedEntity().send(tele);
+    }
+
+    @ReceiveEvent
     public void onRegionTreeAddEvent(RegionTreeAddEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
 
         //Makes sure only one region is being created by a person at a time
@@ -120,20 +127,16 @@ public class RegionTreeSystem extends BaseComponentSystem {
 
         for (EntityRef e : entityManager.getEntitiesWith(ScenarioRegionVisibilityComponent.class)) {
             e.send(new RegionRemoveVisibilityEvent(event.getDeleteEntity()));
-            //e.getComponent(ScenarioRegionVisibilityComponent.class).visibleList.remove(event.getDeleteEntity());
-            //e.saveComponent(e.getComponent(ScenarioRegionVisibilityComponent.class));
         }
 
         event.getDeleteEntity().destroy();
 
         for (EntityRef e : entityManager.getEntitiesWith(ScenarioHubToolUpdateComponent.class)) {
-            e.getComponent(ScenarioHubToolUpdateComponent.class).dirtyRegions = true;
-            e.saveComponent(e.getComponent(ScenarioHubToolUpdateComponent.class));
+            e.send(new HubtoolRewriteRegionEvent());
         }
 
         for (EntityRef e : entityManager.getEntitiesWith(ScenarioRegionVisibilityComponent.class)) {
-            e.getComponent(ScenarioRegionVisibilityComponent.class).dirtyRegionsDraw = true;
-            e.saveComponent(e.getComponent(ScenarioRegionVisibilityComponent.class));
+            e.send(new RegionRedrawEvent());
         }
     }
 
@@ -154,8 +157,7 @@ public class RegionTreeSystem extends BaseComponentSystem {
         scenarioEntity.saveComponent(scenarioEntity.getComponent(ScenarioComponent.class));
 
         for (EntityRef e : entityManager.getEntitiesWith(ScenarioHubToolUpdateComponent.class)) {
-            e.getComponent(ScenarioHubToolUpdateComponent.class).dirtyRegions = true;
-            e.saveComponent(e.getComponent(ScenarioHubToolUpdateComponent.class));
+            e.send(new HubtoolRewriteRegionEvent());
         }
     }
 
@@ -170,8 +172,7 @@ public class RegionTreeSystem extends BaseComponentSystem {
         addingCharacter.send(new RegionAddVisibilityEvent(event.getAddEntity()));
 
         for (EntityRef e : entityManager.getEntitiesWith(ScenarioHubToolUpdateComponent.class)) {
-            e.getComponent(ScenarioHubToolUpdateComponent.class).dirtyRegions = true;
-            e.saveComponent(e.getComponent(ScenarioHubToolUpdateComponent.class));
+            e.send(new HubtoolRewriteRegionEvent());
         }
     }
 
@@ -182,13 +183,11 @@ public class RegionTreeSystem extends BaseComponentSystem {
 
         scenarioEntity.saveComponent(scenarioEntity.getComponent(ScenarioComponent.class));
         for (EntityRef e : entityManager.getEntitiesWith(ScenarioHubToolUpdateComponent.class)) {
-            e.getComponent(ScenarioHubToolUpdateComponent.class).dirtyRegions = true;
-            e.saveComponent(e.getComponent(ScenarioHubToolUpdateComponent.class));
+            e.send(new HubtoolRewriteRegionEvent());
         }
 
         for (EntityRef e : entityManager.getEntitiesWith(ScenarioRegionVisibilityComponent.class)) {
-            e.getComponent(ScenarioRegionVisibilityComponent.class).dirtyRegionsDraw = true;
-            e.saveComponent(e.getComponent(ScenarioRegionVisibilityComponent.class));
+            e.send(new RegionRedrawEvent());
         }
     }
 
@@ -199,13 +198,11 @@ public class RegionTreeSystem extends BaseComponentSystem {
 
         scenarioEntity.saveComponent(scenarioEntity.getComponent(ScenarioComponent.class));
         for (EntityRef e : entityManager.getEntitiesWith(ScenarioHubToolUpdateComponent.class)) {
-            e.getComponent(ScenarioHubToolUpdateComponent.class).dirtyRegions = true;
-            e.saveComponent(e.getComponent(ScenarioHubToolUpdateComponent.class));
+            e.send(new HubtoolRewriteRegionEvent());
         }
 
         for (EntityRef e : entityManager.getEntitiesWith(ScenarioRegionVisibilityComponent.class)) {
-            e.getComponent(ScenarioRegionVisibilityComponent.class).dirtyRegionsDraw = true;
-            e.saveComponent(e.getComponent(ScenarioRegionVisibilityComponent.class));
+            e.send(new RegionRedrawEvent());
         }
     }
 
@@ -238,8 +235,7 @@ public class RegionTreeSystem extends BaseComponentSystem {
         }
 
         for (EntityRef e : entityManager.getEntitiesWith(ScenarioRegionVisibilityComponent.class)) {
-            e.getComponent(ScenarioRegionVisibilityComponent.class).dirtyRegionsDraw = true;
-            e.saveComponent(e.getComponent(ScenarioRegionVisibilityComponent.class));
+            e.send(new RegionRedrawEvent());
         }
     }
 }

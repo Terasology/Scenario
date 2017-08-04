@@ -50,6 +50,7 @@ import org.terasology.scenario.internal.events.RegionProtectEvent;
 import org.terasology.scenario.internal.events.RegionRecolorEvent;
 import org.terasology.scenario.internal.events.RegionRenameEvent;
 import org.terasology.scenario.internal.events.RegionResizeEvent;
+import org.terasology.scenario.internal.events.RegionTeleportationRequestEvent;
 import org.terasology.scenario.internal.utilities.CieCamColorsScenario;
 import org.terasology.structureTemplates.components.ProtectedRegionsComponent;
 import org.terasology.utilities.Assets;
@@ -175,9 +176,7 @@ public class EditRegionScreen extends CoreScreenLayer {
     }
 
     public void onTeleportButton(UIWidget button) {
-        org.terasology.math.geom.Vector3f location = baseEntity.getComponent(RegionLocationComponent.class).region.center();
-        CharacterTeleportEvent tele = new CharacterTeleportEvent(location);
-        localPlayer.getCharacterEntity().send(tele);
+        returnScreen.getEntity().send(new RegionTeleportationRequestEvent(localPlayer.getCharacterEntity(), baseEntity));
     }
 
     public Region3i getRegion() {

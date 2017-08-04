@@ -21,6 +21,11 @@ import org.terasology.assets.management.AssetManager;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.prefab.Prefab;
+import org.terasology.entitySystem.systems.BaseComponentSystem;
+import org.terasology.entitySystem.systems.RegisterMode;
+import org.terasology.entitySystem.systems.RegisterSystem;
+import org.terasology.registry.In;
+import org.terasology.registry.Share;
 import org.terasology.rendering.FontColor;
 import org.terasology.rendering.nui.Color;
 import org.terasology.rendering.nui.CoreScreenLayer;
@@ -42,35 +47,23 @@ import java.util.regex.Pattern;
 /**
  * A parser designed to parse a {@link ScenarioLogicTextComponent} text of a scenario logic entity
  */
-public class ArgumentParser {
+@Share(ArgumentParser.class)
+@RegisterSystem(RegisterMode.CLIENT)
+public class ArgumentParser extends BaseComponentSystem {
     private Logger logger = LoggerFactory.getLogger(ArgumentParser.class);
 
-
+    @In
     private BlockManager blockManager;
 
-
+    @In
     private EntityManager entityManager;
 
+    @In
     private AssetManager assetManager;
-
-    private static ArgumentParser parser;
 
     private List<String> keys;
 
     private Color specialColor = new Color(0, 191, 255);
-
-    public void setBlockManager(BlockManager blockManager) {
-        this.blockManager = blockManager;
-    }
-
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
-
-    public void setAssetManager(AssetManager assetManager) {
-        this.assetManager = assetManager;
-    }
-
     /**
      * Takes in an entity with a textComponent and argumentContainerComponent and parses the arguments from the text
      * and sets the default values in the argument container and saves the entity

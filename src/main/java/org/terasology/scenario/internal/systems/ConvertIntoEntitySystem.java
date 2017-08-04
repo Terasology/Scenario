@@ -68,6 +68,9 @@ public class ConvertIntoEntitySystem extends BaseComponentSystem {
     @In
     BlockManager blockManager;
 
+    @In
+    ArgumentParser argumentParser;
+
     private Logger logger = LoggerFactory.getLogger(ConvertIntoEntitySystem.class);
 
     private Pattern patternMain = Pattern.compile("\\[(.*?)\\]");
@@ -83,10 +86,6 @@ public class ConvertIntoEntitySystem extends BaseComponentSystem {
         matcher.find();
         String prefabName = constructions.get(0).substring(matcher.end());
         EntityRef starterEntity = entityManager.create(assetManager.getAsset(prefabName, Prefab.class).get());
-        ArgumentParser argumentParser = new ArgumentParser();
-        argumentParser.setEntityManager(entityManager);
-        argumentParser.setAssetManager(assetManager);
-        argumentParser.setBlockManager(blockManager);
         argumentParser.parseDefaults(starterEntity);
         constructions.remove(0);
 

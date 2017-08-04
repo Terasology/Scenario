@@ -18,17 +18,16 @@ package org.terasology.scenario.components;
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.network.FieldReplicateType;
+import org.terasology.network.NoReplicate;
 import org.terasology.network.Replicate;
+import org.terasology.scenario.internal.ui.HubToolScreen;
 
 /**
  * Component that lets the client know that the scenario entity was updated and therefore it should redraw on the next update
  */
 public class ScenarioHubToolUpdateComponent implements Component {
-    @Replicate(FieldReplicateType.SERVER_TO_OWNER)
-    public boolean dirtyLogic = true;
-
-    @Replicate(FieldReplicateType.SERVER_TO_OWNER)
-    public boolean dirtyRegions = true;
+    @NoReplicate
+    public HubToolScreen localScreen;
 
     @Replicate(FieldReplicateType.SERVER_TO_OWNER)
     public EntityRef addedEntity;

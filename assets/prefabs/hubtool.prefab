@@ -12,6 +12,5 @@
         "screen": "Scenario:HubToolScreen"
     },
     "HubToolExpansion": {},
-    "ScenarioRegionVisibility": {},
     "ScenarioHubToolUpdate":{}
 }

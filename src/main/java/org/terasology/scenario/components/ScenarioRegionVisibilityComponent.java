@@ -27,10 +27,8 @@ import java.util.Set;
  * Component attached to a hubtool that includes a set of all of the region entities that should be visible to the
  * local player (visibility of the regions are ticked to true)
  */
+@Replicate(FieldReplicateType.SERVER_TO_OWNER)
 public class ScenarioRegionVisibilityComponent implements Component {
     @Replicate(FieldReplicateType.OWNER_TO_SERVER)
     public Set<EntityRef> visibleList = new HashSet<>();
-
-    @Replicate(FieldReplicateType.SERVER_TO_OWNER)
-    public boolean dirtyRegionsDraw = true;
 }
