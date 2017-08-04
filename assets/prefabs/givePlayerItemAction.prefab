@@ -1,12 +1,12 @@
 {
     "Network":{},
-    "Action":{},
-    "ShortName":{
+    "ScenarioIndicatorAction":{},
+    "ScenarioLogicLabel":{
         "name":"Give item"
     },
-    "GiveItemAction":{},
-    "Text":{
+    "ScenarioSecondaryGiveItem":{},
+    "ScenarioLogicText":{
         "text":"Give [player:Player] [amount:Integer] [item:Item]."
     },
-    "ArgumentContainer":{}
+    "ScenarioArgumentContainer":{}
 }

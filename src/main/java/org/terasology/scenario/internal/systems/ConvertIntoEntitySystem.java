@@ -28,14 +28,14 @@ import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.network.NetworkComponent;
 import org.terasology.registry.In;
 import org.terasology.scenario.components.ScenarioHubToolUpdateComponent;
-import org.terasology.scenario.components.actions.ArgumentContainerComponent;
-import org.terasology.scenario.components.information.ConstBlockComponent;
-import org.terasology.scenario.components.information.ConstComparatorComponent;
-import org.terasology.scenario.components.information.ConstIntegerComponent;
-import org.terasology.scenario.components.information.ConstItemPrefabComponent;
-import org.terasology.scenario.components.information.ConstRegionComponent;
-import org.terasology.scenario.components.information.ConstStringComponent;
-import org.terasology.scenario.components.information.PlayerComponent;
+import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
+import org.terasology.scenario.components.information.ScenarioValueBlockUriComponent;
+import org.terasology.scenario.components.information.ScenarioValueComparatorComponent;
+import org.terasology.scenario.components.information.ScenarioValueIntegerComponent;
+import org.terasology.scenario.components.information.ScenarioValueItemPrefabUriComponent;
+import org.terasology.scenario.components.information.ScenarioValueRegionComponent;
+import org.terasology.scenario.components.information.ScenarioValueStringComponent;
+import org.terasology.scenario.components.information.ScenarioValuePlayerComponent;
 import org.terasology.scenario.components.regions.RegionNameComponent;
 import org.terasology.scenario.internal.events.ConvertIntoEntityConstantEvent;
 import org.terasology.scenario.internal.events.ConvertIntoEntityEvent;
@@ -52,6 +52,13 @@ import java.util.regex.Pattern;
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class ConvertIntoEntitySystem extends BaseComponentSystem {
 
+    /**
+     * Strings follow a pattern of [PREFAB]prefabName{key name for entity argument}[VALUE]value of the component
+     *
+     * Calls to entities that are argument entities that contain a value component are the leaves of the tree and therefore
+     * are evaluated for the value passed with the string
+     */
+
     @In
     EntityManager entityManager;
 
@@ -65,12 +72,12 @@ public class ConvertIntoEntitySystem extends BaseComponentSystem {
 
     private Pattern patternMain = Pattern.compile("\\[(.*?)\\]");
     private Pattern keyPattern = Pattern.compile("\\{(.*?)\\}");
+    private static final String PREFAB_MARKER = "PREFAB";
 
 
     @ReceiveEvent
     public void onConvertIntoEntityEvent(ConvertIntoEntityEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
         List<String> constructions = event.getConstructionStrings();
-
         //Finding the main prefab of the entity
         Matcher matcher = patternMain.matcher(constructions.get(0));
         matcher.find();
@@ -95,7 +102,7 @@ public class ConvertIntoEntitySystem extends BaseComponentSystem {
                 lastKey = key;
                 lastIndex = keyMatcher.end();
                 previousEntity = currentEntity;
-                currentEntity = currentEntity.getComponent(ArgumentContainerComponent.class).arguments.get(key);
+                currentEntity = currentEntity.getComponent(ScenarioArgumentContainerComponent.class).arguments.get(key);
             }
             // At this point previousEntity is the second to last entity, current entity is the furthest depth entity
             // lastKey is the key from the previous entity to the current entity and lastIndex is the index in the string
@@ -103,12 +110,12 @@ public class ConvertIntoEntitySystem extends BaseComponentSystem {
 
             Matcher matcherLast = patternMain.matcher(s);
             matcherLast.find(lastIndex);
-            if (matcherLast.group(1).equals("PREFAB")) {
+            if (matcherLast.group(1).equals(PREFAB_MARKER)) {
                 String subPrefab = s.substring(matcherLast.end());
                 EntityRef newEntity = entityManager.create(assetManager.getAsset(subPrefab, Prefab.class).get());
                 argumentParser.parseDefaults(newEntity);
-                previousEntity.getComponent(ArgumentContainerComponent.class).arguments.put(lastKey, newEntity);
-                previousEntity.saveComponent(previousEntity.getComponent(ArgumentContainerComponent.class));
+                previousEntity.getComponent(ScenarioArgumentContainerComponent.class).arguments.put(lastKey, newEntity);
+                previousEntity.saveComponent(previousEntity.getComponent(ScenarioArgumentContainerComponent.class));
             }
             else {
                 //Type doesn't actually matter because the entity will be set up to a constant value at the end and therefore
@@ -116,7 +123,7 @@ public class ConvertIntoEntitySystem extends BaseComponentSystem {
                 String value = s.substring(matcherLast.end());
                 ConvertIntoEntityConstantEvent constEvent = new ConvertIntoEntityConstantEvent(value);
                 currentEntity.send(constEvent);
-                previousEntity.saveComponent(previousEntity.getComponent(ArgumentContainerComponent.class));
+                previousEntity.saveComponent(previousEntity.getComponent(ScenarioArgumentContainerComponent.class));
             }
         }
 
@@ -124,43 +131,43 @@ public class ConvertIntoEntitySystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent
-    public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity, ConstIntegerComponent component) {
+    public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity, ScenarioValueIntegerComponent component) {
         component.value = Integer.parseInt(event.getValue());
         entity.saveComponent(component);
     }
 
     @ReceiveEvent
-    public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity, ConstBlockComponent component) {
+    public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity, ScenarioValueBlockUriComponent component) {
         component.block_uri = event.getValue();
         entity.saveComponent(component);
     }
 
     @ReceiveEvent
-    public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity, PlayerComponent component) {
-        component.type = PlayerComponent.PlayerType.valueOf(event.getValue());
+    public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity, ScenarioValuePlayerComponent component) {
+        component.type = ScenarioValuePlayerComponent.PlayerType.valueOf(event.getValue());
         entity.saveComponent(component);
     }
 
     @ReceiveEvent
-    public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity, ConstStringComponent component) {
+    public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity, ScenarioValueStringComponent component) {
         component.string = event.getValue();
         entity.saveComponent(component);
     }
 
     @ReceiveEvent
-    public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity, ConstItemPrefabComponent component) {
+    public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity, ScenarioValueItemPrefabUriComponent component) {
         component.prefabURI = event.getValue();
         entity.saveComponent(component);
     }
 
     @ReceiveEvent
-    public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity, ConstComparatorComponent component) {
-        component.compare = ConstComparatorComponent.comparison.valueOf(event.getValue());
+    public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity, ScenarioValueComparatorComponent component) {
+        component.compare = ScenarioValueComparatorComponent.comparison.valueOf(event.getValue());
         entity.saveComponent(component);
     }
 
     @ReceiveEvent
-    public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity, ConstRegionComponent component) {
+    public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity, ScenarioValueRegionComponent component) {
         for (EntityRef e : entityManager.getEntitiesWith(RegionNameComponent.class)) {
             if (e.getComponent(NetworkComponent.class).getNetworkId() == Integer.parseInt(event.getValue())) {
                 component.regionEntity = e;

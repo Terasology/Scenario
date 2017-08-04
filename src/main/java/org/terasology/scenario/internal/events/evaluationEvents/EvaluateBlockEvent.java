@@ -17,10 +17,12 @@ package org.terasology.scenario.internal.events.evaluationEvents;
 
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
+import org.terasology.scenario.internal.systems.ScenarioRootManagementSystem;
 import org.terasology.world.block.family.BlockFamily;
 
 /**
- * Event for evaluating a block family entity
+ * Event utilized by {@link ScenarioRootManagementSystem} in order to request
+ * a value or expression logic entity to be evaluated into a BlockFamily
  */
 public class EvaluateBlockEvent implements Event {
 

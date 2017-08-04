@@ -1,11 +1,11 @@
 {
     "Network":{},
-    "ScenarioRegion":{},
-    "ShortName":{
+    "ScenarioTypeRegion":{},
+    "ScenarioLogicLabel":{
         "name":"Triggered Region"
     },
-    "TriggeringRegion":{},
-    "Text":{
+    "ScenarioValueTriggeringRegion":{},
+    "ScenarioLogicText":{
         "text":"Triggered Region"
     }
 }

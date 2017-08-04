@@ -1,10 +1,10 @@
 {
     "Network":{},
-    "ScenarioString":{},
-    "ShortName":{
+    "ScenarioTypeString":{},
+    "ScenarioLogicLabel":{
         "name":"Constant String"
     },
-    "ConstString":{
+    "ScenarioValueString":{
         "string":"message"
     }
 }

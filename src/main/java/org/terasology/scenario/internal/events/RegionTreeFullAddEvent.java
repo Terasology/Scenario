@@ -18,9 +18,12 @@ package org.terasology.scenario.internal.events;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 import org.terasology.network.ServerEvent;
+import org.terasology.scenario.internal.systems.RegionTreeSystem;
 
 /**
  * Event that is called when a region is fully created and needs to be added to the region tree
+ *
+ * It is utilizes by the {@link RegionTreeSystem}
  */
 @ServerEvent
 public class RegionTreeFullAddEvent implements Event {

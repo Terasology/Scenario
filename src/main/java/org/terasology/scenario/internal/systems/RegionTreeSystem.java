@@ -60,6 +60,8 @@ import java.util.List;
 
 /**
  * The system that handles all of the events for the entity version of the region tree structure.
+ *
+ * Allows for clients to make request to the entity tree that is contained on the server's side.
  */
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class RegionTreeSystem extends BaseComponentSystem {

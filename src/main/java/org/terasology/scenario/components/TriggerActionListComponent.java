@@ -23,7 +23,17 @@ import org.terasology.network.Replicate;
 import java.util.ArrayList;
 import java.util.List;
 /**
- * List for actions in a trigger
+ * List for actions in a trigger where action entities are Scenario logic entities with an Action indicator component
+ *
+ *  * Typical Scenario logic entities include:
+ *   Network Component
+ *   Indicator Component
+ *   {@link ScenarioLogicLabelComponent} - label field includes the text for the dropdown menus
+ *   Secondary Component
+ *   *{@link ScenarioLogicTextComponent} - text field is the text that is displayed with arguments included (Detailed in the class)
+ *   *{@link ScenarioArgumentContainerComponent} - Only needed if the entity description includes argument parameters
+ *
+ *   * is not required
  */
 public class TriggerActionListComponent implements Component {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)

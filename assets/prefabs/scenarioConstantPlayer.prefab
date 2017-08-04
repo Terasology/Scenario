@@ -1,8 +1,8 @@
 {
     "Network":{},
-    "ScenarioPlayerEntity":{},
-    "ShortName":{
+    "ScenarioTypePlayer":{},
+    "ScenarioLogicLabel":{
         "name":"Constant Player"
     },
-    "Player":{}
+    "ScenarioValuePlayer":{}
 }

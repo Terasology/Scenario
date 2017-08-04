@@ -21,13 +21,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.rendering.nui.NUIManager;
 import org.terasology.rendering.nui.contextMenu.MenuTree;
+import org.terasology.scenario.internal.ui.HubToolScreen;
 
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
 /**
- * Builder that constructs the context menu for a logic entity on the logic tree.
+ * Builder that constructs the context menu for a logic entity on the logic tree view of a {@link HubToolScreen}.
  */
 public class LogicTreeMenuTreeBuilder {
     public static final String OPTION_ADD_ACTION = "Add Action";

@@ -17,9 +17,11 @@ package org.terasology.scenario.internal.events.scenarioEvents;
 
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
+import org.terasology.scenario.components.events.ScenarioSecondaryRespawnComponent;
 
 /**
- * Event that is triggered on a player respawning(from death or rejoining a server)
+ * Event that is a part of the scenario module that will invoke any logic entities with {@link ScenarioSecondaryRespawnComponent}
+ * to trigger
  */
 public class PlayerRespawnScenarioEvent implements Event {
     private EntityRef spawningEntity;

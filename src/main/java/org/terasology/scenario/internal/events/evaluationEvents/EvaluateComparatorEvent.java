@@ -17,24 +17,26 @@ package org.terasology.scenario.internal.events.evaluationEvents;
 
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
-import org.terasology.scenario.components.information.ConstComparatorComponent;
+import org.terasology.scenario.components.information.ScenarioValueComparatorComponent;
+import org.terasology.scenario.internal.systems.ScenarioRootManagementSystem;
 
 /**
- * Event for evaluating a conditional entity into a comparison type
+ * Event utilized by {@link ScenarioRootManagementSystem} in order to request
+ * a value or expression logic entity to be evaluated into a comparator comparison value
  */
 public class EvaluateComparatorEvent implements Event {
-    private ConstComparatorComponent.comparison result;
+    private ScenarioValueComparatorComponent.comparison result;
     private EntityRef passedEntity;
 
     public EvaluateComparatorEvent(EntityRef passed) {
         this.passedEntity = passed;
     }
 
-    public void setResult(ConstComparatorComponent.comparison result) {
+    public void setResult(ScenarioValueComparatorComponent.comparison result) {
         this.result = result;
     }
 
-    public ConstComparatorComponent.comparison getResult() {
+    public ScenarioValueComparatorComponent.comparison getResult() {
         return result;
     }
 

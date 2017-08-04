@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.terasology.assets.management.AssetManager;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.logic.players.LocalPlayer;
 import org.terasology.registry.In;
 import org.terasology.rendering.assets.texture.Texture;
@@ -31,7 +30,7 @@ import org.terasology.rendering.nui.databinding.ReadOnlyBinding;
 import org.terasology.rendering.nui.widgets.UIBox;
 import org.terasology.rendering.nui.widgets.UIButton;
 import org.terasology.rendering.nui.widgets.treeView.Tree;
-import org.terasology.scenario.components.ExpandedComponent;
+import org.terasology.scenario.components.HubToolExpansionComponent;
 import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.components.ScenarioHubToolUpdateComponent;
 import org.terasology.scenario.components.TriggerActionListComponent;
@@ -135,7 +134,7 @@ public class HubToolScreen extends BaseInteractionScreen {
         treeView = find("logicTree", LogicTreeView.class);
         regionTreeView = find("RegionTree", RegionTreeView.class);
 
-        ExpandedComponent exp = getInteractionTarget().getComponent(ExpandedComponent.class);
+        HubToolExpansionComponent exp = getInteractionTarget().getComponent(HubToolExpansionComponent.class);
 
         if (exp.expandedList == null) {
             exp.expandedList = new HashSet<>();
@@ -551,17 +550,17 @@ public class HubToolScreen extends BaseInteractionScreen {
                 //Assumes all components are non-null, if one isn't then it's a bad trigger entity anyways and will cause problems elsewhere
                 value = new LogicTreeValue(name.name, assetManager.getAsset("Scenario:triggerText", Texture.class).get(), LogicTreeValue.Type.TRIGGER, t, parser);
                 LogicTree event = new LogicTree(new LogicTreeValue("Events", assetManager.getAsset("Scenario:eventText", Texture.class).get(), LogicTreeValue.Type.EVENT_NAME, t, parser), this);
-                if (getInteractionTarget().getComponent(ExpandedComponent.class).expandedList.contains(t.getComponent(TriggerNameComponent.class).entityForEvent)) {
+                if (getInteractionTarget().getComponent(HubToolExpansionComponent.class).expandedList.contains(t.getComponent(TriggerNameComponent.class).entityForEvent)) {
                     event.setExpandedNoEntity(true);
                 }
 
                 LogicTree condition = new LogicTree(new LogicTreeValue("Conditionals", assetManager.getAsset("Scenario:conditionalText", Texture.class).get(), LogicTreeValue.Type.CONDITIONAL_NAME, t, parser), this);
-                if (getInteractionTarget().getComponent(ExpandedComponent.class).expandedList.contains(t.getComponent(TriggerNameComponent.class).entityForCondition)) {
+                if (getInteractionTarget().getComponent(HubToolExpansionComponent.class).expandedList.contains(t.getComponent(TriggerNameComponent.class).entityForCondition)) {
                     condition.setExpandedNoEntity(true);
                 }
 
                 LogicTree action = new LogicTree(new LogicTreeValue("Actions", assetManager.getAsset("Scenario:actionText", Texture.class).get(), LogicTreeValue.Type.ACTION_NAME, t, parser), this);
-                if (getInteractionTarget().getComponent(ExpandedComponent.class).expandedList.contains(t.getComponent(TriggerNameComponent.class).entityForAction)) {
+                if (getInteractionTarget().getComponent(HubToolExpansionComponent.class).expandedList.contains(t.getComponent(TriggerNameComponent.class).entityForAction)) {
                     action.setExpandedNoEntity(true);
                 }
 
@@ -580,7 +579,7 @@ public class HubToolScreen extends BaseInteractionScreen {
                     checkAndAdd(a, LogicTreeValue.Type.ACTION, "Scenario:actionText", action);
                 }
                 returnTree.addChild(tempTriggerTree);
-                tempTriggerTree.setExpandedNoEntity(getInteractionTarget().getComponent(ExpandedComponent.class).expandedList.contains(t));
+                tempTriggerTree.setExpandedNoEntity(getInteractionTarget().getComponent(HubToolExpansionComponent.class).expandedList.contains(t));
 
             }
         }

@@ -1,12 +1,12 @@
 {
     "Network":{},
-    "ScenarioString":{},
-    "ShortName":{
+    "ScenarioTypeString":{},
+    "ScenarioLogicLabel":{
         "name":"Concatenated String"
     },
-    "ConcatString":{},
-    "Text":{
+    "ScenarioExpressionConcatString":{},
+    "ScenarioLogicText":{
         "text":"[string1:String] + [string2:String]"
     },
-    "ArgumentContainer":{}
+    "ScenarioArgumentContainer":{}
 }

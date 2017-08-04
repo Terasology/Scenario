@@ -16,9 +16,11 @@
 package org.terasology.scenario.internal.events.evaluationEvents;
 
 import org.terasology.entitySystem.event.Event;
+import org.terasology.scenario.internal.systems.ScenarioRootManagementSystem;
 
 /**
- * Event for evaluating the display string of a logic entity
+ * Event utilized by {@link ScenarioRootManagementSystem} in order to request
+ * a scenario logic entity to be evaluated into a string for display as a text (such as the hub tool or logic editor)
  */
 public class EvaluateDisplayEvent implements Event {
     private String result;

@@ -1,12 +1,12 @@
 {
     "Network":{},
-    "Event":{},
-    "ShortName":{
+    "ScenarioIndicatorEvent":{},
+    "ScenarioLogicLabel":{
         "name":"On Player Enter Region"
     },
-    "OnEnterRegion":{},
-    "Text":{
+    "ScenarioSecondaryEnterRegion":{},
+    "ScenarioLogicText":{
         "text":"Player enters [region:Region]"
     },
-    "ArgumentContainer":{}
+    "ScenarioArgumentContainer":{}
 }

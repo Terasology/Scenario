@@ -18,7 +18,11 @@ package org.terasology.scenario.internal.events;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 import org.terasology.network.OwnerEvent;
+import org.terasology.scenario.components.ScenarioRegionVisibilityComponent;
 
+/**
+ * Event that is called in order to remove a region entity to a player character's {@link ScenarioRegionVisibilityComponent}
+ */
 @OwnerEvent
 public class RegionRemoveVisibilityEvent implements Event {
     private EntityRef removalEntity;

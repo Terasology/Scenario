@@ -1,11 +1,11 @@
 {
     "Network":{},
-    "Event":{},
-    "ShortName":{
+    "ScenarioIndicatorEvent":{},
+    "ScenarioLogicLabel":{
         "name":"On Player Respawn"
     },
-    "OnRespawn":{},
-    "Text":{
+    "ScenarioSecondaryRespawn":{},
+    "ScenarioLogicText":{
         "text":"On player respawn"
     }
 }

@@ -1,12 +1,12 @@
 {
     "Network":{},
-    "Conditional":{},
-    "ShortName":{
+    "ScenarioIndicatorConditional":{},
+    "ScenarioLogicLabel":{
         "name":"Block is type"
     },
-    "BlockConditional":{},
-    "Text":{
+    "ScenarioSecondaryBlockCompare":{},
+    "ScenarioLogicText":{
         "text":"Is [block1:Block] of type [block2:Block]"
     },
-    "ArgumentContainer":{}
+    "ScenarioArgumentContainer":{}
 }

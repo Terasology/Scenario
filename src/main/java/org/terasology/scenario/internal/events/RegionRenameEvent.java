@@ -18,10 +18,13 @@ package org.terasology.scenario.internal.events;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 import org.terasology.network.ServerEvent;
+import org.terasology.scenario.internal.systems.RegionTreeSystem;
 import org.terasology.scenario.internal.ui.HubToolScreen;
 
 /**
  * Event that is called to rename a region entity
+ *
+ * It is utilizes by the {@link RegionTreeSystem}
  */
 @ServerEvent
 public class RegionRenameEvent implements Event {

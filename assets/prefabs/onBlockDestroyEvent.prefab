@@ -1,11 +1,11 @@
 {
     "Network":{},
-    "Event":{},
-    "ShortName":{
+    "ScenarioIndicatorEvent":{},
+    "ScenarioLogicLabel":{
         "name":"On Block Destroyed"
     },
-    "OnBlockDestroy":{},
-    "Text":{
+    "ScenarioSecondaryBlockDestroy":{},
+    "ScenarioLogicText":{
         "text":"On block destroyed"
     }
 }

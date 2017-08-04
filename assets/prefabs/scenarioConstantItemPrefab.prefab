@@ -1,10 +1,10 @@
 {
     "Network":{},
-    "ScenarioItem":{},
-    "ShortName":{
+    "ScenarioTypeItem":{},
+    "ScenarioLogicLabel":{
         "name":"Constant Item Prefab"
     },
-    "ConstItemPrefab":{
+    "ScenarioValueItemPrefabUri":{
         "prefabURI":"core:axe"
     }
 }

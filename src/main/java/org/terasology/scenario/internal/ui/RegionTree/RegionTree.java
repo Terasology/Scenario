@@ -20,7 +20,7 @@ import org.terasology.scenario.internal.events.RegionTreeMoveEntityEvent;
 import org.terasology.scenario.internal.ui.HubToolScreen;
 
 /**
- * Data structure to store the region entity tree on a hubtool
+ * Data structure to store the region entity tree on a {@link HubToolScreen}
  */
 public class RegionTree extends Tree<RegionTreeValue> {
     private HubToolScreen hubToolScreen;

@@ -17,9 +17,11 @@ package org.terasology.scenario.internal.events.evaluationEvents;
 
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
+import org.terasology.scenario.internal.systems.ScenarioRootManagementSystem;
 
 /**
- * Event for evaluating a conditional into a boolean
+ * Event utilized by {@link ScenarioRootManagementSystem} in order to request a
+ * logic entity that contains a conditional to be evaluated into a boolean
  */
 public class ConditionalCheckEvent implements Event {
     private boolean result;

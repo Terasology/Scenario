@@ -11,7 +11,7 @@
     "InteractionScreen": {
         "screen": "Scenario:HubToolScreen"
     },
-    "Expanded": {},
+    "HubToolExpansion": {},
     "ScenarioRegionVisibility": {},
     "ScenarioHubToolUpdate":{}
 }

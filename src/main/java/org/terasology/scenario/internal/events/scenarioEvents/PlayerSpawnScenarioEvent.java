@@ -17,9 +17,11 @@ package org.terasology.scenario.internal.events.scenarioEvents;
 
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
+import org.terasology.scenario.components.events.ScenarioSecondarySpawnComponent;
 
 /**
- * Scenario event for when a player spawns for the first time
+ * Event that is a part of the scenario module that will invoke any logic entities with {@link ScenarioSecondarySpawnComponent}
+ * to trigger
  */
 public class PlayerSpawnScenarioEvent implements Event {
     private EntityRef spawningEntity;

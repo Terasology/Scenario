@@ -17,9 +17,14 @@ package org.terasology.scenario.internal.events;
 
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
+import org.terasology.scenario.internal.systems.ScenarioRootManagementSystem;
+import org.terasology.scenario.internal.systems.ActionEventSystem;
 
 /**
- * An event that is called when an event is triggered by an entity
+ * An event that is called in order to trigger an action entity to act based on the information entity passed with this event
+ * allows for the {@link ScenarioRootManagementSystem} to pass along an information entity that contains information about the triggered event
+ *
+ * Utilized by {@link ActionEventSystem}
  */
 public class EventTriggerEvent implements Event {
     public EntityRef informationEntity;

@@ -19,7 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.rendering.assets.texture.TextureRegion;
-import org.terasology.scenario.components.TextComponent;
+import org.terasology.scenario.components.ScenarioLogicTextComponent;
 import org.terasology.scenario.internal.utilities.ArgumentParser;
 
 /**
@@ -72,7 +72,7 @@ public class LogicTreeValue {
 
         //Check for action/event/conditional
         if (valueType == Type.ACTION || valueType == Type.EVENT || valueType == Type.CONDITIONAL) {
-            if (entity.hasComponent(TextComponent.class)) {
+            if (entity.hasComponent(ScenarioLogicTextComponent.class)) {
                 text = parser.parseDisplayText(entity);
             }
         }

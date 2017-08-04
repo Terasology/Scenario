@@ -27,7 +27,7 @@ import org.terasology.scenario.internal.ui.LogicTree.LogicTreeValue;
 import java.util.List;
 
 /**
- * Renderer for the treeview representation of a logicTreeValue.
+ * Renderer for the treeview representation of a {@link LogicTreeValue}.
  * Holds the different ways to display different types of logic
  */
 public class LogicItemRenderer extends AbstractItemRenderer<LogicTreeValue> {

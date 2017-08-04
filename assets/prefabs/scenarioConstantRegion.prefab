@@ -1,8 +1,8 @@
 {
     "Network":{},
-    "ScenarioRegion":{},
-    "ShortName":{
+    "ScenarioTypeRegion":{},
+    "ScenarioLogicLabel":{
         "name":"Constant Region"
     },
-    "ConstRegion":{}
+    "ScenarioValueRegion":{}
 }

@@ -38,7 +38,6 @@ import org.terasology.rendering.logic.RegionOutlineComponent;
 import org.terasology.rendering.nui.Color;
 import org.terasology.scenario.components.ScenarioHubToolUpdateComponent;
 import org.terasology.scenario.components.ScenarioRegionVisibilityComponent;
-import org.terasology.scenario.components.information.IndentificationComponents.ScenarioIntegerComponent;
 import org.terasology.scenario.components.regions.RegionColorComponent;
 import org.terasology.scenario.components.regions.RegionLocationComponent;
 import org.terasology.scenario.components.regions.RegionNameComponent;
@@ -50,6 +49,8 @@ import java.util.List;
 
 /**
  * System that displays the regions to a client(the 3d box representation and name in the world)
+ *
+ * Is done on a client to allow for each player to have their own set of displayed regions and not have any effect on other players
  */
 @RegisterSystem(RegisterMode.CLIENT)
 public class RegionDisplaySystem extends BaseComponentSystem implements UpdateSubscriberSystem {
