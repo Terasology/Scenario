@@ -38,11 +38,11 @@ import org.terasology.rendering.nui.itemRendering.AbstractItemRenderer;
 import org.terasology.rendering.nui.layouts.ColumnLayout;
 import org.terasology.rendering.nui.widgets.UIDropdownScrollable;
 import org.terasology.rendering.nui.widgets.UILabel;
-import org.terasology.scenario.components.ShortNameComponent;
-import org.terasology.scenario.components.actions.ActionComponent;
-import org.terasology.scenario.components.actions.ArgumentContainerComponent;
-import org.terasology.scenario.components.conditionals.ConditionalComponent;
-import org.terasology.scenario.components.events.EventComponent;
+import org.terasology.scenario.components.ScenarioLogicLabelComponent;
+import org.terasology.scenario.components.actions.ScenarioIndicatorActionComponent;
+import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
+import org.terasology.scenario.components.conditionals.ScenarioIndicatorConditionalComponent;
+import org.terasology.scenario.components.events.ScenarioIndicatorEventComponent;
 import org.terasology.scenario.internal.events.ConvertScenarioEntityEvent;
 import org.terasology.scenario.internal.events.ReplaceEntityFromConstructionStringsEvent;
 import org.terasology.scenario.internal.ui.LogicTree.LogicTreeValue;
@@ -131,13 +131,13 @@ public class EditLogicScreen extends CoreScreenLayer {
             @Override
             public void draw(Prefab value, Canvas canvas) {
                 Rect2i textRegion = Rect2i.createFromMinAndSize(0, 0, canvas.getRegion().width(), canvas.getRegion().height());
-                canvas.drawText(value.getComponent(ShortNameComponent.class).name, textRegion);
+                canvas.drawText(value.getComponent(ScenarioLogicLabelComponent.class).name, textRegion);
             }
 
             @Override
             public Vector2i getPreferredSize(Prefab value, Canvas canvas) {
                 Font font = canvas.getCurrentStyle().getFont();
-                List<String> lines = TextLineBuilder.getLines(font, value.getComponent(ShortNameComponent.class).name, canvas.size().x);
+                List<String> lines = TextLineBuilder.getLines(font, value.getComponent(ScenarioLogicLabelComponent.class).name, canvas.size().x);
                 return font.getSize(lines);
             }
         });
@@ -181,20 +181,20 @@ public class EditLogicScreen extends CoreScreenLayer {
 
     private List<Prefab> getPrefabs(EntityRef targetEntity) {
         List<Prefab> output = new ArrayList<>();
-        if (targetEntity.hasComponent(ActionComponent.class)) {
-            Iterable<Prefab> prefabs = prefabManager.listPrefabs(ActionComponent.class);
+        if (targetEntity.hasComponent(ScenarioIndicatorActionComponent.class)) {
+            Iterable<Prefab> prefabs = prefabManager.listPrefabs(ScenarioIndicatorActionComponent.class);
             for (Prefab p : prefabs) {
                 output.add(p);
             }
         }
-        if (targetEntity.hasComponent(EventComponent.class)) {
-            Iterable<Prefab> prefabs = prefabManager.listPrefabs(EventComponent.class);
+        if (targetEntity.hasComponent(ScenarioIndicatorEventComponent.class)) {
+            Iterable<Prefab> prefabs = prefabManager.listPrefabs(ScenarioIndicatorEventComponent.class);
             for (Prefab p : prefabs) {
                 output.add(p);
             }
         }
-        if (targetEntity.hasComponent(ConditionalComponent.class)) {
-            Iterable<Prefab> prefabs = prefabManager.listPrefabs(ConditionalComponent.class);
+        if (targetEntity.hasComponent(ScenarioIndicatorConditionalComponent.class)) {
+            Iterable<Prefab> prefabs = prefabManager.listPrefabs(ScenarioIndicatorConditionalComponent.class);
             for (Prefab p : prefabs) {
                 output.add(p);
             }
@@ -232,8 +232,8 @@ public class EditLogicScreen extends CoreScreenLayer {
     }
 
     public void setVariable(String key, EntityRef value) {
-        temporaryEntity.getComponent(ArgumentContainerComponent.class).arguments.put(key, value);
-        temporaryEntity.saveComponent(temporaryEntity.getComponent(ArgumentContainerComponent.class));
+        temporaryEntity.getComponent(ScenarioArgumentContainerComponent.class).arguments.put(key, value);
+        temporaryEntity.saveComponent(temporaryEntity.getComponent(ScenarioArgumentContainerComponent.class));
 
         generateText();
     }

@@ -20,9 +20,12 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.math.geom.Vector3i;
 import org.terasology.network.FieldReplicateType;
 import org.terasology.network.Replicate;
+import org.terasology.scenario.components.ScenarioComponent;
 
 /**
- * Component indicating that this region is the one currently being created and should listen to edits
+ * Creation component for a Scenario argument entity, indicates that this region is currently being created
+ *
+ * Scenario region entities are detailed in {@link ScenarioComponent}
  */
 public class RegionBeingCreatedComponent implements Component {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)

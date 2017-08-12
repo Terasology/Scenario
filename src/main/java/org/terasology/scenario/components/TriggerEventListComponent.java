@@ -24,7 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * List for events in a trigger
+ * List for events in a trigger where action entities are Scenario logic entities with an Event indicator component
+ *
+ * Scenario logic entities detailed in {@link ScenarioComponent}
  */
 public class TriggerEventListComponent implements Component {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)

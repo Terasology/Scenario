@@ -34,7 +34,8 @@ import org.terasology.scenario.internal.events.scenarioEvents.PlayerRespawnScena
 import org.terasology.scenario.internal.events.scenarioEvents.PlayerSpawnScenarioEvent;
 
 /**
- * System that listened for terasology events and converts them into scenario events and sends them to the active scenario
+ * System that listens for normal terasology engine events and converts them into scenario events and sends them to the active scenario
+ * in order to for it to invoke any triggers that have a matching Scenario event
  */
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class EventListeningSystem extends BaseComponentSystem {

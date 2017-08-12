@@ -24,7 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * List for conditions in a trigger
+ * List for conditionals in a trigger where action entities are Scenario logic entities with an Conditional indicator component
+ *
+ * Scenario logic entities detailed in {@link ScenarioComponent}
  */
 public class TriggerConditionListComponent implements Component {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)

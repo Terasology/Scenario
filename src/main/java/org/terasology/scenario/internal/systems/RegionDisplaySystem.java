@@ -17,6 +17,7 @@ package org.terasology.scenario.internal.systems;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.terasology.engine.modes.loadProcesses.AwaitedLocalCharacterSpawnEvent;
 import org.terasology.entitySystem.entity.EntityBuilder;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
@@ -26,23 +27,22 @@ import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
-import org.terasology.entitySystem.systems.UpdateSubscriberSystem;
 import org.terasology.logic.characters.CharacterComponent;
 import org.terasology.logic.location.LocationComponent;
 import org.terasology.logic.players.LocalPlayer;
 import org.terasology.math.Region3i;
 import org.terasology.math.geom.Vector3i;
+import org.terasology.network.NetworkSystem;
 import org.terasology.registry.In;
 import org.terasology.rendering.logic.FloatingTextComponent;
 import org.terasology.rendering.logic.RegionOutlineComponent;
 import org.terasology.rendering.nui.Color;
-import org.terasology.scenario.components.ScenarioHubToolUpdateComponent;
 import org.terasology.scenario.components.ScenarioRegionVisibilityComponent;
-import org.terasology.scenario.components.information.IndentificationComponents.ScenarioIntegerComponent;
 import org.terasology.scenario.components.regions.RegionColorComponent;
 import org.terasology.scenario.components.regions.RegionLocationComponent;
 import org.terasology.scenario.components.regions.RegionNameComponent;
 import org.terasology.scenario.internal.events.RegionAddVisibilityEvent;
+import org.terasology.scenario.internal.events.RegionRedrawEvent;
 import org.terasology.scenario.internal.events.RegionRemoveVisibilityEvent;
 
 import java.util.ArrayList;
@@ -50,11 +50,16 @@ import java.util.List;
 
 /**
  * System that displays the regions to a client(the 3d box representation and name in the world)
+ *
+ * Is done on a client to allow for each player to have their own set of displayed regions and not have any effect on other players
  */
 @RegisterSystem(RegisterMode.CLIENT)
-public class RegionDisplaySystem extends BaseComponentSystem implements UpdateSubscriberSystem {
+public class RegionDisplaySystem extends BaseComponentSystem {
     @In
     private EntityManager entityManager;
+
+    @In
+    private NetworkSystem networkSystem;
 
     @In
     private LocalPlayer localPlayer;
@@ -62,9 +67,6 @@ public class RegionDisplaySystem extends BaseComponentSystem implements UpdateSu
     private List<EntityRef> regionOutlineAndTextEntities = new ArrayList<>();
 
     private Logger logger = LoggerFactory.getLogger(RegionDisplaySystem.class);
-
-    private boolean updateDrawingCheck = false;
-
 
     @ReceiveEvent //Check to see if a character has a visibility component, if not then add one, if they do then do cleanup to check for old regions
     public void onComponentActivated(OnActivatedComponent event, EntityRef entity, CharacterComponent component) {
@@ -80,38 +82,25 @@ public class RegionDisplaySystem extends BaseComponentSystem implements UpdateSu
                 for (EntityRef e : removalList) {
                     comp.visibleList.remove(e);
                 }
-
                 entity.saveComponent(comp);
             }
         } else { //Character doesn't have a visibility for regions, so add one
             ScenarioRegionVisibilityComponent newComp = new ScenarioRegionVisibilityComponent();
             entity.addComponent(newComp);
         }
-
-        entity.getComponent(ScenarioRegionVisibilityComponent.class).dirtyRegionsDraw = true;
-        entity.saveComponent(entity.getComponent(ScenarioRegionVisibilityComponent.class));
     }
 
-    /**
-     * Checks if the regions have been updated since they were last displayed to the client, dirtyRegionsDraw is updated by the
-     * RegionTreeSystem and indicates a change has been made that would require a redraw. Initial testing with using an event did not actually work, will have
-     * to do more testing and will eventually switch to that if it works
-     * @param delta The time (in seconds) since the last engine update.
-     */
-    @Override
-    public void update(float delta) {
-        if (updateDrawingCheck) { //Trade size of boolean to save hasComponent check every update cycle, might be worth the optimization
-            if (localPlayer.getCharacterEntity().getComponent(ScenarioRegionVisibilityComponent.class).dirtyRegionsDraw) {
-                updateOutlineEntities(localPlayer.getCharacterEntity().getComponent(ScenarioRegionVisibilityComponent.class));
-                localPlayer.getCharacterEntity().getComponent(ScenarioRegionVisibilityComponent.class).dirtyRegionsDraw = false;
-                localPlayer.getCharacterEntity().saveComponent(localPlayer.getCharacterEntity().getComponent(ScenarioRegionVisibilityComponent.class));
-            }
+
+    @ReceiveEvent
+    public void onRequestRegionRedrawEvent(RegionRedrawEvent event, EntityRef entity, ScenarioRegionVisibilityComponent component) {
+        if (entity.equals(localPlayer.getCharacterEntity())) {
+            updateOutlineEntities(component);
         }
-        else {
-            if (localPlayer.getCharacterEntity().hasComponent(ScenarioHubToolUpdateComponent.class)) {
-                updateDrawingCheck = true;
-            }
-        }
+    }
+
+    @ReceiveEvent
+    public void onAwaitedLocalCharacterSpawnEvent(AwaitedLocalCharacterSpawnEvent event, EntityRef entity, CharacterComponent component) {
+        updateOutlineEntities(entity.getComponent(ScenarioRegionVisibilityComponent.class));
     }
 
     @ReceiveEvent
@@ -187,7 +176,6 @@ public class RegionDisplaySystem extends BaseComponentSystem implements UpdateSu
                 returnList.add(region);
             }
         }
-
         return returnList;
     }
 }

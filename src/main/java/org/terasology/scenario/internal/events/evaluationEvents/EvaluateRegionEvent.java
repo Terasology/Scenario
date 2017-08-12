@@ -17,9 +17,11 @@ package org.terasology.scenario.internal.events.evaluationEvents;
 
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
+import org.terasology.scenario.internal.systems.ScenarioRootManagementSystem;
 
 /**
- * Event for evaluating a region entity
+ * Event utilized by {@link ScenarioRootManagementSystem} in order to request
+ * a value or expression logic entity to be evaluated into a region entity
  */
 public class EvaluateRegionEvent implements Event {
     private EntityRef result;

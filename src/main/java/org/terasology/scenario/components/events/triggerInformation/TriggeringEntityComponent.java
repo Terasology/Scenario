@@ -22,5 +22,8 @@ import org.terasology.entitySystem.entity.EntityRef;
  * Component that contains the entity that triggers an event
  */
 public class TriggeringEntityComponent implements Component {
+    /**
+     * Entity that triggers the event
+     */
     public EntityRef entity;
 }

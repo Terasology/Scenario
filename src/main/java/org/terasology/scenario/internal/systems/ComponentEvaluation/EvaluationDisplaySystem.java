@@ -24,29 +24,39 @@ import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.registry.In;
-import org.terasology.scenario.components.actions.ArgumentContainerComponent;
-import org.terasology.scenario.components.information.BlockComponent;
-import org.terasology.scenario.components.information.ConcatStringComponent;
-import org.terasology.scenario.components.information.ConstBlockComponent;
-import org.terasology.scenario.components.information.ConstComparatorComponent;
-import org.terasology.scenario.components.information.ConstIntegerComponent;
-import org.terasology.scenario.components.information.ConstItemPrefabComponent;
-import org.terasology.scenario.components.information.ConstRegionComponent;
-import org.terasology.scenario.components.information.ConstStringComponent;
-import org.terasology.scenario.components.information.ItemCountComponent;
-import org.terasology.scenario.components.information.PlayerComponent;
-import org.terasology.scenario.components.information.PlayerNameComponent;
-import org.terasology.scenario.components.information.RandomIntComponent;
-import org.terasology.scenario.components.information.RegionNameStringComponent;
-import org.terasology.scenario.components.information.TriggeringBlockComponent;
-import org.terasology.scenario.components.information.TriggeringRegionComponent;
+import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
+import org.terasology.scenario.components.information.ScenarioValueBlockFamilyComponent;
+import org.terasology.scenario.components.information.ScenarioExpressionConcatStringComponent;
+import org.terasology.scenario.components.information.ScenarioValueBlockUriComponent;
+import org.terasology.scenario.components.information.ScenarioValueComparatorComponent;
+import org.terasology.scenario.components.information.ScenarioValueIntegerComponent;
+import org.terasology.scenario.components.information.ScenarioValueItemPrefabUriComponent;
+import org.terasology.scenario.components.information.ScenarioValueRegionComponent;
+import org.terasology.scenario.components.information.ScenarioValueStringComponent;
+import org.terasology.scenario.components.information.ScenarioExpressionItemCountComponent;
+import org.terasology.scenario.components.information.ScenarioValuePlayerComponent;
+import org.terasology.scenario.components.information.ScenarioExpressionPlayerNameComponent;
+import org.terasology.scenario.components.information.ScenarioExpressionRandomIntComponent;
+import org.terasology.scenario.components.information.ScenarioExpressionRegionNameComponent;
+import org.terasology.scenario.components.information.ScenarioValueTriggeringBlockComponent;
+import org.terasology.scenario.components.information.ScenarioValueTriggeringRegionComponent;
 import org.terasology.scenario.components.regions.RegionNameComponent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateDisplayEvent;
-import org.terasology.scenario.internal.events.evaluationEvents.EvaluateStringEvent;
 import org.terasology.world.block.BlockManager;
 
 import java.util.Map;
 
+/**
+ * This is a system that takes argument entities that contain value or expression components and evaluates them
+ * into a string that is used for display.
+ *
+ * Events watched are {@link EvaluateDisplayEvent}
+ *
+ * Argument entities include:
+ *   Network Component
+ *   Type Component
+ *   Value or Expression Component (Values are constant values, expressions are evaluated to obtain the value)
+ */
 @RegisterSystem(RegisterMode.CLIENT)
 public class EvaluationDisplaySystem extends BaseComponentSystem {
 
@@ -59,43 +69,43 @@ public class EvaluationDisplaySystem extends BaseComponentSystem {
     PrefabManager prefabManager;
 
     @ReceiveEvent //Constant int
-    public void onEvaluateIntDisplayEvent(EvaluateDisplayEvent event, EntityRef entity, ConstIntegerComponent comp) {
+    public void onEvaluateIntDisplayEvent(EvaluateDisplayEvent event, EntityRef entity, ScenarioValueIntegerComponent comp) {
         event.setResult(Integer.toString(comp.value));
     }
 
     @ReceiveEvent //Block
-    public void onEvaluateBlockDisplayEvent(EvaluateDisplayEvent event, EntityRef entity, BlockComponent comp) {
+    public void onEvaluateBlockDisplayEvent(EvaluateDisplayEvent event, EntityRef entity, ScenarioValueBlockFamilyComponent comp) {
         event.setResult(comp.value.getDisplayName());
     }
 
     @ReceiveEvent //Trigger Block
-    public void onEvaluateDisplayEvent(EvaluateDisplayEvent event, EntityRef entity, TriggeringBlockComponent comp) {
+    public void onEvaluateDisplayEvent(EvaluateDisplayEvent event, EntityRef entity, ScenarioValueTriggeringBlockComponent comp) {
         event.setResult("Triggering Block");
     }
 
     @ReceiveEvent //BlockConstant
-    public void onEvaluateBlockDisplayEvent(EvaluateDisplayEvent event, EntityRef entity, ConstBlockComponent comp) {
+    public void onEvaluateBlockDisplayEvent(EvaluateDisplayEvent event, EntityRef entity, ScenarioValueBlockUriComponent comp) {
         event.setResult(blockManager.getBlockFamily(comp.block_uri).getDisplayName());
     }
 
     @ReceiveEvent //Trigger/Target player
-    public void onEvaluatePlayerDisplayEvent(EvaluateDisplayEvent event, EntityRef entity, PlayerComponent comp) {
+    public void onEvaluatePlayerDisplayEvent(EvaluateDisplayEvent event, EntityRef entity, ScenarioValuePlayerComponent comp) {
         event.setResult(comp.type.name());
     }
 
     @ReceiveEvent //Constant string
-    public void onEvaluateStringDisplayEvent(EvaluateDisplayEvent event, EntityRef entity, ConstStringComponent comp) {
+    public void onEvaluateStringDisplayEvent(EvaluateDisplayEvent event, EntityRef entity, ScenarioValueStringComponent comp) {
         event.setResult(comp.string);
     }
 
     @ReceiveEvent //Comparator
-    public void onEvaluateStringEvent(EvaluateDisplayEvent event, EntityRef entity, ConstComparatorComponent comp) {
+    public void onEvaluateStringEvent(EvaluateDisplayEvent event, EntityRef entity, ScenarioValueComparatorComponent comp) {
         event.setResult(comp.compare.toString());
     }
 
     @ReceiveEvent
-    public void OnEvaluateRandomIntEvent(EvaluateDisplayEvent event, EntityRef entity, RandomIntComponent comp) {
-        Map<String, EntityRef> args = entity.getComponent(ArgumentContainerComponent.class).arguments;
+    public void OnEvaluateRandomIntEvent(EvaluateDisplayEvent event, EntityRef entity, ScenarioExpressionRandomIntComponent comp) {
+        Map<String, EntityRef> args = entity.getComponent(ScenarioArgumentContainerComponent.class).arguments;
 
         EvaluateDisplayEvent evalInt1 = new EvaluateDisplayEvent();
         args.get("int1").send(evalInt1);
@@ -109,13 +119,13 @@ public class EvaluationDisplaySystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent
-    public void OnEvaluateItemEvent(EvaluateDisplayEvent event, EntityRef entity, ConstItemPrefabComponent comp) {
+    public void OnEvaluateItemEvent(EvaluateDisplayEvent event, EntityRef entity, ScenarioValueItemPrefabUriComponent comp) {
         event.setResult(comp.prefabURI);
     }
 
     @ReceiveEvent //Count of items
-    public void onEvaluateIntEvent(EvaluateDisplayEvent event, EntityRef entity, ItemCountComponent comp) {
-        Map<String, EntityRef> args = entity.getComponent(ArgumentContainerComponent.class).arguments;
+    public void onEvaluateIntEvent(EvaluateDisplayEvent event, EntityRef entity, ScenarioExpressionItemCountComponent comp) {
+        Map<String, EntityRef> args = entity.getComponent(ScenarioArgumentContainerComponent.class).arguments;
 
         EvaluateDisplayEvent evalItem = new EvaluateDisplayEvent();
         args.get("item").send(evalItem);
@@ -129,8 +139,8 @@ public class EvaluationDisplaySystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent //PlayerName
-    public void OnEvaluatePlayerNameEvent(EvaluateDisplayEvent event, EntityRef entity, PlayerNameComponent comp) {
-        Map<String, EntityRef> args = entity.getComponent(ArgumentContainerComponent.class).arguments;
+    public void OnEvaluatePlayerNameEvent(EvaluateDisplayEvent event, EntityRef entity, ScenarioExpressionPlayerNameComponent comp) {
+        Map<String, EntityRef> args = entity.getComponent(ScenarioArgumentContainerComponent.class).arguments;
 
         EvaluateDisplayEvent evalPlayer = new EvaluateDisplayEvent();
         args.get("player").send(evalPlayer);
@@ -140,7 +150,7 @@ public class EvaluationDisplaySystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent //RegionName
-    public void OnEvaluateRegionEvent(EvaluateDisplayEvent event, EntityRef entity, ConstRegionComponent comp) {
+    public void OnEvaluateRegionEvent(EvaluateDisplayEvent event, EntityRef entity, ScenarioValueRegionComponent comp) {
         if (comp.regionEntity != null) {
             event.setResult(comp.regionEntity.getComponent(RegionNameComponent.class).regionName);
         }
@@ -150,8 +160,8 @@ public class EvaluationDisplaySystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent //ConcatString
-    public void onEvaluateConcatStringEvent(EvaluateDisplayEvent event, EntityRef entity, ConcatStringComponent comp) {
-        Map<String, EntityRef> args = entity.getComponent(ArgumentContainerComponent.class).arguments;
+    public void onEvaluateConcatStringEvent(EvaluateDisplayEvent event, EntityRef entity, ScenarioExpressionConcatStringComponent comp) {
+        Map<String, EntityRef> args = entity.getComponent(ScenarioArgumentContainerComponent.class).arguments;
 
         EvaluateDisplayEvent evalStr1 = new EvaluateDisplayEvent();
         args.get("string1").send(evalStr1);
@@ -165,13 +175,13 @@ public class EvaluationDisplaySystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent //Triggering Region
-    public void onEvaluateDisplayTriggeringRegionEvent(EvaluateDisplayEvent event, EntityRef entity, TriggeringRegionComponent comp) {
+    public void onEvaluateDisplayTriggeringRegionEvent(EvaluateDisplayEvent event, EntityRef entity, ScenarioValueTriggeringRegionComponent comp) {
         event.setResult("TRIGGERING REGION");
     }
 
     @ReceiveEvent //Name of Region
-    public void OnEvaluateNameOfRegion(EvaluateDisplayEvent event, EntityRef entity, RegionNameStringComponent comp) {
-        Map<String, EntityRef> args = entity.getComponent(ArgumentContainerComponent.class).arguments;
+    public void OnEvaluateNameOfRegion(EvaluateDisplayEvent event, EntityRef entity, ScenarioExpressionRegionNameComponent comp) {
+        Map<String, EntityRef> args = entity.getComponent(ScenarioArgumentContainerComponent.class).arguments;
 
         EvaluateDisplayEvent evalName = new EvaluateDisplayEvent();
         args.get("region").send(evalName);

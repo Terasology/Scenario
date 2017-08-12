@@ -18,9 +18,12 @@ package org.terasology.scenario.internal.events;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 import org.terasology.network.ServerEvent;
+import org.terasology.scenario.internal.systems.RegionTreeSystem;
 
 /**
  * Event that is called in order to protect or unprotect a region
+ *
+ * It is utilizes by the {@link RegionTreeSystem}
  */
 @ServerEvent
 public class RegionProtectEvent implements Event {

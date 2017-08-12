@@ -1,10 +1,10 @@
 {
     "Network":{},
-    "ScenarioBlock":{},
-    "ShortName":{
+    "ScenarioTypeBlock":{},
+    "ScenarioLogicLabel":{
         "name":"Constant block"
     },
-    "ConstBlock":{
+    "ScenarioValueBlockUri":{
         "block_uri":"core:stone"
     }
 }

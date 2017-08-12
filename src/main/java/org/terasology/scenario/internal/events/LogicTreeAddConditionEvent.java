@@ -18,6 +18,7 @@ package org.terasology.scenario.internal.events;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 import org.terasology.network.ServerEvent;
+import org.terasology.scenario.internal.systems.EntityTreeSystem;
 import org.terasology.scenario.internal.ui.HubToolScreen;
 
 /**
@@ -25,6 +26,8 @@ import org.terasology.scenario.internal.ui.HubToolScreen;
  * hubScreen: The hub tool's screen, if this is passed then after adding the event it will update the tree on this hubScreen,
  *            if not passed(null) then it will not update immediately.
  * triggerEntity: The entity of the trigger that the action will be attached to
+ *
+ * Utilized with {@link EntityTreeSystem}
  */
 @ServerEvent
 public class LogicTreeAddConditionEvent implements Event {

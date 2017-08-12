@@ -1,12 +1,12 @@
 {
     "Network":{},
-    "ScenarioInteger":{},
-    "ShortName":{
+    "ScenarioTypeInteger":{},
+    "ScenarioLogicLabel":{
         "name":"Count items inventory"
     },
-    "ItemCount":{},
-    "Text":{
+    "ScenarioExpressionItemCount":{},
+    "ScenarioLogicText":{
         "text":"Count of [item:Item] in inventory of [player:Player]"
     },
-    "ArgumentContainer":{}
+    "ScenarioArgumentContainer":{}
 }

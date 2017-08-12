@@ -1,12 +1,12 @@
 {
     "Network":{},
-    "Conditional":{},
-    "ShortName":{
+    "ScenarioIndicatorConditional":{},
+    "ScenarioLogicLabel":{
         "name":"Integer Comparison"
     },
-    "IntComparisonConditional":{},
-    "Text":{
+    "ScenarioSecondaryIntCompare":{},
+    "ScenarioLogicText":{
         "text":"[int1:Integer] [compare:Comparator] [int2:Integer]"
     },
-    "ArgumentContainer":{}
+    "ScenarioArgumentContainer":{}
 }

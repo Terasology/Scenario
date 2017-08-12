@@ -17,9 +17,11 @@ package org.terasology.scenario.internal.events.scenarioEvents;
 
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
+import org.terasology.scenario.components.events.ScenarioSecondaryLeaveRegionComponent;
 
 /**
- * Event that is triggered on a player leaving a region
+ * Event that is a part of the scenario module that will invoke any logic entities with {@link ScenarioSecondaryLeaveRegionComponent}
+ * to trigger
  */
 public class PlayerLeaveRegionEvent implements Event {
     private EntityRef entity;

@@ -1,12 +1,12 @@
 {
     "Network":{},
-    "Action":{},
-    "ShortName":{
+    "ScenarioIndicatorAction":{},
+    "ScenarioLogicLabel":{
         "name":"Log message"
     },
-    "LogInfo":{},
-    "Text":{
+    "ScenarioSecondaryLogInfo":{},
+    "ScenarioLogicText":{
         "text":"Put [text:String] in logger."
     },
-    "ArgumentContainer":{}
+    "ScenarioArgumentContainer":{}
 }

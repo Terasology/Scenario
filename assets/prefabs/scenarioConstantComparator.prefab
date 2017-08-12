@@ -1,8 +1,8 @@
 {
     "Network":{},
-    "ScenarioComparator":{},
-    "ShortName":{
+    "ScenarioTypeComparator":{},
+    "ScenarioLogicLabel":{
         "name":"Comparator"
     },
-    "ConstComparator":{}
+    "ScenarioValueComparator":{}
 }

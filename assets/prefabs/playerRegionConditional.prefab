@@ -1,12 +1,12 @@
 {
     "Network":{},
-    "Conditional":{},
-    "ShortName":{
+    "ScenarioIndicatorConditional":{},
+    "ScenarioLogicLabel":{
         "name":"Player in region"
     },
-    "PlayerRegion":{},
-    "Text":{
+    "ScenarioSecondaryPlayerRegion":{},
+    "ScenarioLogicText":{
         "text":"Is [player:Player] inside of [region:Region]"
     },
-    "ArgumentContainer":{}
+    "ScenarioArgumentContainer":{}
 }

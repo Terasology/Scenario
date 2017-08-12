@@ -1,12 +1,12 @@
 {
     "Network":{},
-    "ScenarioInteger":{},
-    "ShortName":{
+    "ScenarioTypeInteger":{},
+    "ScenarioLogicLabel":{
         "name":"Random Int"
     },
-    "RandomInt":{},
-    "Text":{
+    "ScenarioExpressionRandomInt":{},
+    "ScenarioLogicText":{
         "text":"Random int [int1:Integer] - [int2:Integer]"
     },
-    "ArgumentContainer":{}
+    "ScenarioArgumentContainer":{}
 }

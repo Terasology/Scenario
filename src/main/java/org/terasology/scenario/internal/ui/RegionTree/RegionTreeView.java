@@ -20,11 +20,12 @@ import org.terasology.rendering.nui.NUIManager;
 import org.terasology.rendering.nui.contextMenu.ContextMenuUtils;
 import org.terasology.rendering.nui.contextMenu.MenuTree;
 import org.terasology.rendering.nui.widgets.UITreeView;
+import org.terasology.scenario.internal.ui.HubToolScreen;
 
 import java.util.function.Function;
 
 /**
- * Setting up the display and context menu of the region entity tree on a hubtool
+ * Setting up the display and context menu of the region entity tree on a {@link HubToolScreen}
  */
 public class RegionTreeView extends UITreeView<RegionTreeValue> {
     private Function<RegionTree, MenuTree> contextMenuTreeProducer;

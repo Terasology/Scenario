@@ -27,7 +27,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 /**
- * Class the details the actual displaying portion of the logicTree
+ * Class the details the actual displaying portion of the {@link LogicTree}
  */
 public final class LogicTreeView extends UITreeView<LogicTreeValue> {
     private AssetManager assetManager;

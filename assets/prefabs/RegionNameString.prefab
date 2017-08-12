@@ -1,12 +1,12 @@
 {
     "Network":{},
-    "ScenarioString":{},
-    "ShortName":{
+    "ScenarioTypeString":{},
+    "ScenarioLogicLabel":{
         "name":"Region Name"
     },
-    "RegionNameString":{},
-    "Text":{
+    "ScenarioExpressionRegionName":{},
+    "ScenarioLogicText":{
         "text":"Name of [region:Region]"
     },
-    "ArgumentContainer":{}
+    "ScenarioArgumentContainer":{}
 }

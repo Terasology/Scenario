@@ -18,9 +18,11 @@ package org.terasology.scenario.internal.events.scenarioEvents;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 import org.terasology.entitySystem.prefab.Prefab;
+import org.terasology.scenario.components.events.ScenarioSecondaryBlockDestroyComponent;
 
 /**
- * Event that is triggered on a block destruction
+ * Event that is a part of the scenario module that will invoke any logic entities with {@link ScenarioSecondaryBlockDestroyComponent}
+ * to trigger
  */
 public class DoDestroyScenarioEvent implements Event {
     private EntityRef instigator;

@@ -16,9 +16,10 @@
 package org.terasology.scenario.internal.ui.RegionTree;
 
 import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.scenario.internal.ui.HubToolScreen;
 
 /**
- * Simple value for displaying regions in the hub tool. Just holds a entity that it matches with.
+ * Simple value for displaying regions in a {@link HubToolScreen}. Just holds a entity that it matches with.
  * Any edits are done on the entity side and updates aren't made with out updated an entity which would cause a rebuild
  * of the tree anyways so no need to store temporary values within the value, searching for the components is fine.
  */

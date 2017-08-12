@@ -21,14 +21,19 @@ import org.terasology.assets.management.AssetManager;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.prefab.Prefab;
+import org.terasology.entitySystem.systems.BaseComponentSystem;
+import org.terasology.entitySystem.systems.RegisterMode;
+import org.terasology.entitySystem.systems.RegisterSystem;
+import org.terasology.registry.In;
+import org.terasology.registry.Share;
 import org.terasology.rendering.FontColor;
 import org.terasology.rendering.nui.Color;
 import org.terasology.rendering.nui.CoreScreenLayer;
 import org.terasology.rendering.nui.UIWidget;
 import org.terasology.rendering.nui.widgets.UIButton;
 import org.terasology.rendering.nui.widgets.UILabel;
-import org.terasology.scenario.components.actions.ArgumentContainerComponent;
-import org.terasology.scenario.components.TextComponent;
+import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
+import org.terasology.scenario.components.ScenarioLogicTextComponent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateDisplayEvent;
 import org.terasology.scenario.internal.ui.EditParameterScreen;
 import org.terasology.world.block.BlockManager;
@@ -40,45 +45,33 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * A parser designed to parse a TextComponent's text of a scenario prefab
+ * A parser designed to parse a {@link ScenarioLogicTextComponent} text of a scenario logic entity
  */
-public class ArgumentParser {
+@Share(ArgumentParser.class)
+@RegisterSystem(RegisterMode.CLIENT)
+public class ArgumentParser extends BaseComponentSystem {
     private Logger logger = LoggerFactory.getLogger(ArgumentParser.class);
 
-
+    @In
     private BlockManager blockManager;
 
-
+    @In
     private EntityManager entityManager;
 
+    @In
     private AssetManager assetManager;
-
-    private static ArgumentParser parser;
 
     private List<String> keys;
 
     private Color specialColor = new Color(0, 191, 255);
-
-    public void setBlockManager(BlockManager blockManager) {
-        this.blockManager = blockManager;
-    }
-
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
-
-    public void setAssetManager(AssetManager assetManager) {
-        this.assetManager = assetManager;
-    }
-
     /**
      * Takes in an entity with a textComponent and argumentContainerComponent and parses the arguments from the text
      * and sets the default values in the argument container and saves the entity
      */
     public void parseDefaults (EntityRef entity) {
-        String text = entity.getComponent(TextComponent.class).text;
-        ArgumentContainerComponent args = entity.getComponent(ArgumentContainerComponent.class);
-        if (entity.hasComponent(ArgumentContainerComponent.class)) { //Some cases might not have any arguments
+        String text = entity.getComponent(ScenarioLogicTextComponent.class).text;
+        ScenarioArgumentContainerComponent args = entity.getComponent(ScenarioArgumentContainerComponent.class);
+        if (entity.hasComponent(ScenarioArgumentContainerComponent.class)) { //Some cases might not have any arguments
             args.arguments = new HashMap<>();
         }
 
@@ -126,8 +119,8 @@ public class ArgumentParser {
      * in order to generate the text and coloring that should be used for display on a node in the UI
      */
     public String parseDisplayText (EntityRef entity) {
-        String text = entity.getComponent(TextComponent.class).text;
-        ArgumentContainerComponent args = entity.getComponent(ArgumentContainerComponent.class);
+        String text = entity.getComponent(ScenarioLogicTextComponent.class).text;
+        ScenarioArgumentContainerComponent args = entity.getComponent(ScenarioArgumentContainerComponent.class);
         Pattern pattern = Pattern.compile("\\[(.*?)\\]");
         Matcher matcher = pattern.matcher(text);
 
@@ -161,8 +154,8 @@ public class ArgumentParser {
      */
     public List<UIWidget> generateWidgets(EntityRef entity, CoreScreenLayer editScreen) {
         List<UIWidget> output = new ArrayList<>();
-        String text = entity.getComponent(TextComponent.class).text;
-        ArgumentContainerComponent args = entity.getComponent(ArgumentContainerComponent.class);
+        String text = entity.getComponent(ScenarioLogicTextComponent.class).text;
+        ScenarioArgumentContainerComponent args = entity.getComponent(ScenarioArgumentContainerComponent.class);
         Pattern pattern = Pattern.compile("\\[(.*?)\\]");
         Matcher matcher = pattern.matcher(text);
         List<String> replacements = new ArrayList<>();

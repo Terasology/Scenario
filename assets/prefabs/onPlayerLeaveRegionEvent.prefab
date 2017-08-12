@@ -1,12 +1,12 @@
 {
     "Network":{},
-    "Event":{},
-    "ShortName":{
+    "ScenarioIndicatorEvent":{},
+    "ScenarioLogicLabel":{
         "name":"On Player Leave Region"
     },
-    "OnLeaveRegion":{},
-    "Text":{
+    "ScenarioSecondaryLeaveRegion":{},
+    "ScenarioLogicText":{
         "text":"Player leaves [region:Region]"
     },
-    "ArgumentContainer":{}
+    "ScenarioArgumentContainer":{}
 }

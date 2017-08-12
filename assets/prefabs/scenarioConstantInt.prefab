@@ -1,10 +1,10 @@
 {
     "Network":{},
-    "ScenarioInteger":{},
-    "ShortName":{
+    "ScenarioTypeInteger":{},
+    "ScenarioLogicLabel":{
         "name":"Constant Integer"
     },
-    "ConstInteger":{
+    "ScenarioValueInteger":{
         "value":1
     }
 }

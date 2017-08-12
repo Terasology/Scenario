@@ -27,7 +27,6 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.prefab.Prefab;
 import org.terasology.entitySystem.prefab.PrefabManager;
 import org.terasology.logic.inventory.ItemComponent;
-import org.terasology.logic.players.LocalPlayer;
 import org.terasology.math.geom.Rect2i;
 import org.terasology.math.geom.Vector2i;
 import org.terasology.registry.In;
@@ -45,24 +44,22 @@ import org.terasology.rendering.nui.widgets.UIDropdownScrollable;
 import org.terasology.rendering.nui.widgets.UILabel;
 import org.terasology.rendering.nui.widgets.UIText;
 import org.terasology.scenario.components.ScenarioComponent;
-import org.terasology.scenario.components.ShortNameComponent;
-import org.terasology.scenario.components.actions.ArgumentContainerComponent;
-import org.terasology.scenario.components.information.ConstBlockComponent;
-import org.terasology.scenario.components.information.ConstComparatorComponent;
-import org.terasology.scenario.components.information.ConstIntegerComponent;
-import org.terasology.scenario.components.information.ConstItemPrefabComponent;
-import org.terasology.scenario.components.information.ConstRegionComponent;
-import org.terasology.scenario.components.information.ConstStringComponent;
-import org.terasology.scenario.components.information.IndentificationComponents.ScenarioBlockComponent;
-import org.terasology.scenario.components.information.IndentificationComponents.ScenarioComparatorComponent;
-import org.terasology.scenario.components.information.IndentificationComponents.ScenarioIntegerComponent;
-import org.terasology.scenario.components.information.IndentificationComponents.ScenarioItemComponent;
-import org.terasology.scenario.components.information.IndentificationComponents.ScenarioRegionComponent;
-import org.terasology.scenario.components.information.IndentificationComponents.ScenarioStringComponent;
+import org.terasology.scenario.components.ScenarioLogicLabelComponent;
+import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
+import org.terasology.scenario.components.information.ScenarioValueBlockUriComponent;
+import org.terasology.scenario.components.information.ScenarioValueComparatorComponent;
+import org.terasology.scenario.components.information.ScenarioValueIntegerComponent;
+import org.terasology.scenario.components.information.ScenarioValueItemPrefabUriComponent;
+import org.terasology.scenario.components.information.ScenarioValueRegionComponent;
+import org.terasology.scenario.components.information.ScenarioValueStringComponent;
+import org.terasology.scenario.components.information.IndentificationComponents.ScenarioTypeBlockComponent;
+import org.terasology.scenario.components.information.IndentificationComponents.ScenarioTypeComparatorComponent;
+import org.terasology.scenario.components.information.IndentificationComponents.ScenarioTypeIntegerComponent;
+import org.terasology.scenario.components.information.IndentificationComponents.ScenarioTypeItemComponent;
+import org.terasology.scenario.components.information.IndentificationComponents.ScenarioTypeRegionComponent;
+import org.terasology.scenario.components.information.IndentificationComponents.ScenarioTypeStringComponent;
 import org.terasology.scenario.components.regions.RegionColorComponent;
 import org.terasology.scenario.components.regions.RegionNameComponent;
-import org.terasology.scenario.internal.events.scenarioEvents.PlayerRespawnScenarioEvent;
-import org.terasology.scenario.internal.ui.RegionTree.RegionItemRenderer;
 import org.terasology.scenario.internal.utilities.ArgumentParser;
 import org.terasology.world.block.BlockManager;
 import org.terasology.world.block.BlockUri;
@@ -111,7 +108,7 @@ public class EditParameterScreen extends CoreScreenLayer {
     private UIDropdownScrollable<String> blockDropdown;
     private UIDropdownScrollable<String> itemDropdown;
     private UIDropdownScrollable<EntityRef> regionDropdown;
-    private UIDropdownScrollable<ConstComparatorComponent.comparison> comparisonDropdown;
+    private UIDropdownScrollable<ScenarioValueComparatorComponent.comparison> comparisonDropdown;
     private List<UIWidget> oldWidgets;
 
     private List<String> blocksURI;
@@ -160,48 +157,48 @@ public class EditParameterScreen extends CoreScreenLayer {
         this.parser = parser;
 
         optionList = new ArrayList<>();
-        if (entity.hasComponent(ScenarioIntegerComponent.class)) {
-            Iterable<Prefab> prefabs = prefabManager.listPrefabs(ScenarioIntegerComponent.class);
+        if (entity.hasComponent(ScenarioTypeIntegerComponent.class)) {
+            Iterable<Prefab> prefabs = prefabManager.listPrefabs(ScenarioTypeIntegerComponent.class);
             for (Prefab p : prefabs) {
                 optionList.add(p);
             }
             editLabel.setText("Edit Integer");
             selectionLabel.setText("Select an Integer type");
         }
-        else if (entity.hasComponent(ScenarioStringComponent.class)) {
-            Iterable<Prefab> prefabs = prefabManager.listPrefabs(ScenarioStringComponent.class);
+        else if (entity.hasComponent(ScenarioTypeStringComponent.class)) {
+            Iterable<Prefab> prefabs = prefabManager.listPrefabs(ScenarioTypeStringComponent.class);
             for (Prefab p : prefabs) {
                 optionList.add(p);
             }
             editLabel.setText("Edit String");
             selectionLabel.setText("Select a String type");
         }
-        else if (entity.hasComponent(ScenarioBlockComponent.class)) {
-            Iterable<Prefab> prefabs = prefabManager.listPrefabs(ScenarioBlockComponent.class);
+        else if (entity.hasComponent(ScenarioTypeBlockComponent.class)) {
+            Iterable<Prefab> prefabs = prefabManager.listPrefabs(ScenarioTypeBlockComponent.class);
             for (Prefab p : prefabs) {
                 optionList.add(p);
             }
             editLabel.setText("Edit Block");
             selectionLabel.setText("Select a Block type");
         }
-        else if (entity.hasComponent(ScenarioItemComponent.class)) {
-            Iterable<Prefab> prefabs = prefabManager.listPrefabs(ScenarioItemComponent.class);
+        else if (entity.hasComponent(ScenarioTypeItemComponent.class)) {
+            Iterable<Prefab> prefabs = prefabManager.listPrefabs(ScenarioTypeItemComponent.class);
             for (Prefab p : prefabs) {
                 optionList.add(p);
             }
             editLabel.setText("Edit Item");
             selectionLabel.setText("Select a Item type");
         }
-        else if (entity.hasComponent(ScenarioComparatorComponent.class)) {
-            Iterable<Prefab> prefabs = prefabManager.listPrefabs(ScenarioComparatorComponent.class);
+        else if (entity.hasComponent(ScenarioTypeComparatorComponent.class)) {
+            Iterable<Prefab> prefabs = prefabManager.listPrefabs(ScenarioTypeComparatorComponent.class);
             for (Prefab p : prefabs) {
                 optionList.add(p);
             }
             editLabel.setText("Edit Comparator");
             selectionLabel.setText("Select a Comparator type");
         }
-        else if (entity.hasComponent(ScenarioRegionComponent.class)) {
-            Iterable<Prefab> prefabs = prefabManager.listPrefabs(ScenarioRegionComponent.class);
+        else if (entity.hasComponent(ScenarioTypeRegionComponent.class)) {
+            Iterable<Prefab> prefabs = prefabManager.listPrefabs(ScenarioTypeRegionComponent.class);
             for (Prefab p : prefabs) {
                 optionList.add(p);
             }
@@ -216,13 +213,13 @@ public class EditParameterScreen extends CoreScreenLayer {
             @Override
             public void draw(Prefab value, Canvas canvas) {
                 Rect2i textRegion = Rect2i.createFromMinAndSize(0, 0, canvas.getRegion().width(), canvas.getRegion().height());
-                canvas.drawText(value.getComponent(ShortNameComponent.class).name, textRegion);
+                canvas.drawText(value.getComponent(ScenarioLogicLabelComponent.class).name, textRegion);
             }
 
             @Override
             public Vector2i getPreferredSize(Prefab value, Canvas canvas) {
                 Font font = canvas.getCurrentStyle().getFont();
-                List<String> lines = TextLineBuilder.getLines(font, value.getComponent(ShortNameComponent.class).name, canvas.size().x);
+                List<String> lines = TextLineBuilder.getLines(font, value.getComponent(ScenarioLogicLabelComponent.class).name, canvas.size().x);
                 return font.getSize(lines);
             }
         });
@@ -243,28 +240,28 @@ public class EditParameterScreen extends CoreScreenLayer {
 
     private void onOkButton(UIWidget button) {
         if (tempEntity.getParentPrefab().equals(prefabManager.getPrefab("scenario:scenarioConstantInt"))) {
-            tempEntity.getComponent(ConstIntegerComponent.class).value = Integer.parseInt(textEntry.getText());
-            tempEntity.saveComponent(tempEntity.getComponent(ConstIntegerComponent.class));
+            tempEntity.getComponent(ScenarioValueIntegerComponent.class).value = Integer.parseInt(textEntry.getText());
+            tempEntity.saveComponent(tempEntity.getComponent(ScenarioValueIntegerComponent.class));
         }
         else if (tempEntity.getParentPrefab().equals(prefabManager.getPrefab("scenario:scenarioConstantString"))) {
-            tempEntity.getComponent(ConstStringComponent.class).string = textEntry.getText();
-            tempEntity.saveComponent(tempEntity.getComponent(ConstStringComponent.class));
+            tempEntity.getComponent(ScenarioValueStringComponent.class).string = textEntry.getText();
+            tempEntity.saveComponent(tempEntity.getComponent(ScenarioValueStringComponent.class));
         }
         else if (tempEntity.getParentPrefab().equals(prefabManager.getPrefab("scenario:scenarioConstantBlock"))) {
-            tempEntity.getComponent(ConstBlockComponent.class).block_uri = blockDropdown.getSelection();
-            tempEntity.saveComponent(tempEntity.getComponent(ConstBlockComponent.class));
+            tempEntity.getComponent(ScenarioValueBlockUriComponent.class).block_uri = blockDropdown.getSelection();
+            tempEntity.saveComponent(tempEntity.getComponent(ScenarioValueBlockUriComponent.class));
         }
         else if (tempEntity.getParentPrefab().equals(prefabManager.getPrefab("scenario:scenarioConstantItemPrefab"))) {
-            tempEntity.getComponent(ConstItemPrefabComponent.class).prefabURI = itemDropdown.getSelection();
-            tempEntity.saveComponent(tempEntity.getComponent(ConstItemPrefabComponent.class));
+            tempEntity.getComponent(ScenarioValueItemPrefabUriComponent.class).prefabURI = itemDropdown.getSelection();
+            tempEntity.saveComponent(tempEntity.getComponent(ScenarioValueItemPrefabUriComponent.class));
         }
         else if (tempEntity.getParentPrefab().equals(prefabManager.getPrefab("scenario:scenarioConstantComparator"))) {
-            tempEntity.getComponent(ConstComparatorComponent.class).compare = comparisonDropdown.getSelection();
-            tempEntity.saveComponent(tempEntity.getComponent(ConstComparatorComponent.class));
+            tempEntity.getComponent(ScenarioValueComparatorComponent.class).compare = comparisonDropdown.getSelection();
+            tempEntity.saveComponent(tempEntity.getComponent(ScenarioValueComparatorComponent.class));
         }
         else if (tempEntity.getParentPrefab().equals(prefabManager.getPrefab("scenario:scenarioConstantRegion"))) {
-            tempEntity.getComponent(ConstRegionComponent.class).regionEntity = regionDropdown.getSelection();
-            tempEntity.saveComponent(tempEntity.getComponent(ConstRegionComponent.class));
+            tempEntity.getComponent(ScenarioValueRegionComponent.class).regionEntity = regionDropdown.getSelection();
+            tempEntity.saveComponent(tempEntity.getComponent(ScenarioValueRegionComponent.class));
         }
         if (!tempEntity.equals(baseEntity)) {
             if (returnScreen instanceof EditLogicScreen) {
@@ -304,16 +301,16 @@ public class EditParameterScreen extends CoreScreenLayer {
     }
 
     private void setupInteraction() {
-        if (tempEntity.hasComponent(ConstIntegerComponent.class) || //Check for constant/base cases
-                tempEntity.hasComponent(ConstStringComponent.class)) {
+        if (tempEntity.hasComponent(ScenarioValueIntegerComponent.class) || //Check for constant/base cases
+                tempEntity.hasComponent(ScenarioValueStringComponent.class)) {
             String entryValue;
             UIText entry = new UIText();
             entry.setReadOnly(false);
-            if (tempEntity.hasComponent(ConstIntegerComponent.class)) {
-                entryValue = Integer.toString(tempEntity.getComponent(ConstIntegerComponent.class).value);
+            if (tempEntity.hasComponent(ScenarioValueIntegerComponent.class)) {
+                entryValue = Integer.toString(tempEntity.getComponent(ScenarioValueIntegerComponent.class).value);
             }
             else {
-                entryValue = tempEntity.getComponent(ConstStringComponent.class).string;
+                entryValue = tempEntity.getComponent(ScenarioValueStringComponent.class).string;
             }
             entry.setText(entryValue);
             emptyVariables();
@@ -321,34 +318,34 @@ public class EditParameterScreen extends CoreScreenLayer {
             textEntry = entry;
             variables.addWidget(entry);
         }
-        else if(tempEntity.hasComponent(ConstBlockComponent.class)) {
+        else if(tempEntity.hasComponent(ScenarioValueBlockUriComponent.class)) {
             emptyVariables();
 
             blockDropdown = new UIDropdownScrollable<>();
             blockDropdown.setOptions(blocksURI);
-            blockDropdown.setSelection(tempEntity.getComponent(ConstBlockComponent.class).block_uri);
+            blockDropdown.setSelection(tempEntity.getComponent(ScenarioValueBlockUriComponent.class).block_uri);
 
             variables.addWidget(blockDropdown);
         }
-        else if(tempEntity.hasComponent(ConstItemPrefabComponent.class)) {
+        else if(tempEntity.hasComponent(ScenarioValueItemPrefabUriComponent.class)) {
             emptyVariables();
 
             itemDropdown = new UIDropdownScrollable<>();
             itemDropdown.setOptions(itemPrefabs);
-            itemDropdown.setSelection(tempEntity.getComponent(ConstItemPrefabComponent.class).prefabURI);
+            itemDropdown.setSelection(tempEntity.getComponent(ScenarioValueItemPrefabUriComponent.class).prefabURI);
 
             variables.addWidget(itemDropdown);
         }
-        else if(tempEntity.hasComponent(ConstComparatorComponent.class)) {
+        else if(tempEntity.hasComponent(ScenarioValueComparatorComponent.class)) {
             emptyVariables();
 
             comparisonDropdown = new UIDropdownScrollable<>();
-            comparisonDropdown.setOptions(Arrays.asList(ConstComparatorComponent.comparison.values()));
-            comparisonDropdown.setSelection(tempEntity.getComponent(ConstComparatorComponent.class).compare);
+            comparisonDropdown.setOptions(Arrays.asList(ScenarioValueComparatorComponent.comparison.values()));
+            comparisonDropdown.setSelection(tempEntity.getComponent(ScenarioValueComparatorComponent.class).compare);
 
             variables.addWidget(comparisonDropdown);
         }
-        else if(tempEntity.hasComponent(ConstRegionComponent.class)) {
+        else if(tempEntity.hasComponent(ScenarioValueRegionComponent.class)) {
             emptyVariables();
 
             regionDropdown = new UIDropdownScrollable<>();
@@ -389,8 +386,8 @@ public class EditParameterScreen extends CoreScreenLayer {
     }
 
     private void setVariable(String key, EntityRef value) {
-        tempEntity.getComponent(ArgumentContainerComponent.class).arguments.put(key, value);
-        tempEntity.saveComponent(tempEntity.getComponent(ArgumentContainerComponent.class));
+        tempEntity.getComponent(ScenarioArgumentContainerComponent.class).arguments.put(key, value);
+        tempEntity.saveComponent(tempEntity.getComponent(ScenarioArgumentContainerComponent.class));
 
         setupInteraction();
     }

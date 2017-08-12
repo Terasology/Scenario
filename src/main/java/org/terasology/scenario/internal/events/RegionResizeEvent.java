@@ -21,10 +21,13 @@ import org.terasology.math.Region3i;
 import org.terasology.math.geom.Vector3f;
 import org.terasology.math.geom.Vector3i;
 import org.terasology.network.ServerEvent;
+import org.terasology.scenario.internal.systems.RegionTreeSystem;
 import org.terasology.scenario.internal.ui.HubToolScreen;
 
 /**
  * Event that is called to resize a region entity
+ *
+ * It is utilizes by the {@link RegionTreeSystem}
  */
 @ServerEvent
 public class RegionResizeEvent implements Event {

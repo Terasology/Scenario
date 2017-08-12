@@ -18,6 +18,7 @@ package org.terasology.scenario.internal.events;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 import org.terasology.network.ServerEvent;
+import org.terasology.scenario.internal.systems.EntityTreeSystem;
 import org.terasology.scenario.internal.ui.HubToolScreen;
 
 /**
@@ -26,6 +27,8 @@ import org.terasology.scenario.internal.ui.HubToolScreen;
  * deleteFromEntity: The entity that the deleteEntity is attached to(trigger if entity is a event/condition/action, scenario if it is a trigger)
  * hubScreen: The hub tool's screen, if this is passed then after adding the event it will update the tree on this hubScreen,
  *            if not passed(null) then it will not update immediately.
+ *
+ * Utilized with {@link EntityTreeSystem}
  */
 @ServerEvent
 public class LogicTreeDeleteEvent implements Event{

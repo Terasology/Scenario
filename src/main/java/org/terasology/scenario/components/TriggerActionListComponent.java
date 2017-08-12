@@ -23,7 +23,9 @@ import org.terasology.network.Replicate;
 import java.util.ArrayList;
 import java.util.List;
 /**
- * List for actions in a trigger
+ * List for actions in a trigger where action entities are Scenario logic entities with an Action indicator component
+ *
+ * Scenario logic entities detailed in {@link ScenarioComponent}
  */
 public class TriggerActionListComponent implements Component {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)

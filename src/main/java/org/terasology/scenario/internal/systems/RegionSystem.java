@@ -46,7 +46,7 @@ import org.terasology.scenario.internal.events.RegionTreeFullAddEvent;
 import java.util.Iterator;
 
 /**
- * System that monitors attack hits and consumes them if they are being used to create a region.
+ * System that monitors attack hits and consumes them if they are being used to create the region of a scenario region entity.
  */
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class RegionSystem extends BaseComponentSystem {

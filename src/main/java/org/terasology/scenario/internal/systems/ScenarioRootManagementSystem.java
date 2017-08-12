@@ -23,20 +23,19 @@ import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
-import org.terasology.logic.health.DoDestroyEvent;
 import org.terasology.registry.In;
 import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.components.TriggerActionListComponent;
 import org.terasology.scenario.components.TriggerConditionListComponent;
-import org.terasology.scenario.components.actions.ArgumentContainerComponent;
-import org.terasology.scenario.components.events.OnBlockDestroyComponent;
-import org.terasology.scenario.components.events.OnEnterRegionComponent;
-import org.terasology.scenario.components.events.OnLeaveRegionComponent;
-import org.terasology.scenario.components.events.OnRespawnComponent;
-import org.terasology.scenario.components.events.OnSpawnComponent;
-import org.terasology.scenario.components.events.triggerInformation.DestroyedBlockComponent;
-import org.terasology.scenario.components.events.triggerInformation.TriggeredRegionComponent;
-import org.terasology.scenario.components.events.triggerInformation.TriggeringEntityComponent;
+import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
+import org.terasology.scenario.components.events.ScenarioSecondaryBlockDestroyComponent;
+import org.terasology.scenario.components.events.ScenarioSecondaryEnterRegionComponent;
+import org.terasology.scenario.components.events.ScenarioSecondaryLeaveRegionComponent;
+import org.terasology.scenario.components.events.ScenarioSecondaryRespawnComponent;
+import org.terasology.scenario.components.events.ScenarioSecondarySpawnComponent;
+import org.terasology.scenario.components.events.triggerInformation.InfoDestroyedBlockComponent;
+import org.terasology.scenario.components.events.triggerInformation.InfoTriggerRegionComponent;
+import org.terasology.scenario.components.events.triggerInformation.InfoTriggeringEntityComponent;
 import org.terasology.scenario.internal.events.EventTriggerEvent;
 import org.terasology.scenario.internal.events.evaluationEvents.ConditionalCheckEvent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateRegionEvent;
@@ -47,8 +46,11 @@ import org.terasology.scenario.internal.events.scenarioEvents.PlayerRespawnScena
 import org.terasology.scenario.internal.events.scenarioEvents.PlayerSpawnScenarioEvent;
 
 /**
- * System that relays game events into scenario events and sends them using a filled up entity that contains information of the trigger
- * which could include who the triggering entity or region is, or block details for breaking the block
+ * System that relays game events into scenario events and sends them using a filled up information entity that contains information of the trigger
+ * which could include who the triggering entity or region is, or block details for breaking the block, etc
+ *
+ * First checks any conditionals with a {@link ConditionalCheckEvent} and if the conditional is satisfies it
+ * Will send {@link EventTriggerEvent} to the attached list of actions, technically in the order of the actions on the hubtool
  */
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class ScenarioRootManagementSystem extends BaseComponentSystem {
@@ -79,8 +81,8 @@ public class ScenarioRootManagementSystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void onPlayerRespawnScenarioEvent(PlayerRespawnScenarioEvent event, EntityRef entity, ScenarioComponent component) {
-        Iterable<EntityRef> entityList = entityManager.getEntitiesWith(OnRespawnComponent.class);
-        TriggeringEntityComponent triggerEntity = new TriggeringEntityComponent();
+        Iterable<EntityRef> entityList = entityManager.getEntitiesWith(ScenarioSecondaryRespawnComponent.class);
+        InfoTriggeringEntityComponent triggerEntity = new InfoTriggeringEntityComponent();
         triggerEntity.entity = event.getSpawningEntity();
         EntityRef passEntity = entityManager.create(triggerEntity);
         entityList.forEach(e -> e.getOwner().send(new EventTriggerEvent(passEntity)));
@@ -88,8 +90,8 @@ public class ScenarioRootManagementSystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void onPlayerSpawnScenarioEvent(PlayerSpawnScenarioEvent event, EntityRef entity, ScenarioComponent component) {
-        Iterable<EntityRef> entityList = entityManager.getEntitiesWith(OnSpawnComponent.class);
-        TriggeringEntityComponent triggerEntity = new TriggeringEntityComponent();
+        Iterable<EntityRef> entityList = entityManager.getEntitiesWith(ScenarioSecondarySpawnComponent.class);
+        InfoTriggeringEntityComponent triggerEntity = new InfoTriggeringEntityComponent();
         triggerEntity.entity = event.getSpawningEntity();
         EntityRef passEntity = entityManager.create(triggerEntity);
         entityList.forEach(e -> e.getOwner().send(new EventTriggerEvent(passEntity)));
@@ -97,10 +99,10 @@ public class ScenarioRootManagementSystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void onDoDestroyScenarioEvent(DoDestroyScenarioEvent event, EntityRef entity, ScenarioComponent component) {
-        Iterable<EntityRef> entityList = entityManager.getEntitiesWith(OnBlockDestroyComponent.class);
-        TriggeringEntityComponent triggerEntity = new TriggeringEntityComponent();
+        Iterable<EntityRef> entityList = entityManager.getEntitiesWith(ScenarioSecondaryBlockDestroyComponent.class);
+        InfoTriggeringEntityComponent triggerEntity = new InfoTriggeringEntityComponent();
         triggerEntity.entity = event.getInstigator();
-        DestroyedBlockComponent destroyed = new DestroyedBlockComponent();
+        InfoDestroyedBlockComponent destroyed = new InfoDestroyedBlockComponent();
         destroyed.damageType = event.getDamageType();
         destroyed.destroyedBlock = event.getDestroyed();
         destroyed.directCause = event.getDirectCause();
@@ -110,15 +112,15 @@ public class ScenarioRootManagementSystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void onPlayerEnterRegionEvent(PlayerEnterRegionEvent event, EntityRef entity, ScenarioComponent component) {
-        Iterable<EntityRef> entityList = entityManager.getEntitiesWith(OnEnterRegionComponent.class);
-        TriggeringEntityComponent triggerEntity = new TriggeringEntityComponent();
+        Iterable<EntityRef> entityList = entityManager.getEntitiesWith(ScenarioSecondaryEnterRegionComponent.class);
+        InfoTriggeringEntityComponent triggerEntity = new InfoTriggeringEntityComponent();
         triggerEntity.entity = event.getTriggerEntity();
-        TriggeredRegionComponent triggerRegion = new TriggeredRegionComponent();
+        InfoTriggerRegionComponent triggerRegion = new InfoTriggerRegionComponent();
         triggerRegion.region = event.getRegion();
         EntityRef passEntity = entityManager.create(triggerEntity, triggerRegion);
         entityList.forEach(e -> {
             EvaluateRegionEvent reg = new EvaluateRegionEvent(passEntity);
-            e.getComponent(ArgumentContainerComponent.class).arguments.get("region").send(reg);
+            e.getComponent(ScenarioArgumentContainerComponent.class).arguments.get("region").send(reg);
             if (reg.getResult().equals(event.getRegion())) {
                 e.getOwner().send(new EventTriggerEvent(passEntity));
             }
@@ -127,15 +129,15 @@ public class ScenarioRootManagementSystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void onPlayerLeaveRegionEvent(PlayerLeaveRegionEvent event, EntityRef entity, ScenarioComponent component) {
-        Iterable<EntityRef> entityList = entityManager.getEntitiesWith(OnLeaveRegionComponent.class);
-        TriggeringEntityComponent triggerEntity = new TriggeringEntityComponent();
+        Iterable<EntityRef> entityList = entityManager.getEntitiesWith(ScenarioSecondaryLeaveRegionComponent.class);
+        InfoTriggeringEntityComponent triggerEntity = new InfoTriggeringEntityComponent();
         triggerEntity.entity = event.getTriggerEntity();
-        TriggeredRegionComponent triggerRegion = new TriggeredRegionComponent();
+        InfoTriggerRegionComponent triggerRegion = new InfoTriggerRegionComponent();
         triggerRegion.region = event.getRegion();
         EntityRef passEntity = entityManager.create(triggerEntity, triggerRegion);
         entityList.forEach(e -> {
             EvaluateRegionEvent reg = new EvaluateRegionEvent(passEntity);
-            e.getComponent(ArgumentContainerComponent.class).arguments.get("region").send(reg);
+            e.getComponent(ScenarioArgumentContainerComponent.class).arguments.get("region").send(reg);
             if (reg.getResult().equals(event.getRegion())) {
                 e.getOwner().send(new EventTriggerEvent(passEntity));
             }

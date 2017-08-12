@@ -1,12 +1,12 @@
 {
     "Network":{},
-    "ScenarioString":{},
-    "ShortName":{
+    "ScenarioTypeString":{},
+    "ScenarioLogicLabel":{
         "name":"Player name"
     },
-    "PlayerName":{},
-    "Text":{
+    "ScenarioExpressionPlayerName":{},
+    "ScenarioLogicText":{
         "text":"Name of [player:Player]"
     },
-    "ArgumentContainer":{}
+    "ScenarioArgumentContainer":{}
 }

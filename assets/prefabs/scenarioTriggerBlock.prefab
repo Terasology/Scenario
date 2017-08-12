@@ -1,11 +1,11 @@
 {
     "Network":{},
-    "ScenarioBlock":{},
-    "ShortName":{
+    "ScenarioTypeBlock":{},
+    "ScenarioLogicLabel":{
         "name":"Triggering block"
     },
-    "Text":{
+    "ScenarioLogicText":{
         "text":"Triggering block"
     },
-    "TriggeringBlock":{}
+    "ScenarioValueTriggeringBlock":{}
 }

@@ -18,10 +18,14 @@ package org.terasology.scenario.internal.events;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 import org.terasology.network.ServerEvent;
+import org.terasology.scenario.internal.systems.RegionTreeSystem;
 import org.terasology.scenario.internal.ui.HubToolScreen;
 
 /**
- * Event that is called to begin a region creation
+ * Event that is called to begin a region creation, only sets up a region entity that is in process of being created, does not completely
+ * add to the region entity tree yet
+ *
+ * It is utilizes by the {@link RegionTreeSystem}
  */
 @ServerEvent
 public class RegionTreeAddEvent implements Event {
