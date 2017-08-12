@@ -18,15 +18,13 @@ package org.terasology.scenario.components.information;
 import org.terasology.entitySystem.Component;
 import org.terasology.network.FieldReplicateType;
 import org.terasology.network.Replicate;
+import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 import org.terasology.world.block.family.BlockFamily;
 
 /**
  * Value component for a Scenario argument entity, Contains a blockFamily value
  *
- * Argument entities include:
- *   Network Component
- *   Type Component
- *   Value or Expression Component (Values are constant values, expressions are evaluated to obtain the value)
+ * Argument Entities detailed in {@link ScenarioArgumentContainerComponent}
  */
 public class ScenarioValueBlockFamilyComponent implements Component {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)

@@ -18,6 +18,9 @@ package org.terasology.scenario.components;
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.network.Replicate;
+import org.terasology.scenario.components.information.IndentificationComponents.ScenarioTypeIntegerComponent;
+import org.terasology.scenario.components.information.ScenarioValueStringComponent;
+import org.terasology.network.NetworkComponent;
 
 import java.util.Map;
 
@@ -25,19 +28,12 @@ import java.util.Map;
  * Argument Container component for a Scenario logic entity, NEEDS to be includes if the description includes argument parameters
  *
  * Argument entities include:
- *   Network Component
- *   Type Component
+ *   Network Component - This is just the default network component for a terasology entity {@link NetworkComponent}
+ *   Type Component - This is a component used to denote the type of variable that the entity is representing, example is {@link ScenarioTypeIntegerComponent}
  *   Value or Expression Component (Values are constant values, expressions are evaluated to obtain the value)
+ *        - This is the component that holds the actual value or expression representation for the entity, example is {@link ScenarioValueStringComponent}
  *
- * Typical Scenario logic entities include:
- *   Network Component
- *   Indicator Component
- *   {@link ScenarioLogicLabelComponent} - label field includes the text for the dropdown menus
- *   Secondary Component
- *   *{@link ScenarioLogicTextComponent} - text field is the text that is displayed with arguments included (Detailed in the class)
- *   *{@link ScenarioArgumentContainerComponent} - Only needed if the entity description includes argument parameters
- *
- *   * is not required
+ * Scenario logic entities are detailed in {@link ScenarioComponent}
  */
 @Replicate
 public class ScenarioArgumentContainerComponent implements Component {

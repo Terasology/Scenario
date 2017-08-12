@@ -19,14 +19,12 @@ import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.network.FieldReplicateType;
 import org.terasology.network.Replicate;
+import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 
 /**
  * Value component for a Scenario argument entity, Contains a region entity value
  *
- * Argument entities include:
- *   Network Component
- *   Type Component
- *   Value or Expression Component (Values are constant values, expressions are evaluated to obtain the value)
+ * Argument Entities detailed in {@link ScenarioArgumentContainerComponent}
  */
 public class ScenarioValueRegionComponent implements Component {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)

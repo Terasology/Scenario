@@ -17,14 +17,12 @@ package org.terasology.scenario.components.information;
 
 import org.terasology.entitySystem.Component;
 import org.terasology.network.Replicate;
+import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 
 /**
  * Expression component for a Scenario argument entity, Evaluates the name of a region
  *
- * Argument entities include:
- *   Network Component
- *   Type Component
- *   Value or Expression Component (Values are constant values, expressions are evaluated to obtain the value)
+ * Argument Entities detailed in {@link ScenarioArgumentContainerComponent}
  */
 @Replicate
 public class ScenarioExpressionRegionNameComponent implements Component {

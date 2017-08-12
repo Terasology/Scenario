@@ -54,6 +54,7 @@ import org.terasology.scenario.internal.ui.RegionTree.RegionTreeView;
 import org.terasology.scenario.internal.utilities.ArgumentParser;
 import org.terasology.world.block.BlockManager;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -117,9 +118,6 @@ public class HubToolScreen extends BaseInteractionScreen {
 
     @Override
     public void initialise() {
-        ScenarioHubToolUpdateComponent component = getEntity().getComponent(ScenarioHubToolUpdateComponent.class);
-        component.localScreen = this;
-        getEntity().saveComponent(component);
         overviewBox = find("overviewBox", UIBox.class);
         logicBox = find("logicBox", UIBox.class);
         regionBox = find("regionBox", UIBox.class);
@@ -436,7 +434,7 @@ public class HubToolScreen extends BaseInteractionScreen {
         super.onOpened();
         Iterable<EntityRef> scenario = entityManager.getEntitiesWith(ScenarioComponent.class);
         ScenarioHubToolUpdateComponent component = getEntity().getComponent(ScenarioHubToolUpdateComponent.class);
-        component.localScreen = this;
+        component.localScreenID = this.getId();
         getEntity().saveComponent(component);
 
         if (scenario.iterator().hasNext()) {

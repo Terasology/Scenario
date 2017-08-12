@@ -19,10 +19,10 @@ import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
 /**
  * Component that is attached to the data entity that is passed when an event in the Scenario logic occurs.
- *
- * This component includes information about the triggered region;
- *   The entity of the region that was triggered (example: the joined region or the region that was just exited)
  */
 public class InfoTriggerRegionComponent implements Component {
+    /**
+     * The entity of the region that was triggered (example: the joined region or the region that was just exited)
+     */
     public EntityRef region;
 }

@@ -19,8 +19,11 @@ import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
 
 /**
- * Component that contains the targeted entity
+ * Component that contains the targeted entity when a logic event is triggered
  */
 public class TargetedEntityComponent implements Component {
+    /**
+     * Entity targeted for a triggered logic event
+     */
     public EntityRef entity;
 }

@@ -29,16 +29,7 @@ import org.terasology.scenario.internal.utilities.ArgumentParser;
  *      * Parameters follow the pattern of [key:type] where key is the string name of the variable, each key must be unique to the rest of the keys in the entity
  *      * the type is the Type of the parameter, this type must be accounted for in {@link ArgumentParser}
  *
- *
- * Typical Scenario logic entities include:
- *   Network Component
- *   Indicator Component
- *   {@link ScenarioLogicLabelComponent} - label field includes the text for the dropdown menus
- *   Secondary Component
- *   *{@link ScenarioLogicTextComponent} - text field is the text that is displayed with arguments included (Detailed in the class)
- *   *{@link ScenarioArgumentContainerComponent} - Only needed if the entity description includes argument parameters
- *
- *   * is not required
+ * Scenario logic entities detailed in {@link ScenarioComponent}
  */
 public class ScenarioLogicTextComponent implements Component {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)

@@ -20,10 +20,10 @@ import org.terasology.entitySystem.entity.EntityRef;
 
 /**
  * Component that is attached to the data entity that is passed when an event in the Scenario logic occurs.
- *
- * This component includes information about the triggering entity;
- *   The entity that triggered the event and cause it to occur (Will usually be a player character)
  */
 public class InfoTriggeringEntityComponent implements Component {
+    /**
+     * The entity that triggered the event and cause it to occur (Will usually be a player character)
+     */
     public EntityRef entity;
 }

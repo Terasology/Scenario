@@ -18,22 +18,14 @@ package org.terasology.scenario.components.events;
 import org.terasology.entitySystem.Component;
 import org.terasology.network.Replicate;
 import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
+import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.components.ScenarioLogicLabelComponent;
 import org.terasology.scenario.components.ScenarioLogicTextComponent;
 
 /**
  * Indicator component for a Scenario logic entity, indicates that the entity is an Event
  *
- *
- * Typical Scenario logic entities include:
- *   Network Component
- *   Indicator Component
- *   {@link ScenarioLogicLabelComponent} - label field includes the text for the dropdown menus
- *   Secondary Component
- *   *{@link ScenarioLogicTextComponent} - text field is the text that is displayed with arguments included (Detailed in the class)
- *   *{@link ScenarioArgumentContainerComponent} - Only needed if the entity description includes argument parameters
- *
- *   * is not required
+ * Scenario logic entities detailed in {@link ScenarioComponent}
  */
 @Replicate
 public class ScenarioIndicatorEventComponent implements Component {

@@ -27,7 +27,7 @@ import org.terasology.scenario.internal.ui.HubToolScreen;
  */
 public class ScenarioHubToolUpdateComponent implements Component {
     @NoReplicate
-    public HubToolScreen localScreen;
+    public String localScreenID;
 
     @Replicate(FieldReplicateType.SERVER_TO_OWNER)
     public EntityRef addedEntity;

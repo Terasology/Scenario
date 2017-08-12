@@ -23,7 +23,18 @@ import org.terasology.entitySystem.prefab.Prefab;
  * Component for a block being destroyed and the information passed with it
  */
 public class DestroyedBlockComponent implements Component {
+    /**
+     * entity of the block that was destroyed
+     */
     public EntityRef destroyedBlock;
+
+    /**
+     * entity of the character that destroyed the block
+     */
     public EntityRef directCause;
+
+    /**
+     * prefab of the item used to destroy the block
+     */
     public Prefab damageType;
 }

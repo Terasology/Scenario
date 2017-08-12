@@ -21,5 +21,8 @@ import org.terasology.entitySystem.entity.EntityRef;
  * Component that contains the triggered region for an event
  */
 public class TriggeredRegionComponent implements Component {
+    /**
+     * Targeted region for a triggered logic event
+     */
     public EntityRef region;
 }

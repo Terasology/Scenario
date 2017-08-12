@@ -20,10 +20,10 @@ import org.terasology.entitySystem.entity.EntityRef;
 
 /**
  * Component that is attached to the data entity that is passed when an event in the Scenario logic occurs.
- *
- * This component includes information about the targeted entity;
- *   The entity that was targeted
  */
 public class InfoTargetedEntityComponent implements Component {
+    /**
+     * entity that was targeted
+     */
     public EntityRef entity;
 }

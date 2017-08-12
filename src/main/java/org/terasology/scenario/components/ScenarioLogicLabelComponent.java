@@ -22,16 +22,7 @@ import org.terasology.network.Replicate;
 /**
  * Label component for a Scenario logic entity, includes the text displayed on a dropdown menu for selecting an entity prefab in the logic editor
  *
- *
- * Typical Scenario logic entities include:
- *   Network Component
- *   Indicator Component
- *   {@link ScenarioLogicLabelComponent} - label field includes the text for the dropdown menus
- *   Secondary Component
- *   *{@link ScenarioLogicTextComponent} - text field is the text that is displayed with arguments included (Detailed in the class)
- *   *{@link ScenarioArgumentContainerComponent} - Only needed if the entity description includes argument parameters
- *
- *   * is not required
+ * Scenario logic entities detailed in {@link ScenarioComponent}
  */
 public class ScenarioLogicLabelComponent implements Component {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)

@@ -19,9 +19,17 @@ import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.math.Region3i;
 import org.terasology.network.FieldReplicateType;
+import org.terasology.network.NetworkComponent;
 import org.terasology.network.Replicate;
+import org.terasology.scenario.components.regions.RegionBeingCreatedComponent;
+import org.terasology.scenario.components.regions.RegionColorComponent;
+import org.terasology.scenario.components.regions.RegionContainingEntitiesComponent;
+import org.terasology.scenario.components.regions.RegionLocationComponent;
+import org.terasology.scenario.components.regions.RegionNameComponent;
 import org.terasology.scenario.internal.systems.RegionSystem;
 import org.terasology.structureTemplates.components.ProtectedRegionsComponent;
+import org.terasology.scenario.components.actions.ScenarioIndicatorActionComponent;
+import org.terasology.scenario.components.actions.ScenarioSecondaryGiveBlockComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,28 +39,26 @@ import java.util.List;
  *  Trigger entities list contain a list of triggers that each have a list of logic entities
  *  Region entities list contains a list of all the region entities
  *
- * Argument entities include:
- *   Network Component
- *   Type Component
- *   Value or Expression Component (Values are constant values, expressions are evaluated to obtain the value)
+ * Argument entities are detailed in {@link ScenarioArgumentContainerComponent}
  *
  * Typical Scenario logic entities include:
- *   Network Component
- *   Indicator Component
+ *   Network Component - This is just the default network component for a terasology entity {@link NetworkComponent}
+ *   Indicator Component - This is a component that indicates the general type of the entity(Action/Event/Condition), example is {@link ScenarioIndicatorActionComponent}
  *   {@link ScenarioLogicLabelComponent} - label field includes the text for the dropdown menus
- *   Secondary Component
+ *   Secondary Component - This is a component that indicates the specific type of the entity, so if it is an action the secondary (indicator) could denote that is is specifically
+ *                         a "give block" action, example being {@link ScenarioSecondaryGiveBlockComponent}
  *   *{@link ScenarioLogicTextComponent} - text field is the text that is displayed with arguments included (Detailed in the class)
  *   *{@link ScenarioArgumentContainerComponent} - Only needed if the entity description includes argument parameters
  *
  *   * is not required
  *
  * Region entities include:
- *   Network Component
- *   RegionName Component - field indicates the name of the region
- *   RegionColor Component - field indicates the color of the region
- *   RegionContainingEntities Component - field contains a list that is monitored by {@link RegionSystem} of what player entities are within the region
- *   RegionLocation Component - field is the actual region in the world as a {@link Region3i}
- *   * RegionBeingCreated Component
+ *   Network Component - This is just the default network component for a terasology entity {@link NetworkComponent}
+ *   {@link RegionNameComponent} Component - field indicates the name of the region
+ *   {@link RegionColorComponent} Component - field indicates the color of the region
+ *   {@link RegionContainingEntitiesComponent} Component - field contains a list that is monitored by {@link RegionSystem} of what player entities are within the region
+ *   {@link RegionLocationComponent} Component - field is the actual region in the world as a {@link Region3i}
+ *   * {@link RegionBeingCreatedComponent} Component
  *   * {@link ProtectedRegionsComponent}
  *
  *   * indicates optional (RegionBeingCreated meaning it is currently being created, ProtectedRegion meaning the region

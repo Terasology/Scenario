@@ -21,14 +21,20 @@ import org.terasology.entitySystem.prefab.Prefab;
 
 /**
  * Component that is attached to the data entity that is passed when an event in the Scenario logic occurs.
- *
- * This component includes information about a destroyed block;
- *   The entity of the destroyed block
- *   The entity of the destroyer of the block
- *   The prefab used to destroy the block by the destroyer
  */
 public class InfoDestroyedBlockComponent implements Component {
+    /**
+     * entity of the block that was destroyed
+     */
     public EntityRef destroyedBlock;
+
+    /**
+     * entity of the character that destroyed the block
+     */
     public EntityRef directCause;
+
+    /**
+     * prefab of the item used to destroy the block
+     */
     public Prefab damageType;
 }

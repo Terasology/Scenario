@@ -17,6 +17,7 @@ package org.terasology.scenario.internal.systems;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.terasology.engine.modes.loadProcesses.AwaitedLocalCharacterSpawnEvent;
 import org.terasology.entitySystem.entity.EntityBuilder;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
@@ -26,17 +27,16 @@ import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
-import org.terasology.entitySystem.systems.UpdateSubscriberSystem;
 import org.terasology.logic.characters.CharacterComponent;
 import org.terasology.logic.location.LocationComponent;
 import org.terasology.logic.players.LocalPlayer;
 import org.terasology.math.Region3i;
 import org.terasology.math.geom.Vector3i;
+import org.terasology.network.NetworkSystem;
 import org.terasology.registry.In;
 import org.terasology.rendering.logic.FloatingTextComponent;
 import org.terasology.rendering.logic.RegionOutlineComponent;
 import org.terasology.rendering.nui.Color;
-import org.terasology.scenario.components.ScenarioHubToolUpdateComponent;
 import org.terasology.scenario.components.ScenarioRegionVisibilityComponent;
 import org.terasology.scenario.components.regions.RegionColorComponent;
 import org.terasology.scenario.components.regions.RegionLocationComponent;
@@ -59,12 +59,14 @@ public class RegionDisplaySystem extends BaseComponentSystem {
     private EntityManager entityManager;
 
     @In
+    private NetworkSystem networkSystem;
+
+    @In
     private LocalPlayer localPlayer;
 
     private List<EntityRef> regionOutlineAndTextEntities = new ArrayList<>();
 
     private Logger logger = LoggerFactory.getLogger(RegionDisplaySystem.class);
-
 
     @ReceiveEvent //Check to see if a character has a visibility component, if not then add one, if they do then do cleanup to check for old regions
     public void onComponentActivated(OnActivatedComponent event, EntityRef entity, CharacterComponent component) {
@@ -88,21 +90,17 @@ public class RegionDisplaySystem extends BaseComponentSystem {
         }
     }
 
-    @ReceiveEvent
-    public void onComponentActivated(OnActivatedComponent event, EntityRef entity, ScenarioRegionVisibilityComponent component) {
-        logger.info("Activated");
-        if (!localPlayer.isValid()) { //Trick to make sure that the client isn't already connected, only want to activate on joining
-            logger.info("activate local");
-            logger.info(component.visibleList.toString());
-            updateOutlineEntities(component);
-        }
-    }
 
     @ReceiveEvent
     public void onRequestRegionRedrawEvent(RegionRedrawEvent event, EntityRef entity, ScenarioRegionVisibilityComponent component) {
         if (entity.equals(localPlayer.getCharacterEntity())) {
             updateOutlineEntities(component);
         }
+    }
+
+    @ReceiveEvent
+    public void onAwaitedLocalCharacterSpawnEvent(AwaitedLocalCharacterSpawnEvent event, EntityRef entity, CharacterComponent component) {
+        updateOutlineEntities(entity.getComponent(ScenarioRegionVisibilityComponent.class));
     }
 
     @ReceiveEvent
@@ -178,7 +176,6 @@ public class RegionDisplaySystem extends BaseComponentSystem {
                 returnList.add(region);
             }
         }
-
         return returnList;
     }
 }

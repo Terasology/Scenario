@@ -20,23 +20,14 @@ import org.terasology.math.Region3i;
 import org.terasology.network.FieldReplicateType;
 import org.terasology.network.Replicate;
 import org.terasology.rendering.nui.Color;
+import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.internal.systems.RegionSystem;
 import org.terasology.structureTemplates.components.ProtectedRegionsComponent;
 
 /**
  * Creation component for a Scenario argument entity, includes the color of the region for display
  *
- * Region entities include:
- *   Network Component
- *   RegionName Component - field indicates the name of the region
- *   RegionColor Component - field indicates the color of the region
- *   RegionContainingEntities Component - field contains a list that is monitored by {@link RegionSystem} of what player entities are within the region
- *   RegionLocation Component - field is the actual region in the world as a {@link Region3i}
- *   * RegionBeingCreated Component
- *   * {@link ProtectedRegionsComponent}
- *
- *   * indicates optional (RegionBeingCreated meaning it is currently being created, ProtectedRegion meaning the region
- *     is being protected by the structureTemplates system and will prevent alterations being made to the land within the region
+ * Scenario region entities are detailed in {@link ScenarioComponent}
  */
 public class RegionColorComponent implements Component {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
