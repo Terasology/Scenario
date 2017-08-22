@@ -167,9 +167,14 @@ public class ConvertIntoEntitySystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity, ScenarioValueRegionComponent component) {
-        for (EntityRef e : entityManager.getEntitiesWith(RegionNameComponent.class)) {
-            if (e.getComponent(NetworkComponent.class).getNetworkId() == Integer.parseInt(event.getValue())) {
-                component.regionEntity = e;
+        if (event.getValue().substring(0,1).equals("x")) { //No network component
+            component.regionEntity = entityManager.getEntity(Integer.parseInt(event.getValue().substring(1)));
+        }
+        else {
+            for (EntityRef e : entityManager.getEntitiesWith(RegionNameComponent.class)) {
+                if (e.getComponent(NetworkComponent.class).getNetworkId() == Integer.parseInt(event.getValue())) {
+                    component.regionEntity = e;
+                }
             }
         }
         entity.saveComponent(component);

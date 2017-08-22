@@ -1,0 +1,12 @@
+{
+    "Network":{},
+    "ScenarioIndicatorAction":{},
+    "ScenarioLogicLabel":{
+        "name":"Teleport Player"
+    },
+    "ScenarioSecondaryTeleport":{},
+    "ScenarioLogicText":{
+        "text":"Teleport [player:Player] to [region1:Region]."
+    },
+    "ScenarioArgumentContainer":{}
+}
