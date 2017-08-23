@@ -1,0 +1,12 @@
+{
+    "Network":{},
+    "ScenarioIndicatorAction":{},
+    "ScenarioLogicLabel":{
+        "name":"Damage Player"
+    },
+    "ScenarioSecondaryDamageAmount":{},
+    "ScenarioLogicText":{
+        "text":"Damage [player:Player] by [amount:Integer]."
+    },
+    "ScenarioArgumentContainer":{}
+}

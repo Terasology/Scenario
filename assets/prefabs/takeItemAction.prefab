@@ -1,0 +1,12 @@
+{
+    "Network":{},
+    "ScenarioIndicatorAction":{},
+    "ScenarioLogicLabel":{
+        "name":"Take item"
+    },
+    "ScenarioSecondaryTakeItem":{},
+    "ScenarioLogicText":{
+        "text":"Attempt to take [amount:Integer] of [item:Item] from [player:Player]"
+    },
+    "ScenarioArgumentContainer":{}
+}

@@ -1,0 +1,12 @@
+{
+    "Network":{},
+    "ScenarioIndicatorAction":{},
+    "ScenarioLogicLabel":{
+        "name":"Heal Player"
+    },
+    "ScenarioSecondaryHealAmount":{},
+    "ScenarioLogicText":{
+        "text":"Heal [player:Player] by [amount:Integer]."
+    },
+    "ScenarioArgumentContainer":{}
+}

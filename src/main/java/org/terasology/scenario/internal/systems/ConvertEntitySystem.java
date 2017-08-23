@@ -24,10 +24,15 @@ import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.network.NetworkComponent;
 import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
+import org.terasology.scenario.components.actions.ScenarioSecondaryDamageAmountComponent;
 import org.terasology.scenario.components.actions.ScenarioSecondaryGiveBlockComponent;
 import org.terasology.scenario.components.actions.ScenarioSecondaryGiveItemComponent;
+import org.terasology.scenario.components.actions.ScenarioSecondaryHealAmountComponent;
 import org.terasology.scenario.components.actions.ScenarioSecondaryLogInfoComponent;
 import org.terasology.scenario.components.actions.ScenarioSecondarySendChatComponent;
+import org.terasology.scenario.components.actions.ScenarioSecondaryTakeBlockComponent;
+import org.terasology.scenario.components.actions.ScenarioSecondaryTakeItemComponent;
+import org.terasology.scenario.components.actions.ScenarioSecondaryTeleportComponent;
 import org.terasology.scenario.components.conditionals.ScenarioSecondaryBlockCompareComponent;
 import org.terasology.scenario.components.conditionals.ScenarioSecondaryIntCompareComponent;
 import org.terasology.scenario.components.conditionals.ScenarioSecondaryPlayerRegionComponent;
@@ -77,14 +82,12 @@ public class ConvertEntitySystem extends BaseComponentSystem {
 
     private Logger logger = LoggerFactory.getLogger(ConvertEntitySystem.class);
 
-
-    @ReceiveEvent
-    public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioValueTriggeringRegionComponent component) {
-        event.getOutputList().add(event.getPrefix() + PREFAB_MARKER + entity.getParentPrefab().getName());
-    }
-
-    @ReceiveEvent
-    public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondarySendChatComponent component) {
+    /**
+     * Anything that has an argument container and is not a value would use this serialization
+     * @param event the ConvertScenarioEntityEvent that triggered the original call
+     * @param entity The entityRef that the call was sent to
+     */
+    public void DefaultSerialize(ConvertScenarioEntityEvent event, EntityRef entity) {
         event.getOutputList().add(event.getPrefix() + PREFAB_MARKER + entity.getParentPrefab().getName());
 
         for (Map.Entry<String, EntityRef> e : entity.getComponent(ScenarioArgumentContainerComponent.class).arguments.entrySet()) {
@@ -94,6 +97,16 @@ public class ConvertEntitySystem extends BaseComponentSystem {
                 event.getOutputList().add(s);
             }
         }
+    }
+
+    @ReceiveEvent
+    public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioValueTriggeringRegionComponent component) {
+        event.getOutputList().add(event.getPrefix() + PREFAB_MARKER + entity.getParentPrefab().getName());
+    }
+
+    @ReceiveEvent
+    public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondarySendChatComponent component) {
+        DefaultSerialize(event, entity);
     }
 
 
@@ -105,28 +118,12 @@ public class ConvertEntitySystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioExpressionRandomIntComponent component) {
-        event.getOutputList().add(event.getPrefix() + PREFAB_MARKER + entity.getParentPrefab().getName());
-
-        for (Map.Entry<String, EntityRef> e : entity.getComponent(ScenarioArgumentContainerComponent.class).arguments.entrySet()) {
-            ConvertScenarioEntityEvent newEvent = new ConvertScenarioEntityEvent(event.getPrefix() + "{" + e.getKey() + "}");
-            e.getValue().send(newEvent);
-            for (String s : newEvent.getOutputList()) {
-                event.getOutputList().add(s);
-            }
-        }
+        DefaultSerialize(event, entity);
     }
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioExpressionPlayerNameComponent component) {
-        event.getOutputList().add(event.getPrefix() + PREFAB_MARKER + entity.getParentPrefab().getName());
-
-        for (Map.Entry<String, EntityRef> e : entity.getComponent(ScenarioArgumentContainerComponent.class).arguments.entrySet()) {
-            ConvertScenarioEntityEvent newEvent = new ConvertScenarioEntityEvent(event.getPrefix() + "{" + e.getKey() + "}");
-            e.getValue().send(newEvent);
-            for (String s : newEvent.getOutputList()) {
-                event.getOutputList().add(s);
-            }
-        }
+        DefaultSerialize(event, entity);
     }
 
     @ReceiveEvent
@@ -136,7 +133,12 @@ public class ConvertEntitySystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioValueRegionComponent component) {
-        event.getOutputList().add(event.getPrefix() + VALUE_MARKER + component.regionEntity.getComponent(NetworkComponent.class).getNetworkId());
+        if (component.regionEntity.getComponent(NetworkComponent.class).getNetworkId() == 0) { //No network component (local/single player, so can't/don't need to use network id)
+            event.getOutputList().add(event.getPrefix() + VALUE_MARKER + "x" + component.regionEntity.getId());
+        }
+        else {
+            event.getOutputList().add(event.getPrefix() + VALUE_MARKER + component.regionEntity.getComponent(NetworkComponent.class).getNetworkId());
+        }
     }
 
     @ReceiveEvent
@@ -166,28 +168,12 @@ public class ConvertEntitySystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioExpressionRegionNameComponent component) {
-        event.getOutputList().add(event.getPrefix() + PREFAB_MARKER + entity.getParentPrefab().getName());
-
-        for (Map.Entry<String, EntityRef> e : entity.getComponent(ScenarioArgumentContainerComponent.class).arguments.entrySet()) {
-            ConvertScenarioEntityEvent newEvent = new ConvertScenarioEntityEvent(event.getPrefix() + "{" + e.getKey() + "}");
-            e.getValue().send(newEvent);
-            for (String s : newEvent.getOutputList()) {
-                event.getOutputList().add(s);
-            }
-        }
+        DefaultSerialize(event, entity);
     }
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondaryPlayerRegionComponent component) {
-        event.getOutputList().add(event.getPrefix() + PREFAB_MARKER + entity.getParentPrefab().getName());
-
-        for (Map.Entry<String, EntityRef> e : entity.getComponent(ScenarioArgumentContainerComponent.class).arguments.entrySet()) {
-            ConvertScenarioEntityEvent newEvent = new ConvertScenarioEntityEvent(event.getPrefix() + "{" + e.getKey() + "}");
-            e.getValue().send(newEvent);
-            for (String s : newEvent.getOutputList()) {
-                event.getOutputList().add(s);
-            }
-        }
+        DefaultSerialize(event, entity);
     }
 
     @ReceiveEvent
@@ -202,28 +188,12 @@ public class ConvertEntitySystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondaryLeaveRegionComponent component) {
-        event.getOutputList().add(event.getPrefix() + PREFAB_MARKER + entity.getParentPrefab().getName());
-
-        for (Map.Entry<String, EntityRef> e : entity.getComponent(ScenarioArgumentContainerComponent.class).arguments.entrySet()) {
-            ConvertScenarioEntityEvent newEvent = new ConvertScenarioEntityEvent(event.getPrefix() + "{" + e.getKey() + "}");
-            e.getValue().send(newEvent);
-            for (String s : newEvent.getOutputList()) {
-                event.getOutputList().add(s);
-            }
-        }
+        DefaultSerialize(event, entity);
     }
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondaryEnterRegionComponent component) {
-        event.getOutputList().add(event.getPrefix() + PREFAB_MARKER + entity.getParentPrefab().getName());
-
-        for (Map.Entry<String, EntityRef> e : entity.getComponent(ScenarioArgumentContainerComponent.class).arguments.entrySet()) {
-            ConvertScenarioEntityEvent newEvent = new ConvertScenarioEntityEvent(event.getPrefix() + "{" + e.getKey() + "}");
-            e.getValue().send(newEvent);
-            for (String s : newEvent.getOutputList()) {
-                event.getOutputList().add(s);
-            }
-        }
+        DefaultSerialize(event, entity);
     }
 
     @ReceiveEvent
@@ -233,92 +203,61 @@ public class ConvertEntitySystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondaryLogInfoComponent component) {
-        event.getOutputList().add(event.getPrefix() + PREFAB_MARKER + entity.getParentPrefab().getName());
-
-        for (Map.Entry<String, EntityRef> e : entity.getComponent(ScenarioArgumentContainerComponent.class).arguments.entrySet()) {
-            ConvertScenarioEntityEvent newEvent = new ConvertScenarioEntityEvent(event.getPrefix() + "{" + e.getKey() + "}");
-            e.getValue().send(newEvent);
-            for (String s : newEvent.getOutputList()) {
-                event.getOutputList().add(s);
-            }
-        }
+        DefaultSerialize(event, entity);
     }
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioExpressionItemCountComponent component) {
-        event.getOutputList().add(event.getPrefix() + PREFAB_MARKER + entity.getParentPrefab().getName());
-
-        for (Map.Entry<String, EntityRef> e : entity.getComponent(ScenarioArgumentContainerComponent.class).arguments.entrySet()) {
-            ConvertScenarioEntityEvent newEvent = new ConvertScenarioEntityEvent(event.getPrefix() + "{" + e.getKey() + "}");
-            e.getValue().send(newEvent);
-            for (String s : newEvent.getOutputList()) {
-                event.getOutputList().add(s);
-            }
-        }
+        DefaultSerialize(event, entity);
     }
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondaryIntCompareComponent component) {
-        event.getOutputList().add(event.getPrefix() + PREFAB_MARKER + entity.getParentPrefab().getName());
-
-        for (Map.Entry<String, EntityRef> e : entity.getComponent(ScenarioArgumentContainerComponent.class).arguments.entrySet()) {
-            ConvertScenarioEntityEvent newEvent = new ConvertScenarioEntityEvent(event.getPrefix() + "{" + e.getKey() + "}");
-            e.getValue().send(newEvent);
-            for (String s : newEvent.getOutputList()) {
-                event.getOutputList().add(s);
-            }
-        }
+        DefaultSerialize(event, entity);
     }
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondaryGiveItemComponent component) {
-        event.getOutputList().add(event.getPrefix() + PREFAB_MARKER + entity.getParentPrefab().getName());
-
-        for (Map.Entry<String, EntityRef> e : entity.getComponent(ScenarioArgumentContainerComponent.class).arguments.entrySet()) {
-            ConvertScenarioEntityEvent newEvent = new ConvertScenarioEntityEvent(event.getPrefix() + "{" + e.getKey() + "}");
-            e.getValue().send(newEvent);
-            for (String s : newEvent.getOutputList()) {
-                event.getOutputList().add(s);
-            }
-        }
+        DefaultSerialize(event, entity);
     }
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondaryGiveBlockComponent component) {
-        event.getOutputList().add(event.getPrefix() + PREFAB_MARKER + entity.getParentPrefab().getName());
-
-        for (Map.Entry<String, EntityRef> e : entity.getComponent(ScenarioArgumentContainerComponent.class).arguments.entrySet()) {
-            ConvertScenarioEntityEvent newEvent = new ConvertScenarioEntityEvent(event.getPrefix() + "{" + e.getKey() + "}");
-            e.getValue().send(newEvent);
-            for (String s : newEvent.getOutputList()) {
-                event.getOutputList().add(s);
-            }
-        }
+        DefaultSerialize(event, entity);
     }
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioExpressionConcatStringComponent component) {
-        event.getOutputList().add(event.getPrefix() + PREFAB_MARKER + entity.getParentPrefab().getName());
+        DefaultSerialize(event, entity);
+    }
 
-        for (Map.Entry<String, EntityRef> e : entity.getComponent(ScenarioArgumentContainerComponent.class).arguments.entrySet()) {
-            ConvertScenarioEntityEvent newEvent = new ConvertScenarioEntityEvent(event.getPrefix() + "{" + e.getKey() + "}");
-            e.getValue().send(newEvent);
-            for (String s : newEvent.getOutputList()) {
-                event.getOutputList().add(s);
-            }
-        }
+    @ReceiveEvent
+    public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondaryTeleportComponent component) {
+        DefaultSerialize(event, entity);
     }
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondaryBlockCompareComponent component) {
-        event.getOutputList().add(event.getPrefix() + PREFAB_MARKER + entity.getParentPrefab().getName());
+        DefaultSerialize(event, entity);
+    }
 
-        for (Map.Entry<String, EntityRef> e : entity.getComponent(ScenarioArgumentContainerComponent.class).arguments.entrySet()) {
-            ConvertScenarioEntityEvent newEvent = new ConvertScenarioEntityEvent(event.getPrefix() + "{" + e.getKey() + "}");
-            e.getValue().send(newEvent);
-            for (String s : newEvent.getOutputList()) {
-                event.getOutputList().add(s);
-            }
-        }
+    @ReceiveEvent
+    public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondaryTakeItemComponent component) {
+        DefaultSerialize(event, entity);
+    }
+
+    @ReceiveEvent
+    public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondaryTakeBlockComponent component) {
+        DefaultSerialize(event, entity);
+    }
+
+    @ReceiveEvent
+    public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondaryHealAmountComponent component) {
+        DefaultSerialize(event, entity);
+    }
+
+    @ReceiveEvent
+    public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondaryDamageAmountComponent component) {
+        DefaultSerialize(event, entity);
     }
 }
