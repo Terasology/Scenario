@@ -30,9 +30,8 @@ import org.terasology.logic.common.DisplayNameComponent;
 import org.terasology.logic.health.DoDamageEvent;
 import org.terasology.logic.health.DoHealEvent;
 import org.terasology.logic.health.EngineDamageTypes;
-import org.terasology.logic.health.HealthCommands;
-import org.terasology.logic.health.HealthComponent;
 import org.terasology.logic.inventory.InventoryComponent;
+import org.terasology.logic.inventory.InventoryManager;
 import org.terasology.logic.inventory.ItemComponent;
 import org.terasology.logic.inventory.events.GiveItemEvent;
 import org.terasology.math.geom.Vector3f;
@@ -41,17 +40,16 @@ import org.terasology.network.ColorComponent;
 import org.terasology.registry.In;
 import org.terasology.rendering.nui.Color;
 import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
-import org.terasology.scenario.components.actions.ScenarioSecondaryDamageComponent;
+import org.terasology.scenario.components.actions.ScenarioSecondaryDamageAmountComponent;
 import org.terasology.scenario.components.actions.ScenarioSecondaryGiveBlockComponent;
 import org.terasology.scenario.components.actions.ScenarioSecondaryGiveItemComponent;
-import org.terasology.scenario.components.actions.ScenarioSecondaryHealComponent;
+import org.terasology.scenario.components.actions.ScenarioSecondaryHealAmountComponent;
 import org.terasology.scenario.components.actions.ScenarioSecondaryLogInfoComponent;
 import org.terasology.scenario.components.actions.ScenarioSecondarySendChatComponent;
 import org.terasology.scenario.components.actions.ScenarioSecondaryTakeBlockComponent;
 import org.terasology.scenario.components.actions.ScenarioSecondaryTakeItemComponent;
 import org.terasology.scenario.components.actions.ScenarioSecondaryTeleportComponent;
 import org.terasology.scenario.components.events.triggerInformation.InfoTriggeringEntityComponent;
-import org.terasology.scenario.components.events.triggerInformation.TriggeringEntityComponent;
 import org.terasology.scenario.components.information.ScenarioValuePlayerComponent;
 import org.terasology.scenario.components.regions.RegionLocationComponent;
 import org.terasology.scenario.internal.events.EventTriggerEvent;
@@ -87,6 +85,9 @@ public class ActionEventSystem extends BaseComponentSystem {
 
     @In
     private AssetManager assetManager;
+
+    @In
+    private InventoryManager inventoryManager;
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ActionEventSystem.class);
 
@@ -216,7 +217,7 @@ public class ActionEventSystem extends BaseComponentSystem {
 
             for (EntityRef e : items) {
                 if (e.exists() && e.getParentPrefab().exists() && e.getParentPrefab().equals(itemPrefab)) {
-                    e.destroy();
+                    inventoryManager.removeItem(playerEnt, EntityRef.NULL, e, true, 1);
                     amount--;
                 }
 
@@ -253,17 +254,16 @@ public class ActionEventSystem extends BaseComponentSystem {
                     if (e.getComponent(BlockItemComponent.class).blockFamily.equals(blockFamily)) {
                         ItemComponent itemComponent = e.getComponent(ItemComponent.class);
                         if (itemComponent.stackCount > amount) {
-                            itemComponent.stackCount-= amount;
-                            e.saveComponent(itemComponent);
+                            inventoryManager.removeItem(playerEnt, EntityRef.NULL, e, true, amount);
                             break;
                         }
                         else if (itemComponent.stackCount == amount) {
-                            e.destroy();
+                            inventoryManager.removeItem(playerEnt, EntityRef.NULL, e, true, amount);
                             break;
                         }
                         else { //Same item, but stack isn't big enough
+                            inventoryManager.removeItem(playerEnt, EntityRef.NULL, e, true, itemComponent.stackCount);
                             amount -= itemComponent.stackCount;
-                            e.destroy();
                         }
                     }
                 }
@@ -274,7 +274,7 @@ public class ActionEventSystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent //Heal Player
-    public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity, ScenarioSecondaryHealComponent action) {
+    public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity, ScenarioSecondaryHealAmountComponent action) {
         Map<String, EntityRef> variables = entity.getComponent(ScenarioArgumentContainerComponent.class).arguments;
 
         EvaluateIntEvent intEvaluateEvent = new EvaluateIntEvent(event.informationEntity);
@@ -289,7 +289,7 @@ public class ActionEventSystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent //Damage Player
-    public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity, ScenarioSecondaryDamageComponent action) {
+    public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity, ScenarioSecondaryDamageAmountComponent action) {
         Map<String, EntityRef> variables = entity.getComponent(ScenarioArgumentContainerComponent.class).arguments;
 
         EvaluateIntEvent intEvaluateEvent = new EvaluateIntEvent(event.informationEntity);

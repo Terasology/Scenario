@@ -4,9 +4,9 @@
     "ScenarioLogicLabel":{
         "name":"Damage Player"
     },
-    "ScenarioSecondaryDamage":{},
+    "ScenarioSecondaryDamageAmount":{},
     "ScenarioLogicText":{
-        "text":"Damage [player:Player] by [amount:Integer]%."
+        "text":"Damage [player:Player] by [amount:Integer]."
     },
     "ScenarioArgumentContainer":{}
 }

@@ -25,5 +25,5 @@ import org.terasology.scenario.components.ScenarioComponent;
  * Scenario logic entities detailed in {@link ScenarioComponent}
  */
 @Replicate
-public class ScenarioSecondaryHealComponent implements Component {
+public class ScenarioSecondaryHealAmountComponent implements Component {
 }
