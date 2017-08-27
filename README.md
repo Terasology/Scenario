@@ -15,7 +15,11 @@ Video tutorial about creation of a barebones fetch quest using the Scenario modu
 
 ### Development Tutorials
 Some text tutorials about developing new trigger elements for the Scenario module.
-[Action] (tutorials/ActionTutorial.md)
-[Conditional] (tutorials/ConditionalTutorial.md)
-[Event] (tutorials/EventTutorial.md)
-[Expression] (tutorials/ExpressionTutorial.md)
+
+[Action](tutorials/ActionTutorial.md)
+
+[Conditional](tutorials/ConditionalTutorial.md)
+
+[Event](tutorials/EventTutorial.md)
+
+[Expression](tutorials/ExpressionTutorial.md)
