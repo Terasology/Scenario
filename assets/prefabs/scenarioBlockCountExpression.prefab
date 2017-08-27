@@ -1,0 +1,12 @@
+{
+    "Network":{},
+    "ScenarioTypeInteger":{},
+    "ScenarioLogicLabel":{
+        "name":"Count blocks inventory"
+    },
+    "ScenarioExpressionBlockCount":{},
+    "ScenarioLogicText":{
+        "text":"Count of [block:Block] in inventory of [player:Player]"
+    },
+    "ScenarioArgumentContainer":{}
+}

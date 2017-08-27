@@ -26,6 +26,7 @@ import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.common.DisplayNameComponent;
 import org.terasology.logic.inventory.InventoryComponent;
+import org.terasology.logic.inventory.ItemComponent;
 import org.terasology.logic.location.LocationComponent;
 import org.terasology.math.geom.Vector3f;
 import org.terasology.network.ClientComponent;
@@ -38,11 +39,13 @@ import org.terasology.scenario.components.conditionals.ScenarioSecondaryPlayerRe
 import org.terasology.scenario.components.events.triggerInformation.InfoDestroyedBlockComponent;
 import org.terasology.scenario.components.events.triggerInformation.InfoTriggerRegionComponent;
 import org.terasology.scenario.components.events.triggerInformation.InfoTriggeringEntityComponent;
+import org.terasology.scenario.components.information.ScenarioExpressionBlockCountComponent;
 import org.terasology.scenario.components.information.ScenarioExpressionConcatStringComponent;
 import org.terasology.scenario.components.information.ScenarioValueBlockUriComponent;
 import org.terasology.scenario.components.information.ScenarioValueComparatorComponent;
 import org.terasology.scenario.components.information.ScenarioValueIntegerComponent;
 import org.terasology.scenario.components.information.ScenarioValueItemPrefabUriComponent;
+import org.terasology.scenario.components.information.ScenarioValuePlayerComponent;
 import org.terasology.scenario.components.information.ScenarioValueRegionComponent;
 import org.terasology.scenario.components.information.ScenarioValueStringComponent;
 import org.terasology.scenario.components.information.ScenarioExpressionItemCountComponent;
@@ -66,6 +69,7 @@ import org.terasology.utilities.random.Random;
 import org.terasology.world.block.BlockComponent;
 import org.terasology.world.block.BlockManager;
 import org.terasology.world.block.family.BlockFamily;
+import org.terasology.world.block.items.BlockItemComponent;
 
 import java.util.Map;
 
@@ -264,5 +268,32 @@ public class EvaluationSystem extends BaseComponentSystem {
         RegionColorComponent color = region.getComponent(RegionColorComponent.class);
 
         event.setResult(FontColor.getColored(name.regionName, color.color));
+    }
+
+    @ReceiveEvent
+    public void onEvaluateCountBlock(EvaluateIntEvent event, EntityRef entity, ScenarioExpressionBlockCountComponent component) {
+        Map<String, EntityRef> args = entity.getComponent(ScenarioArgumentContainerComponent.class).arguments;
+
+        ScenarioValuePlayerComponent.PlayerType player = args.get("player").getComponent(ScenarioValuePlayerComponent.class).type;
+
+        EvaluateBlockEvent evaluateBlockEvent = new EvaluateBlockEvent(event.getPassedEntity());
+        args.get("block").send(evaluateBlockEvent);
+        BlockFamily blockFamily = evaluateBlockEvent.getResult();
+
+        int count = 0;
+
+        if (player == ScenarioValuePlayerComponent.PlayerType.TRIGGERING_PLAYER) {
+            EntityRef playerEntity = event.getPassedEntity().getComponent(InfoTriggeringEntityComponent.class).entity;
+            InventoryComponent  invent = playerEntity.getComponent(InventoryComponent.class);
+            for (EntityRef e : invent.itemSlots) {
+                if (e.exists() && e.hasComponent(BlockItemComponent.class)) {
+                    if (e.getComponent(BlockItemComponent.class).blockFamily.equals(blockFamily)) {
+                        count += e.getComponent(ItemComponent.class).stackCount;
+                    }
+                }
+            }
+        }
+
+        event.setResult(count);
     }
 }

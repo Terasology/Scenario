@@ -41,6 +41,7 @@ import org.terasology.scenario.components.events.ScenarioSecondaryEnterRegionCom
 import org.terasology.scenario.components.events.ScenarioSecondaryLeaveRegionComponent;
 import org.terasology.scenario.components.events.ScenarioSecondaryRespawnComponent;
 import org.terasology.scenario.components.events.ScenarioSecondarySpawnComponent;
+import org.terasology.scenario.components.information.ScenarioExpressionBlockCountComponent;
 import org.terasology.scenario.components.information.ScenarioExpressionConcatStringComponent;
 import org.terasology.scenario.components.information.ScenarioValueBlockUriComponent;
 import org.terasology.scenario.components.information.ScenarioValueComparatorComponent;
@@ -258,6 +259,11 @@ public class ConvertEntitySystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondaryDamageAmountComponent component) {
+        DefaultSerialize(event, entity);
+    }
+
+    @ReceiveEvent
+    public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioExpressionBlockCountComponent component) {
         DefaultSerialize(event, entity);
     }
 }
