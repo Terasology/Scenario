@@ -25,6 +25,7 @@ import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.registry.In;
 import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
+import org.terasology.scenario.components.information.ScenarioExpressionBlockCountComponent;
 import org.terasology.scenario.components.information.ScenarioValueBlockFamilyComponent;
 import org.terasology.scenario.components.information.ScenarioExpressionConcatStringComponent;
 import org.terasology.scenario.components.information.ScenarioValueBlockUriComponent;
@@ -130,6 +131,21 @@ public class EvaluationDisplaySystem extends BaseComponentSystem {
         EvaluateDisplayEvent evalItem = new EvaluateDisplayEvent();
         args.get("item").send(evalItem);
         String itemName = evalItem.getResult();
+
+        EvaluateDisplayEvent evalPlayer = new EvaluateDisplayEvent();
+        args.get("player").send(evalPlayer);
+        String player = evalPlayer.getResult();
+
+        event.setResult("Count of " + itemName + " owned by " + player);
+    }
+
+    @ReceiveEvent //Count of blocks
+    public void onEvaluateIntEvent(EvaluateDisplayEvent event, EntityRef entity, ScenarioExpressionBlockCountComponent comp) {
+        Map<String, EntityRef> args = entity.getComponent(ScenarioArgumentContainerComponent.class).arguments;
+
+        EvaluateDisplayEvent evalBlock = new EvaluateDisplayEvent();
+        args.get("block").send(evalBlock);
+        String itemName = evalBlock.getResult();
 
         EvaluateDisplayEvent evalPlayer = new EvaluateDisplayEvent();
         args.get("player").send(evalPlayer);
