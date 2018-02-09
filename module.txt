@@ -1,15 +1,12 @@
 {
     "id" : "Scenario",
-    "version" : "0.1.0-SNAPSHOT",
+    "version" : "0.1.1-SNAPSHOT",
     "author" : "Cata",
     "displayName" : "Scenario",
     "description" : "",
-    "dependencies" : [{
-            "id" : "Core",
-            "minVersion" : "1.0.0"
-        },{
-            "id" : "StructureTemplates",
-            "minVersion" : "0.2.0"
-        }],
+    "dependencies" : [
+        {"id" : "Core", "minVersion" : "2.0.0"},
+        {"id" : "StructureTemplates", "minVersion" : "0.2.0"}
+    ],
     "serverSideOnly" : false
 }
