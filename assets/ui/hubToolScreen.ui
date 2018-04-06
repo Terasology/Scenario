@@ -21,8 +21,22 @@
               "layoutInfo": {
                 "use-content-width": true,
                 "position-horizontal-center": {},
-                "height": 30
+                "height": 30,
+                "width": 300
               }
+            },
+            {
+              "type": "UIText",
+              "id": "newWidget",
+              "layoutInfo": {
+                "width": 180,
+                "height": 30,
+                "position-left": {
+                  "widget": "HubToolLabel",
+                  "target": "RIGHT"
+                 }
+              },
+              "text": "New Scenario"
             },
             {
               "type": "RelativeLayout",
@@ -32,46 +46,12 @@
                   "target": "BOTTOM",
                   "widget": "HubToolLabel"
                 },
-                "height": 50
+                "height": 5
               },
-              "contents": [
-                {
-                  "type": "UIButton",
-                  "id": "Overview",
-                  "layoutInfo": {
-                    "width": 234
-                  },
-                  "text": "Overview"
-                },
-                {
-                  "type": "UIButton",
-                  "id": "Logic",
-                  "layoutInfo": {
-                    "position-left": {
-                      "widget": "Overview",
-                      "target": "RIGHT"
-                    },
-                    "position-right": {
-                      "widget": "Regions",
-                      "target": "LEFT"
-                    },
-                    "width": 233
-                  },
-                  "text": "Logic"
-                },
-                {
-                  "type": "UIButton",
-                  "id": "Regions",
-                  "layoutInfo": {
-                    "position-right": {},
-                    "width": 233
-                  },
-                  "text": "Regions"
-                }
-              ]
+              "contents": []
             },
             {
-              "type": "RelativeLayout",
+              "type": "migLayout",
               "id": "mainView",
               "layoutInfo": {
                 "position-top": {
@@ -80,55 +60,14 @@
                 }
               },
               "contents": [
-                {
-                  "type": "UIBox",
-                  "id": "overviewBox",
-                  "layoutInfo": {},
-                  "visible": false,
-                  "content": {
-                    "type": "RelativeLayout",
-                    "layoutInfo": {},
-                    "contents": [
-                      {
-                        "type": "RowLayout",
-                        "layoutInfo": {
-                          "position-top": {},
-                          "use-content-height": true
-                        },
-                        "contents": [
-                          {
-                            "type": "UISpace",
-                            "layoutInfo": {
-                              "relativeWidth": 0.15
-                            }
-                          },
-                          {
-                            "type": "UILabel",
-                            "id": "newWidget",
-                            "layoutInfo": {},
-                            "text": "Scenario Name:"
-                          },
-                          {
-                            "type": "UIText",
-                            "id": "newWidget",
-                            "layoutInfo": {},
-                            "text": "New Scenario"
-                          },
-                          {
-                            "type": "UISpace",
-                            "layoutInfo": {
-                              "relativeWidth": 0.15
-                            }
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                },
+
+
                 {
                   "type": "UIBox",
                   "id": "logicBox",
-                  "layoutInfo": {},
+                  "layoutInfo": {
+                  "cc": "w 400!"
+                  },
                   "visible": true,
                   "content": {
                     "type": "RelativeLayout",
@@ -148,8 +87,20 @@
                           "layoutInfo": {}
                         },
                         "layoutInfo": {
-                          "position-top": {}
+                          "height": 475,
+                          "position-bottom": {}
                         }
+                      },
+                      {
+                        "type": "UILabel",
+                        "id": "logicLabel",
+                        "layoutInfo": {
+                          "position-bottom":{
+                            "widget": "scrollWindow",
+                            "target": "TOP"
+                          }
+                           },
+                         "text": "Logic"
                       }
                     ]
                   }
@@ -157,8 +108,10 @@
                 {
                   "type": "UIBox",
                   "id": "regionBox",
-                  "layoutInfo": {},
-                  "visible": false,
+                  "layoutInfo": {
+                   "cc": ""
+                  },
+                  "visible": true,
                   "content": {
                     "type": "RelativeLayout",
                     "layoutInfo": {
@@ -172,15 +125,29 @@
                         "type": "engine:ScrollableArea",
                         "id": "scrollAreaRegions",
                         "layoutInfo": {
-                          "position-top": {}
+                          "position-bottom": {},
+                          "height": 475
                         },
                         "contents": [
                           {
                             "type": "Scenario:RegionTreeView",
                             "id": "RegionTree",
-                            "layoutInfo": {}
+                            "layoutInfo": {
+                              "position-top": {}
+                            }
                           }
                         ]
+                      },
+                      {
+                        "type": "UILabel",
+                        "id": "regionLabel",
+                        "layoutInfo": {
+                        "position-bottom":{
+                           "widget": "scrollAreaRegions",
+                           "target": "TOP"
+                           }
+                         },
+                        "text": "Regions"
                       }
                     ]
                   }
