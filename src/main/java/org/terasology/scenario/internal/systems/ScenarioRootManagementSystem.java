@@ -28,22 +28,15 @@ import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.components.TriggerActionListComponent;
 import org.terasology.scenario.components.TriggerConditionListComponent;
 import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
-import org.terasology.scenario.components.events.ScenarioSecondaryBlockDestroyComponent;
-import org.terasology.scenario.components.events.ScenarioSecondaryEnterRegionComponent;
-import org.terasology.scenario.components.events.ScenarioSecondaryLeaveRegionComponent;
-import org.terasology.scenario.components.events.ScenarioSecondaryRespawnComponent;
-import org.terasology.scenario.components.events.ScenarioSecondarySpawnComponent;
+import org.terasology.scenario.components.events.*;
 import org.terasology.scenario.components.events.triggerInformation.InfoDestroyedBlockComponent;
+import org.terasology.scenario.components.events.triggerInformation.InfoAddedBlockComponent;
 import org.terasology.scenario.components.events.triggerInformation.InfoTriggerRegionComponent;
 import org.terasology.scenario.components.events.triggerInformation.InfoTriggeringEntityComponent;
 import org.terasology.scenario.internal.events.EventTriggerEvent;
 import org.terasology.scenario.internal.events.evaluationEvents.ConditionalCheckEvent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateRegionEvent;
-import org.terasology.scenario.internal.events.scenarioEvents.DoDestroyScenarioEvent;
-import org.terasology.scenario.internal.events.scenarioEvents.PlayerEnterRegionEvent;
-import org.terasology.scenario.internal.events.scenarioEvents.PlayerLeaveRegionEvent;
-import org.terasology.scenario.internal.events.scenarioEvents.PlayerRespawnScenarioEvent;
-import org.terasology.scenario.internal.events.scenarioEvents.PlayerSpawnScenarioEvent;
+import org.terasology.scenario.internal.events.scenarioEvents.*;
 
 /**
  * System that relays game events into scenario events and sends them using a filled up information entity that contains information of the trigger
@@ -143,4 +136,17 @@ public class ScenarioRootManagementSystem extends BaseComponentSystem {
             }
         });
     }
+
+    @ReceiveEvent
+    public void onOnBlockAddedScenario(OnBlockItemAddedScenario event, EntityRef entity, ScenarioComponent component) {
+        Iterable<EntityRef> entityList = entityManager.getEntitiesWith(ScenarioSecondaryBlockAddComponent.class);
+        InfoTriggeringEntityComponent triggerEntity = new InfoTriggeringEntityComponent();
+        triggerEntity.entity = event.getPlacedBlock();
+        InfoAddedBlockComponent added = new InfoAddedBlockComponent();
+        added.getPosition = event.getPosition();
+        added.getPlacedBlock = event.getPlacedBlock();
+        EntityRef passEntity = entityManager.create(triggerEntity, added);
+        entityList.forEach(e -> e.getOwner().send(new EventTriggerEvent(passEntity)));
+    }
+
 }

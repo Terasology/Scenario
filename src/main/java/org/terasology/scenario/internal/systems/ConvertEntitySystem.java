@@ -37,6 +37,7 @@ import org.terasology.scenario.components.conditionals.ScenarioSecondaryBlockCom
 import org.terasology.scenario.components.conditionals.ScenarioSecondaryIntCompareComponent;
 import org.terasology.scenario.components.conditionals.ScenarioSecondaryPlayerRegionComponent;
 import org.terasology.scenario.components.events.ScenarioSecondaryBlockDestroyComponent;
+import org.terasology.scenario.components.events.ScenarioSecondaryBlockAddComponent;
 import org.terasology.scenario.components.events.ScenarioSecondaryEnterRegionComponent;
 import org.terasology.scenario.components.events.ScenarioSecondaryLeaveRegionComponent;
 import org.terasology.scenario.components.events.ScenarioSecondaryRespawnComponent;
@@ -266,4 +267,12 @@ public class ConvertEntitySystem extends BaseComponentSystem {
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioExpressionBlockCountComponent component) {
         DefaultSerialize(event, entity);
     }
+
+
+    @ReceiveEvent
+    public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondaryBlockAddComponent component) {
+        event.getOutputList().add(event.getPrefix() + PREFAB_MARKER + entity.getParentPrefab().getName());
+    }
+
+
 }

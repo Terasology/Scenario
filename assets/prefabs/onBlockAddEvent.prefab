@@ -1,0 +1,11 @@
+{
+    "Network":{},
+    "ScenarioIndicatorEvent":{},
+    "ScenarioLogicLabel":{
+        "name":"On Block Added"
+    },
+    "ScenarioSecondaryBlockAdd":{},
+    "ScenarioLogicText":{
+        "text":"On block added"
+    }
+}

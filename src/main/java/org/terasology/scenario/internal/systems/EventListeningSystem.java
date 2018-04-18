@@ -28,10 +28,8 @@ import org.terasology.logic.players.event.OnPlayerRespawnedEvent;
 import org.terasology.logic.players.event.OnPlayerSpawnedEvent;
 import org.terasology.registry.In;
 import org.terasology.scenario.components.ScenarioComponent;
-import org.terasology.scenario.internal.events.scenarioEvents.DoDestroyScenarioEvent;
-import org.terasology.scenario.internal.events.scenarioEvents.PlayerEnterRegionEvent;
-import org.terasology.scenario.internal.events.scenarioEvents.PlayerRespawnScenarioEvent;
-import org.terasology.scenario.internal.events.scenarioEvents.PlayerSpawnScenarioEvent;
+import org.terasology.world.block.items.OnBlockItemPlaced;
+import org.terasology.scenario.internal.events.scenarioEvents.*;
 
 /**
  * System that listens for normal terasology engine events and converts them into scenario events and sends them to the active scenario
@@ -77,6 +75,15 @@ public class EventListeningSystem extends BaseComponentSystem {
         }
     }
 
-
+    @ReceiveEvent //On block placed
+    public void onOnBlockItemPlaced(OnBlockItemPlaced event, EntityRef entity) {
+        if (entityManager.getEntitiesWith(ScenarioComponent.class).iterator().hasNext()) {
+            EntityRef scenario = entityManager.getEntitiesWith(ScenarioComponent.class).iterator().next();
+            if (scenario == null) {
+                return;
+            }
+            scenario.send(new OnBlockItemAddedScenario(event.getPosition(), event.getPlacedBlock()));
+        }
+    }
 
 }
