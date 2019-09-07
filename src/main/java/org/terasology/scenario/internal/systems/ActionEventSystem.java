@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 MovingBlocks
+ * Copyright 2019 MovingBlocks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,8 +27,8 @@ import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.characters.CharacterTeleportEvent;
 import org.terasology.logic.chat.ChatMessageEvent;
 import org.terasology.logic.common.DisplayNameComponent;
-import org.terasology.logic.health.DoDamageEvent;
-import org.terasology.logic.health.DoHealEvent;
+import org.terasology.logic.health.event.DoDamageEvent;
+import org.terasology.logic.health.event.DoRestoreEvent;
 import org.terasology.logic.health.EngineDamageTypes;
 import org.terasology.logic.inventory.InventoryComponent;
 import org.terasology.logic.inventory.InventoryManager;
@@ -75,6 +75,8 @@ import java.util.Map;
  */
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class ActionEventSystem extends BaseComponentSystem {
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ActionEventSystem.class);
+
     @In
     private EntityManager entityManager;
 
@@ -88,8 +90,6 @@ public class ActionEventSystem extends BaseComponentSystem {
 
     @In
     private InventoryManager inventoryManager;
-
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ActionEventSystem.class);
 
     @Override
     public void initialise() {
@@ -256,12 +256,10 @@ public class ActionEventSystem extends BaseComponentSystem {
                         if (itemComponent.stackCount > amount) {
                             inventoryManager.removeItem(playerEnt, EntityRef.NULL, e, true, amount);
                             break;
-                        }
-                        else if (itemComponent.stackCount == amount) {
+                        } else if (itemComponent.stackCount == amount) {
                             inventoryManager.removeItem(playerEnt, EntityRef.NULL, e, true, amount);
                             break;
-                        }
-                        else { //Same item, but stack isn't big enough
+                        } else { //Same item, but stack isn't big enough
                             inventoryManager.removeItem(playerEnt, EntityRef.NULL, e, true, itemComponent.stackCount);
                             amount -= itemComponent.stackCount;
                         }
@@ -284,7 +282,7 @@ public class ActionEventSystem extends BaseComponentSystem {
         ScenarioValuePlayerComponent.PlayerType player = variables.get("player").getComponent(ScenarioValuePlayerComponent.class).type;
         if (player == ScenarioValuePlayerComponent.PlayerType.TRIGGERING_PLAYER) {
             EntityRef playerEnt = event.informationEntity.getComponent(InfoTriggeringEntityComponent.class).entity;
-            playerEnt.send(new DoHealEvent(amount, playerEnt));
+            playerEnt.send(new DoRestoreEvent(amount, playerEnt));
         }
     }
 
