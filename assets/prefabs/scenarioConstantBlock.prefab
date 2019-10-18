@@ -5,6 +5,6 @@
         "name":"Constant block"
     },
     "ScenarioValueBlockUri":{
-        "block_uri":"core:stone"
+        "block_uri":"CoreBlocks:Stone"
     }
 }
