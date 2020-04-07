@@ -24,6 +24,7 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.prefab.Prefab;
 import org.terasology.entitySystem.prefab.PrefabManager;
 import org.terasology.logic.players.LocalPlayer;
+import org.terasology.math.JomlUtil;
 import org.terasology.math.geom.Rect2i;
 import org.terasology.math.geom.Vector2i;
 import org.terasology.registry.In;
@@ -138,7 +139,7 @@ public class EditLogicScreen extends CoreScreenLayer {
             public Vector2i getPreferredSize(Prefab value, Canvas canvas) {
                 Font font = canvas.getCurrentStyle().getFont();
                 List<String> lines = TextLineBuilder.getLines(font, value.getComponent(ScenarioLogicLabelComponent.class).name, canvas.size().x);
-                return font.getSize(lines);
+                return JomlUtil.from(font.getSize(lines));
             }
         });
         dropdown.bindSelection(new Binding<Prefab>() {
@@ -163,8 +164,7 @@ public class EditLogicScreen extends CoreScreenLayer {
             temporaryEntity.send(convertEvent);
             ReplaceEntityFromConstructionStringsEvent event = new ReplaceEntityFromConstructionStringsEvent(targetEntity, convertEvent.getOutputList());
             hubtool.getEntity().send(event);
-        }
-        else {
+        } else {
             if (temporaryEntity.exists()) {
                 temporaryEntity.destroy();
             }

@@ -15,6 +15,7 @@
  */
 package org.terasology.scenario.internal.ui.RegionTree;
 
+import org.terasology.math.JomlUtil;
 import org.terasology.math.geom.Rect2i;
 import org.terasology.math.geom.Vector2i;
 import org.terasology.rendering.FontColor;
@@ -79,6 +80,6 @@ public class RegionItemRenderer extends AbstractItemRenderer<RegionTreeValue> {
         }
 
         List<String> lines = TextLineBuilder.getLines(font, text, canvas.size().x);
-        return font.getSize(lines);
+        return JomlUtil.from(font.getSize(lines));
     }
 }

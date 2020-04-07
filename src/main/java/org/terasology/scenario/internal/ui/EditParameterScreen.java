@@ -27,6 +27,7 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.prefab.Prefab;
 import org.terasology.entitySystem.prefab.PrefabManager;
 import org.terasology.logic.inventory.ItemComponent;
+import org.terasology.math.JomlUtil;
 import org.terasology.math.geom.Rect2i;
 import org.terasology.math.geom.Vector2i;
 import org.terasology.registry.In;
@@ -220,7 +221,7 @@ public class EditParameterScreen extends CoreScreenLayer {
             public Vector2i getPreferredSize(Prefab value, Canvas canvas) {
                 Font font = canvas.getCurrentStyle().getFont();
                 List<String> lines = TextLineBuilder.getLines(font, value.getComponent(ScenarioLogicLabelComponent.class).name, canvas.size().x);
-                return font.getSize(lines);
+                return JomlUtil.from(font.getSize(lines));
             }
         });
         dropdown.bindSelection(new Binding<Prefab>() {
@@ -369,7 +370,7 @@ public class EditParameterScreen extends CoreScreenLayer {
                         Font font = canvas.getCurrentStyle().getFont();
                         String text = value.getComponent(RegionNameComponent.class).regionName;
                         List<String> lines = TextLineBuilder.getLines(font, text, canvas.size().x);
-                        return font.getSize(lines);
+                        return JomlUtil.from(font.getSize(lines));
                     }
                 });
 
