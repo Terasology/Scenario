@@ -5,6 +5,6 @@
         "name":"Constant Item Prefab"
     },
     "ScenarioValueItemPrefabUri":{
-        "prefabURI":"core:axe"
+        "prefabURI":"CoreItems:axe"
     }
 }
