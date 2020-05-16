@@ -3,11 +3,12 @@
     "version" : "1.0.0",
     "author" : "Cata",
     "displayName" : "Scenario",
-    "description" : "",
+    "description" : "The Scenario module allows for creations of scenarios, which are \"static worlds\" with logic attached to them.",
     "dependencies" : [
-        {"id" : "CoreItems", "minVersion" : "1.0.0"},
-        {"id" : "CoreBlocks", "minVersion" : "1.0.0"},
+        {"id" : "CoreAssets", "minVersion" : "2.0.1"},
         {"id" : "StructureTemplates", "minVersion" : "0.3.0"}
     ],
-    "serverSideOnly" : false
+    "serverSideOnly" : false,
+    "isAugmentation": true,
+    "isSpecial": true
 }
