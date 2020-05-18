@@ -6,7 +6,7 @@
     "description" : "The Scenario module allows for creations of scenarios, which are \"static worlds\" with logic attached to them.",
     "dependencies" : [
         {"id" : "CoreAssets", "minVersion" : "2.0.1"},
-        {"id" : "StructureTemplates", "minVersion" : "0.3.0"}
+        {"id" : "StructureTemplates", "minVersion" : "1.0.0"}
     ],
     "serverSideOnly" : false,
     "isAugmentation": true,
