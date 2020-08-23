@@ -15,15 +15,14 @@
  */
 package org.terasology.scenario.internal.ui.LogicTree;
 
-import org.terasology.math.JomlUtil;
-import org.terasology.math.geom.Rect2i;
-import org.terasology.math.geom.Vector2i;
-import org.terasology.rendering.assets.font.Font;
+import org.joml.Rectanglei;
+import org.joml.Vector2i;
+import org.terasology.nui.Canvas;
+import org.terasology.nui.TextLineBuilder;
+import org.terasology.nui.asset.font.Font;
+import org.terasology.nui.itemRendering.AbstractItemRenderer;
+import org.terasology.nui.util.RectUtility;
 import org.terasology.rendering.assets.texture.TextureRegion;
-import org.terasology.rendering.nui.Canvas;
-import org.terasology.rendering.nui.TextLineBuilder;
-import org.terasology.rendering.nui.itemRendering.AbstractItemRenderer;
-import org.terasology.scenario.internal.ui.LogicTree.LogicTreeValue;
 
 import java.util.List;
 
@@ -49,17 +48,19 @@ public class LogicItemRenderer extends AbstractItemRenderer<LogicTreeValue> {
     }
 
     @Override
-    public void draw(LogicTreeValue value, Canvas canvas){
+    public void draw(LogicTreeValue value, Canvas canvas) {
         TextureRegion texture = value.getTextureRegion();
 
-        if (texture != null){
-            if (marginTop + texture.getHeight() + marginBottom > canvas.size().y) { // Shrink vertically if it doesn't fit
+        if (texture != null) {
+            if (marginTop + texture.getHeight() + marginBottom > canvas.size().y) { // Shrink vertically if it
+                // doesn't fit
                 int iconHeight = canvas.size().y - marginTop - marginBottom;
-                canvas.drawTexture(texture, Rect2i.createFromMinAndSize(marginLeft, marginTop, texture.getWidth(), iconHeight));
-            }
-            else { // Center Vertically if fit
+                canvas.drawTexture(texture, RectUtility.createFromMinAndSize(marginLeft, marginTop,
+                    texture.getWidth(), iconHeight));
+            } else { // Center Vertically if fit
                 int iconVerticalPosition = (canvas.size().y - texture.getHeight()) / 2;
-                canvas.drawTexture(texture, Rect2i.createFromMinAndSize(marginLeft, iconVerticalPosition, texture.getWidth(), texture.getHeight()));
+                canvas.drawTexture(texture, RectUtility.createFromMinAndSize(marginLeft, iconVerticalPosition,
+                    texture.getWidth(), texture.getHeight()));
             }
         }
 
@@ -84,14 +85,14 @@ public class LogicItemRenderer extends AbstractItemRenderer<LogicTreeValue> {
         }
 
         int iconWidth;
-        if (texture != null){
+        if (texture != null) {
             iconWidth = marginLeft + texture.getWidth() + marginRight;
-        }
-        else {
+        } else {
             iconWidth = 0;
         }
 
-        Rect2i textRegion = Rect2i.createFromMinAndSize(iconWidth, 0, canvas.getRegion().width() - iconWidth, canvas.getRegion().height());
+        Rectanglei textRegion = RectUtility.createFromMinAndSize(iconWidth, 0,
+            canvas.getRegion().lengthX() - iconWidth, canvas.getRegion().lengthY());
         canvas.drawText(text, textRegion);
     }
 
@@ -120,12 +121,11 @@ public class LogicItemRenderer extends AbstractItemRenderer<LogicTreeValue> {
         TextureRegion texture = value.getTextureRegion();
         if (texture != null) {
             List<String> lines = TextLineBuilder.getLines(font, text, canvas.size().x);
-            return JomlUtil.from(font.getSize(lines));
-        }
-        else {
+            return font.getSize(lines);
+        } else {
             int iconWidth = marginLeft + texture.getWidth() + marginRight;
             List<String> lines = TextLineBuilder.getLines(font, text, canvas.size().x - iconWidth);
-            return JomlUtil.from(font.getSize(lines)).addX(iconWidth);
+            return font.getSize(lines).add(iconWidth, 0);
         }
     }
 }

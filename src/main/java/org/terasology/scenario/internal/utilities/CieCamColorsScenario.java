@@ -17,7 +17,7 @@
 package org.terasology.scenario.internal.utilities;
 
 import com.google.common.collect.ImmutableList;
-import org.terasology.rendering.nui.Color;
+import org.terasology.nui.Color;
 
 
 /**

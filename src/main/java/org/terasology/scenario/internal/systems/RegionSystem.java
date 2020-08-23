@@ -32,14 +32,11 @@ import org.terasology.logic.chat.ChatMessageEvent;
 import org.terasology.logic.common.DisplayNameComponent;
 import org.terasology.math.Region3i;
 import org.terasology.math.geom.Vector3i;
-import org.terasology.network.ClientComponent;
 import org.terasology.network.ColorComponent;
+import org.terasology.nui.Color;
 import org.terasology.registry.In;
-import org.terasology.rendering.FontColor;
-import org.terasology.rendering.nui.Color;
 import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.components.regions.RegionBeingCreatedComponent;
-import org.terasology.scenario.components.regions.RegionContainingEntitiesComponent;
 import org.terasology.scenario.components.regions.RegionLocationComponent;
 import org.terasology.scenario.internal.events.RegionTreeFullAddEvent;
 

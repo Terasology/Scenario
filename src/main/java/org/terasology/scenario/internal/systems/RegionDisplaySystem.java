@@ -36,7 +36,7 @@ import org.terasology.network.NetworkSystem;
 import org.terasology.registry.In;
 import org.terasology.rendering.logic.FloatingTextComponent;
 import org.terasology.rendering.logic.RegionOutlineComponent;
-import org.terasology.rendering.nui.Color;
+import org.terasology.nui.Color;
 import org.terasology.scenario.components.ScenarioRegionVisibilityComponent;
 import org.terasology.scenario.components.regions.RegionColorComponent;
 import org.terasology.scenario.components.regions.RegionLocationComponent;

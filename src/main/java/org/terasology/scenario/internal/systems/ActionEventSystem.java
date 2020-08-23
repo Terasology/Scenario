@@ -38,7 +38,7 @@ import org.terasology.math.geom.Vector3f;
 import org.terasology.network.ClientComponent;
 import org.terasology.network.ColorComponent;
 import org.terasology.registry.In;
-import org.terasology.rendering.nui.Color;
+import org.terasology.nui.Color;
 import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 import org.terasology.scenario.components.actions.ScenarioSecondaryDamageAmountComponent;
 import org.terasology.scenario.components.actions.ScenarioSecondaryGiveBlockComponent;

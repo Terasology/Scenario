@@ -21,15 +21,15 @@ import org.terasology.assets.management.AssetManager;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.players.LocalPlayer;
+import org.terasology.nui.UIWidget;
+import org.terasology.nui.databinding.ReadOnlyBinding;
+import org.terasology.nui.widgets.UIBox;
+import org.terasology.nui.widgets.UIButton;
+import org.terasology.nui.widgets.treeView.Tree;
 import org.terasology.registry.In;
 import org.terasology.rendering.assets.texture.Texture;
 import org.terasology.rendering.nui.BaseInteractionScreen;
-import org.terasology.rendering.nui.UIWidget;
 import org.terasology.rendering.nui.contextMenu.MenuTree;
-import org.terasology.rendering.nui.databinding.ReadOnlyBinding;
-import org.terasology.rendering.nui.widgets.UIBox;
-import org.terasology.rendering.nui.widgets.UIButton;
-import org.terasology.rendering.nui.widgets.treeView.Tree;
 import org.terasology.scenario.components.HubToolExpansionComponent;
 import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.components.ScenarioHubToolUpdateComponent;
@@ -166,36 +166,36 @@ public class HubToolScreen extends BaseInteractionScreen {
         if (addEventButton != null) {
             addEventButton.subscribe(this::onAddEventButton);
             addEventButton.bindEnabled(
-                    new ReadOnlyBinding<Boolean>() {
-                        @Override
-                        public Boolean get() {
-                            return checkCanAddEvent();
-                        }
+                new ReadOnlyBinding<Boolean>() {
+                    @Override
+                    public Boolean get() {
+                        return checkCanAddEvent();
                     }
+                }
             );
         }
 
         if (addActionButton != null) {
             addActionButton.subscribe(this::onAddActionButton);
             addActionButton.bindEnabled(
-                    new ReadOnlyBinding<Boolean>() {
-                        @Override
-                        public Boolean get() {
-                            return checkCanAddAction();
-                        }
+                new ReadOnlyBinding<Boolean>() {
+                    @Override
+                    public Boolean get() {
+                        return checkCanAddAction();
                     }
+                }
             );
         }
 
         if (deleteButton != null) {
             deleteButton.subscribe(this::onDeleteButton);
             deleteButton.bindEnabled(
-                    new ReadOnlyBinding<Boolean>() {
-                        @Override
-                        public Boolean get() {
-                            return checkCanDelete();
-                        }
+                new ReadOnlyBinding<Boolean>() {
+                    @Override
+                    public Boolean get() {
+                        return checkCanDelete();
                     }
+                }
             );
         }
 
@@ -209,8 +209,7 @@ public class HubToolScreen extends BaseInteractionScreen {
                 MenuTree menu = new MenuTree(null);
                 if (node.getValue().getEntity() == null) {
                     menu.addOption("Add region", this::regionAdd, node);
-                }
-                else {
+                } else {
                     menu.addOption("Edit region", this::regionEdit, node);
                     menu.addOption("Delete region", this::regionDelete, node);
                 }
@@ -228,8 +227,7 @@ public class HubToolScreen extends BaseInteractionScreen {
                 if (tempTree != null) {
                     regionTreeView.setModel(tempTree);
                 }
-            }
-            else { //Create a new scenario if none exists
+            } else { //Create a new scenario if none exists
                 ScenarioComponent tempComponent = new ScenarioComponent();
                 scenarioEntity = entityManager.create(tempComponent);
             }
@@ -237,10 +235,10 @@ public class HubToolScreen extends BaseInteractionScreen {
             regionTreeView.setEditor(getManager());
         }
 
-        if (treeView != null){
+        if (treeView != null) {
             treeView.expandedList = new HashSet<>();
             treeView.subscribeNodeDoubleClick((event, node) -> {
-                if (canEdit((LogicTree)node)) {
+                if (canEdit((LogicTree) node)) {
                     pushEditScreen((LogicTree) node);
                 }
             });
@@ -271,8 +269,7 @@ public class HubToolScreen extends BaseInteractionScreen {
                 if (tempTree != null) {
                     treeView.setModel(tempTree);
                 }
-            }
-            else { //Create a new scenario if none exists
+            } else { //Create a new scenario if none exists
                 ScenarioComponent tempComponent = new ScenarioComponent();
                 scenarioEntity = entityManager.create(tempComponent);
             }
@@ -290,11 +287,10 @@ public class HubToolScreen extends BaseInteractionScreen {
 
     private boolean canEdit(LogicTree node) {
         if (node.getValue().getValueType() == LogicTreeValue.Type.CONDITIONAL ||
-                node.getValue().getValueType() == LogicTreeValue.Type.EVENT ||
-                node.getValue().getValueType() == LogicTreeValue.Type.ACTION) {
+            node.getValue().getValueType() == LogicTreeValue.Type.EVENT ||
+            node.getValue().getValueType() == LogicTreeValue.Type.ACTION) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
 
@@ -325,13 +321,13 @@ public class HubToolScreen extends BaseInteractionScreen {
      */
     private void onAddEvent() {
         Integer selectedIndex = treeView.getSelectedIndex();
-
         Tree<LogicTreeValue> tree = treeView.getModel().getNode(selectedIndex);
         getEntity().send(new LogicTreeAddEventEvent(getEntity(), tree.getValue().getEntity()));
     }
 
     /**
      * Identification on if an event can be added from the selected index, currently it's if scenario root is selected
+     *
      * @return If add event button should be allowed.
      */
     private boolean checkCanAddEvent() {
@@ -451,8 +447,7 @@ public class HubToolScreen extends BaseInteractionScreen {
             if (tempRegionTree != null) {
                 regionTreeView.setModel(tempRegionTree);
             }
-        }
-        else {
+        } else {
             ScenarioComponent tempComponent = new ScenarioComponent();
             scenarioEntity = entityManager.create(tempComponent);
         }
@@ -482,8 +477,8 @@ public class HubToolScreen extends BaseInteractionScreen {
     /**
      * Function for updating the currently displayed tree with a new root for the scenario tree.
      *
-     * @param newScenario must have a ScenarioComponent in order to build the tree detailed from it.
-     *                automatically open the edit screen
+     * @param newScenario must have a ScenarioComponent in order to build the tree detailed from it. automatically
+     *     open the edit screen
      */
     public void updateTree(EntityRef newScenario) {
         if (newScenario.getComponent(ScenarioComponent.class) != null) {
@@ -499,8 +494,7 @@ public class HubToolScreen extends BaseInteractionScreen {
                 if (canEdit(newAddedEntityTree)) {
                     pushEditScreen(newAddedEntityTree);
                     newAddedEntityTree = null;
-                }
-                else {
+                } else {
                     newAddedEntityTree = null;
                 }
             }
@@ -514,6 +508,7 @@ public class HubToolScreen extends BaseInteractionScreen {
 
     /**
      * Constructs the treeView version of the tree detailed in the entity/component tree structure for logic
+     *
      * @param entity The root entity (EntityRef with a ScenarioComponent)
      * @return LogicTree built from the given entityRef.
      */
@@ -523,7 +518,7 @@ public class HubToolScreen extends BaseInteractionScreen {
         }
         ScenarioComponent scenario = entity.getComponent(ScenarioComponent.class);
         LogicTreeView tempTreeView = new LogicTreeView();
-        LogicTree returnTree = new LogicTree(new LogicTreeValue("Scenario", assetManager.getAsset("Scenario:scenarioText", Texture.class).get(),  LogicTreeValue.Type.SCENARIO, entity, argumentParser), this);
+        LogicTree returnTree = new LogicTree(new LogicTreeValue("Scenario", assetManager.getAsset("Scenario:scenarioText", Texture.class).get(), LogicTreeValue.Type.SCENARIO, entity, argumentParser), this);
         tempTreeView.setModel(returnTree.getRoot());
         returnTree.setExpandedNoEntity(true);
 
@@ -580,8 +575,7 @@ public class HubToolScreen extends BaseInteractionScreen {
             addedEntity = null;
             newAddedEntityTree = new LogicTree(new LogicTreeValue(assetManager.getAsset(textureUrn, Texture.class).get(), type, wantToAdd, argumentParser), this);
             addTo.addChild(newAddedEntityTree);
-        }
-        else {
+        } else {
             addTo.addChild(new LogicTreeValue(assetManager.getAsset(textureUrn, Texture.class).get(), type, wantToAdd, argumentParser));
         }
     }
@@ -640,6 +634,5 @@ public class HubToolScreen extends BaseInteractionScreen {
     public void requestPop() {
         getManager().popScreen();
     }
-
 
 }

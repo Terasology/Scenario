@@ -15,15 +15,15 @@
  */
 package org.terasology.scenario.internal.ui.RegionTree;
 
-import org.terasology.math.JomlUtil;
-import org.terasology.math.geom.Rect2i;
-import org.terasology.math.geom.Vector2i;
-import org.terasology.rendering.FontColor;
-import org.terasology.rendering.assets.font.Font;
-import org.terasology.rendering.nui.Canvas;
-import org.terasology.rendering.nui.Color;
-import org.terasology.rendering.nui.TextLineBuilder;
-import org.terasology.rendering.nui.itemRendering.AbstractItemRenderer;
+import org.joml.Rectanglei;
+import org.joml.Vector2i;
+import org.terasology.nui.Canvas;
+import org.terasology.nui.FontColor;
+import org.terasology.nui.TextLineBuilder;
+import org.terasology.nui.asset.font.Font;
+import org.terasology.nui.itemRendering.AbstractItemRenderer;
+import org.terasology.nui.Color;
+import org.terasology.nui.util.RectUtility;
 import org.terasology.scenario.components.regions.RegionColorComponent;
 import org.terasology.scenario.components.regions.RegionNameComponent;
 
@@ -40,7 +40,7 @@ public class RegionItemRenderer extends AbstractItemRenderer<RegionTreeValue> {
     private final int marginRight;
 
     public RegionItemRenderer() {
-        this(2,2,5,5);
+        this(2, 2, 5, 5);
     }
 
     public RegionItemRenderer(int marginTop, int marginBottom, int marginLeft, int marginRight) {
@@ -56,13 +56,12 @@ public class RegionItemRenderer extends AbstractItemRenderer<RegionTreeValue> {
 
         if (value.getEntity() == null) {
             text = FontColor.getColored("Regions", Color.WHITE);
-        }
-        else {
+        } else {
             text = FontColor.getColored(value.getEntity().getComponent(RegionNameComponent.class).regionName,
-                                        value.getEntity().getComponent(RegionColorComponent.class).color);
+                value.getEntity().getComponent(RegionColorComponent.class).color);
         }
 
-        Rect2i textRegion = Rect2i.createFromMinAndSize(0, 0, canvas.getRegion().width(), canvas.getRegion().height());
+        Rectanglei textRegion = RectUtility.createFromMinAndSize(0, 0, canvas.getRegion().lengthX(), canvas.getRegion().lengthY());
         canvas.drawText(text, textRegion);
 
     }
@@ -74,12 +73,11 @@ public class RegionItemRenderer extends AbstractItemRenderer<RegionTreeValue> {
 
         if (value.getEntity() == null) {
             text = "Regions";
-        }
-        else {
+        } else {
             text = value.getEntity().getComponent(RegionNameComponent.class).regionName;
         }
 
         List<String> lines = TextLineBuilder.getLines(font, text, canvas.size().x);
-        return JomlUtil.from(font.getSize(lines));
+        return font.getSize(lines);
     }
 }

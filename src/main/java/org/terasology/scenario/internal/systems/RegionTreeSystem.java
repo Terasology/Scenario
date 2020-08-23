@@ -33,7 +33,7 @@ import org.terasology.math.Region3i;
 import org.terasology.network.ClientComponent;
 import org.terasology.network.ColorComponent;
 import org.terasology.registry.In;
-import org.terasology.rendering.nui.Color;
+import org.terasology.nui.Color;
 import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.components.ScenarioHubToolUpdateComponent;
 import org.terasology.scenario.components.ScenarioRegionVisibilityComponent;

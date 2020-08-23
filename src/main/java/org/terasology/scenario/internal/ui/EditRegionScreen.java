@@ -17,31 +17,27 @@ package org.terasology.scenario.internal.ui;
 
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
-import com.google.common.collect.Lists;
 import com.google.common.math.DoubleMath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.assets.ResourceUrn;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.logic.characters.CharacterTeleportEvent;
 import org.terasology.logic.players.LocalPlayer;
 import org.terasology.math.Region3i;
-import org.terasology.math.geom.BaseVector3i;
 import org.terasology.math.geom.Vector3i;
-import org.terasology.network.ClientComponent;
+import org.terasology.nui.Color;
+import org.terasology.nui.UIWidget;
+import org.terasology.nui.WidgetUtil;
+import org.terasology.nui.databinding.DefaultBinding;
+import org.terasology.nui.widgets.UICheckbox;
+import org.terasology.nui.widgets.UIImage;
+import org.terasology.nui.widgets.UISlider;
+import org.terasology.nui.widgets.UIText;
 import org.terasology.registry.In;
 import org.terasology.rendering.assets.texture.Texture;
 import org.terasology.rendering.assets.texture.TextureUtil;
-import org.terasology.rendering.nui.Color;
 import org.terasology.rendering.nui.CoreScreenLayer;
-import org.terasology.rendering.nui.UIWidget;
-import org.terasology.rendering.nui.WidgetUtil;
-import org.terasology.rendering.nui.databinding.DefaultBinding;
-import org.terasology.rendering.nui.widgets.UICheckbox;
-import org.terasology.rendering.nui.widgets.UIImage;
-import org.terasology.rendering.nui.widgets.UISlider;
-import org.terasology.rendering.nui.widgets.UIText;
 import org.terasology.scenario.components.ScenarioRegionVisibilityComponent;
 import org.terasology.scenario.components.regions.RegionColorComponent;
 import org.terasology.scenario.components.regions.RegionLocationComponent;
@@ -181,8 +177,8 @@ public class EditRegionScreen extends CoreScreenLayer {
 
     public Region3i getRegion() {
         return Region3i.createFromMinAndSize(
-                new Vector3i(integerFromField(minXField), integerFromField(minYField), integerFromField(minZField)),
-                new Vector3i(integerFromField(sizeXField), integerFromField(sizeYField), integerFromField(sizeZField))
+            new Vector3i(integerFromField(minXField), integerFromField(minYField), integerFromField(minZField)),
+            new Vector3i(integerFromField(sizeXField), integerFromField(sizeYField), integerFromField(sizeZField))
         );
     }
 
@@ -249,8 +245,7 @@ public class EditRegionScreen extends CoreScreenLayer {
         if (colorSlider != null) {
             float index = colorSlider.getValue();
             return findClosestColor(index);
-        }
-        else {
+        } else {
             return baseEntity.getComponent(RegionColorComponent.class).color;
         }
     }

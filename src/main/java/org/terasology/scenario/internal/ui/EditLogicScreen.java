@@ -15,6 +15,8 @@
  */
 package org.terasology.scenario.internal.ui;
 
+import org.joml.Rectanglei;
+import org.joml.Vector2i;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.assets.ResourceUrn;
@@ -24,21 +26,19 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.prefab.Prefab;
 import org.terasology.entitySystem.prefab.PrefabManager;
 import org.terasology.logic.players.LocalPlayer;
-import org.terasology.math.JomlUtil;
-import org.terasology.math.geom.Rect2i;
-import org.terasology.math.geom.Vector2i;
+import org.terasology.nui.Canvas;
+import org.terasology.nui.TextLineBuilder;
+import org.terasology.nui.UIWidget;
+import org.terasology.nui.WidgetUtil;
+import org.terasology.nui.asset.font.Font;
+import org.terasology.nui.databinding.Binding;
+import org.terasology.nui.itemRendering.AbstractItemRenderer;
+import org.terasology.nui.layouts.ColumnLayout;
+import org.terasology.nui.util.RectUtility;
+import org.terasology.nui.widgets.UIDropdownScrollable;
+import org.terasology.nui.widgets.UILabel;
 import org.terasology.registry.In;
-import org.terasology.rendering.assets.font.Font;
-import org.terasology.rendering.nui.Canvas;
 import org.terasology.rendering.nui.CoreScreenLayer;
-import org.terasology.rendering.nui.TextLineBuilder;
-import org.terasology.rendering.nui.UIWidget;
-import org.terasology.rendering.nui.WidgetUtil;
-import org.terasology.rendering.nui.databinding.Binding;
-import org.terasology.rendering.nui.itemRendering.AbstractItemRenderer;
-import org.terasology.rendering.nui.layouts.ColumnLayout;
-import org.terasology.rendering.nui.widgets.UIDropdownScrollable;
-import org.terasology.rendering.nui.widgets.UILabel;
 import org.terasology.scenario.components.ScenarioLogicLabelComponent;
 import org.terasology.scenario.components.actions.ScenarioIndicatorActionComponent;
 import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
@@ -94,8 +94,7 @@ public class EditLogicScreen extends CoreScreenLayer {
         variables = find("variableWidget", ColumnLayout.class);
         editLabel = find("editLabel", UILabel.class);
         selectionLabel = find("selectLabel", UILabel.class);
-        dropdown = find ("selectionDropdown", UIDropdownScrollable.class);
-
+        dropdown = find("selectionDropdown", UIDropdownScrollable.class);
 
 
         WidgetUtil.trySubscribe(this, "okButton", this::onOkButton);
@@ -103,11 +102,11 @@ public class EditLogicScreen extends CoreScreenLayer {
     }
 
 
-    public void setEntities(EntityRef scenarioEntity, EntityRef targetEntity, LogicTreeValue.Type type, HubToolScreen hubtool, ArgumentParser parser){
-        this.scenarioEntity = scenarioEntity;
-        this.targetEntity = targetEntity;
-        this.hubtool = hubtool;
-        this.parser = parser;
+    public void setEntities(EntityRef entity, EntityRef target, LogicTreeValue.Type type, HubToolScreen hub, ArgumentParser argumentParser) {
+        this.scenarioEntity = entity;
+        this.targetEntity = target;
+        this.hubtool = hub;
+        this.parser = argumentParser;
 
         switch (type) {
             case EVENT:
@@ -131,7 +130,7 @@ public class EditLogicScreen extends CoreScreenLayer {
         dropdown.setOptionRenderer(new AbstractItemRenderer<Prefab>() {
             @Override
             public void draw(Prefab value, Canvas canvas) {
-                Rect2i textRegion = Rect2i.createFromMinAndSize(0, 0, canvas.getRegion().width(), canvas.getRegion().height());
+                Rectanglei textRegion = RectUtility.createFromMinAndSize(0, 0, canvas.getRegion().lengthX(), canvas.getRegion().lengthY());
                 canvas.drawText(value.getComponent(ScenarioLogicLabelComponent.class).name, textRegion);
             }
 
@@ -139,7 +138,7 @@ public class EditLogicScreen extends CoreScreenLayer {
             public Vector2i getPreferredSize(Prefab value, Canvas canvas) {
                 Font font = canvas.getCurrentStyle().getFont();
                 List<String> lines = TextLineBuilder.getLines(font, value.getComponent(ScenarioLogicLabelComponent.class).name, canvas.size().x);
-                return JomlUtil.from(font.getSize(lines));
+                return font.getSize(lines);
             }
         });
         dropdown.bindSelection(new Binding<Prefab>() {
@@ -179,21 +178,21 @@ public class EditLogicScreen extends CoreScreenLayer {
         getManager().popScreen();
     }
 
-    private List<Prefab> getPrefabs(EntityRef targetEntity) {
+    private List<Prefab> getPrefabs(EntityRef entity) {
         List<Prefab> output = new ArrayList<>();
-        if (targetEntity.hasComponent(ScenarioIndicatorActionComponent.class)) {
+        if (entity.hasComponent(ScenarioIndicatorActionComponent.class)) {
             Iterable<Prefab> prefabs = prefabManager.listPrefabs(ScenarioIndicatorActionComponent.class);
             for (Prefab p : prefabs) {
                 output.add(p);
             }
         }
-        if (targetEntity.hasComponent(ScenarioIndicatorEventComponent.class)) {
+        if (entity.hasComponent(ScenarioIndicatorEventComponent.class)) {
             Iterable<Prefab> prefabs = prefabManager.listPrefabs(ScenarioIndicatorEventComponent.class);
             for (Prefab p : prefabs) {
                 output.add(p);
             }
         }
-        if (targetEntity.hasComponent(ScenarioIndicatorConditionalComponent.class)) {
+        if (entity.hasComponent(ScenarioIndicatorConditionalComponent.class)) {
             Iterable<Prefab> prefabs = prefabManager.listPrefabs(ScenarioIndicatorConditionalComponent.class);
             for (Prefab p : prefabs) {
                 output.add(p);
@@ -221,7 +220,7 @@ public class EditLogicScreen extends CoreScreenLayer {
     private void generateText() {
         List<UIWidget> widgets = parser.generateWidgets(temporaryEntity, this);
         if (oldWidgets != null) {
-            for(UIWidget w : oldWidgets) {
+            for (UIWidget w : oldWidgets) {
                 variables.removeWidget(w);
             }
         }

@@ -17,7 +17,7 @@ package org.terasology.scenario.internal.ui.LogicTree;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.rendering.nui.widgets.treeView.Tree;
+import org.terasology.nui.widgets.treeView.Tree;
 import org.terasology.scenario.components.HubToolExpansionComponent;
 import org.terasology.scenario.components.TriggerNameComponent;
 import org.terasology.scenario.internal.events.LogicTreeMoveEntityEvent;
@@ -31,6 +31,7 @@ public class LogicTree extends Tree<LogicTreeValue> {
     private HubToolScreen hubToolScreen;
 
     private static final Logger logger = LoggerFactory.getLogger(LogicTree.class);
+
     public LogicTree(HubToolScreen hubToolScreen) {
         this.hubToolScreen = hubToolScreen;
     }
@@ -41,8 +42,9 @@ public class LogicTree extends Tree<LogicTreeValue> {
     }
 
     /**
-     * Expansion needs to be saved within an external component because the tree is constantly rebuilt and the expansion should
-     * be saved to best provide usability for a client
+     * Expansion needs to be saved within an external component because the tree is constantly rebuilt and the expansion
+     * should be saved to best provide usability for a client
+     *
      * @param expanded The new expanded state of this tree.
      */
     @Override
@@ -71,8 +73,7 @@ public class LogicTree extends Tree<LogicTreeValue> {
                 }
 
             }
-        }
-        else {
+        } else {
             if (value.getEntity() != null) {
                 switch (value.getValueType()) {
                     //If it is a name(event/conditional/action) then it needs to find the matching entity from the trigger
@@ -99,6 +100,7 @@ public class LogicTree extends Tree<LogicTreeValue> {
 
     /**
      * Verifies that the event types match where they should be
+     *
      * @param child The child to be added.
      * @return
      */
@@ -123,8 +125,8 @@ public class LogicTree extends Tree<LogicTreeValue> {
                 break;
             case TRIGGER:
                 if (child.getValue().getValueType() == LogicTreeValue.Type.EVENT_NAME || //Can't move event/cond/action names
-                        child.getValue().getValueType() == LogicTreeValue.Type.CONDITIONAL_NAME ||
-                        child.getValue().getValueType() == LogicTreeValue.Type.ACTION_NAME) {
+                    child.getValue().getValueType() == LogicTreeValue.Type.CONDITIONAL_NAME ||
+                    child.getValue().getValueType() == LogicTreeValue.Type.ACTION_NAME) {
                     thisReturn = true;
                 }
             case SCENARIO:
@@ -142,7 +144,7 @@ public class LogicTree extends Tree<LogicTreeValue> {
     }
 
     @Override
-    public void addChild(LogicTreeValue childValue){
+    public void addChild(LogicTreeValue childValue) {
         addChild(new LogicTree(childValue, hubToolScreen));
     }
 
@@ -152,7 +154,9 @@ public class LogicTree extends Tree<LogicTreeValue> {
     }
 
     /**
-     * Client is requesting a movement of entities, not a new child and therefore this must be managed by the server to re-order the entities
+     * Client is requesting a movement of entities, not a new child and therefore this must be managed by the server to
+     * re-order the entities
+     *
      * @param index The index of the child to be added.
      * @param child The child to be added.
      */
@@ -162,7 +166,7 @@ public class LogicTree extends Tree<LogicTreeValue> {
     }
 
     @Override
-    public Tree<LogicTreeValue> copy(){
+    public Tree<LogicTreeValue> copy() {
         throw new UnsupportedOperationException();
     }
 }

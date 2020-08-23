@@ -30,8 +30,8 @@ import org.terasology.logic.inventory.ItemComponent;
 import org.terasology.logic.location.LocationComponent;
 import org.terasology.math.geom.Vector3f;
 import org.terasology.network.ClientComponent;
+import org.terasology.nui.FontColor;
 import org.terasology.registry.In;
-import org.terasology.rendering.FontColor;
 import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 import org.terasology.scenario.components.conditionals.ScenarioSecondaryBlockCompareComponent;
 import org.terasology.scenario.components.conditionals.ScenarioSecondaryIntCompareComponent;
@@ -257,7 +257,7 @@ public class EvaluationSystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent //Name of Region
-    public void OnEvaluateNameOfRegion(EvaluateStringEvent event, EntityRef entity, ScenarioExpressionRegionNameComponent comp) {
+    public void onEvaluateNameOfRegion(EvaluateStringEvent event, EntityRef entity, ScenarioExpressionRegionNameComponent comp) {
         Map<String, EntityRef> args = entity.getComponent(ScenarioArgumentContainerComponent.class).arguments;
 
         EvaluateRegionEvent evalRegion = new EvaluateRegionEvent(event.getPassedEntity());

@@ -18,10 +18,10 @@ package org.terasology.scenario.internal.ui.LogicTree;
 import org.terasology.assets.management.AssetManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.input.MouseInput;
+import org.terasology.nui.widgets.UITreeView;
 import org.terasology.rendering.nui.NUIManager;
 import org.terasology.rendering.nui.contextMenu.ContextMenuUtils;
 import org.terasology.rendering.nui.contextMenu.MenuTree;
-import org.terasology.rendering.nui.widgets.UITreeView;
 
 import java.util.Set;
 import java.util.function.Function;
@@ -41,7 +41,7 @@ public final class LogicTreeView extends UITreeView<LogicTreeValue> {
         setItemRenderer(new LogicItemRenderer());
     }
 
-    public LogicTreeView(String id){
+    public LogicTreeView(String id) {
         super(id);
         setItemRenderer(new LogicItemRenderer());
     }
@@ -51,16 +51,15 @@ public final class LogicTreeView extends UITreeView<LogicTreeValue> {
     }
 
 
-
     public void setEditor(NUIManager manager) {
         subscribeNodeClick((event, node) -> {
-           if (event.getMouseButton() == MouseInput.MOUSE_RIGHT) {
-               setSelectedIndex(getModel().indexOf(node));
-               setAlternativeWidget(null);
+            if (event.getMouseButton() == MouseInput.MOUSE_RIGHT) {
+                setSelectedIndex(getModel().indexOf(node));
+                setAlternativeWidget(null);
 
-               MenuTree menuTree = contextMenuTreeProducer.apply((LogicTree) node);
-               ContextMenuUtils.showContextMenu(manager, event.getMouse().getPosition(), menuTree);
-           }
+                MenuTree menuTree = contextMenuTreeProducer.apply((LogicTree) node);
+                ContextMenuUtils.showContextMenu(manager, event.getMouse().getPosition(), menuTree);
+            }
         });
     }
 
