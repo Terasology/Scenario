@@ -105,7 +105,7 @@ public class EvaluationDisplaySystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent
-    public void OnEvaluateRandomIntEvent(EvaluateDisplayEvent event, EntityRef entity, ScenarioExpressionRandomIntComponent comp) {
+    public void onEvaluateRandomIntEvent(EvaluateDisplayEvent event, EntityRef entity, ScenarioExpressionRandomIntComponent comp) {
         Map<String, EntityRef> args = entity.getComponent(ScenarioArgumentContainerComponent.class).arguments;
 
         EvaluateDisplayEvent evalInt1 = new EvaluateDisplayEvent();
@@ -120,7 +120,7 @@ public class EvaluationDisplaySystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent
-    public void OnEvaluateItemEvent(EvaluateDisplayEvent event, EntityRef entity, ScenarioValueItemPrefabUriComponent comp) {
+    public void onEvaluateItemEvent(EvaluateDisplayEvent event, EntityRef entity, ScenarioValueItemPrefabUriComponent comp) {
         event.setResult(comp.prefabURI);
     }
 
@@ -155,7 +155,7 @@ public class EvaluationDisplaySystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent //PlayerName
-    public void OnEvaluatePlayerNameEvent(EvaluateDisplayEvent event, EntityRef entity, ScenarioExpressionPlayerNameComponent comp) {
+    public void onEvaluatePlayerNameEvent(EvaluateDisplayEvent event, EntityRef entity, ScenarioExpressionPlayerNameComponent comp) {
         Map<String, EntityRef> args = entity.getComponent(ScenarioArgumentContainerComponent.class).arguments;
 
         EvaluateDisplayEvent evalPlayer = new EvaluateDisplayEvent();
@@ -166,11 +166,10 @@ public class EvaluationDisplaySystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent //RegionName
-    public void OnEvaluateRegionEvent(EvaluateDisplayEvent event, EntityRef entity, ScenarioValueRegionComponent comp) {
+    public void onEvaluateRegionEvent(EvaluateDisplayEvent event, EntityRef entity, ScenarioValueRegionComponent comp) {
         if (comp.regionEntity != null) {
             event.setResult(comp.regionEntity.getComponent(RegionNameComponent.class).regionName);
-        }
-        else {
+        } else {
             event.setResult("No region selected");
         }
     }
@@ -196,7 +195,7 @@ public class EvaluationDisplaySystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent //Name of Region
-    public void OnEvaluateNameOfRegion(EvaluateDisplayEvent event, EntityRef entity, ScenarioExpressionRegionNameComponent comp) {
+    public void onEvaluateNameOfRegion(EvaluateDisplayEvent event, EntityRef entity, ScenarioExpressionRegionNameComponent comp) {
         Map<String, EntityRef> args = entity.getComponent(ScenarioArgumentContainerComponent.class).arguments;
 
         EvaluateDisplayEvent evalName = new EvaluateDisplayEvent();
