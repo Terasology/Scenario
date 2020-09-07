@@ -17,9 +17,9 @@ package org.terasology.scenario.internal.ui;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.assets.management.AssetManager;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.gestalt.assets.management.AssetManager;
 import org.terasology.logic.players.LocalPlayer;
 import org.terasology.nui.UIWidget;
 import org.terasology.nui.databinding.ReadOnlyBinding;
@@ -54,7 +54,6 @@ import org.terasology.scenario.internal.ui.RegionTree.RegionTreeView;
 import org.terasology.scenario.internal.utilities.ArgumentParser;
 import org.terasology.world.block.BlockManager;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
