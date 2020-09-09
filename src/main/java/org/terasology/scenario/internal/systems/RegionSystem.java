@@ -1,40 +1,27 @@
-/*
- * Copyright 2017 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.scenario.internal.systems;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.entitySystem.entity.EntityManager;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.event.EventPriority;
-import org.terasology.entitySystem.event.ReceiveEvent;
-import org.terasology.entitySystem.prefab.Prefab;
-import org.terasology.entitySystem.prefab.PrefabManager;
-import org.terasology.entitySystem.systems.BaseComponentSystem;
-import org.terasology.entitySystem.systems.RegisterMode;
-import org.terasology.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.entitySystem.entity.EntityManager;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.event.EventPriority;
+import org.terasology.engine.entitySystem.event.ReceiveEvent;
+import org.terasology.engine.entitySystem.prefab.Prefab;
+import org.terasology.engine.entitySystem.prefab.PrefabManager;
+import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
+import org.terasology.engine.entitySystem.systems.RegisterMode;
+import org.terasology.engine.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.logic.characters.events.AttackEvent;
+import org.terasology.engine.logic.chat.ChatMessageEvent;
+import org.terasology.engine.logic.common.DisplayNameComponent;
+import org.terasology.engine.math.Region3i;
+import org.terasology.engine.network.ColorComponent;
+import org.terasology.engine.registry.In;
 import org.terasology.gestalt.assets.management.AssetManager;
-import org.terasology.logic.characters.events.AttackEvent;
-import org.terasology.logic.chat.ChatMessageEvent;
-import org.terasology.logic.common.DisplayNameComponent;
-import org.terasology.math.Region3i;
 import org.terasology.math.geom.Vector3i;
-import org.terasology.network.ColorComponent;
 import org.terasology.nui.Color;
-import org.terasology.registry.In;
 import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.components.regions.RegionBeingCreatedComponent;
 import org.terasology.scenario.components.regions.RegionLocationComponent;
@@ -43,21 +30,18 @@ import org.terasology.scenario.internal.events.RegionTreeFullAddEvent;
 import java.util.Iterator;
 
 /**
- * System that monitors attack hits and consumes them if they are being used to create the region of a scenario region entity.
+ * System that monitors attack hits and consumes them if they are being used to create the region of a scenario region
+ * entity.
  */
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class RegionSystem extends BaseComponentSystem {
+    private final Logger logger = LoggerFactory.getLogger(RegionSystem.class);
     @In
     private EntityManager entityManager;
-
     @In
     private PrefabManager prefabManager;
-
     @In
     private AssetManager assetManager;
-
-    private Logger logger = LoggerFactory.getLogger(RegionSystem.class);
-
     private EntityRef chatMessageEntity;
 
     /**
@@ -65,7 +49,8 @@ public class RegionSystem extends BaseComponentSystem {
      */
     @Override
     public void postBegin() {
-        chatMessageEntity = entityManager.create(assetManager.getAsset("scenario:scenarioChatEntity", Prefab.class).get());
+        chatMessageEntity =
+                entityManager.create(assetManager.getAsset("scenario:scenarioChatEntity", Prefab.class).get());
         chatMessageEntity.getComponent(DisplayNameComponent.class).name = "Scenario System";
         chatMessageEntity.saveComponent(chatMessageEntity.getComponent(DisplayNameComponent.class));
         chatMessageEntity.getComponent(ColorComponent.class).color = Color.RED;
@@ -73,7 +58,8 @@ public class RegionSystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent(priority = EventPriority.PRIORITY_CRITICAL)
-    public void onAttackEntity(AttackEvent event, EntityRef targetEntity, org.terasology.world.block.BlockComponent blockComponent) {
+    public void onAttackEntity(AttackEvent event, EntityRef targetEntity,
+                               org.terasology.engine.world.block.BlockComponent blockComponent) {
         Iterator<EntityRef> entities = entityManager.getEntitiesWith(RegionBeingCreatedComponent.class).iterator();
         while (entities.hasNext()) {
             EntityRef editedRegion = entities.next();
@@ -84,7 +70,8 @@ public class RegionSystem extends BaseComponentSystem {
                     if (create.firstHit == null) {
                         create.firstHit = pos;
 
-                        event.getInstigator().getOwner().send(new ChatMessageEvent("Region started, left click next location", chatMessageEntity));
+                        event.getInstigator().getOwner().send(new ChatMessageEvent("Region started, left click next " +
+                                "location", chatMessageEntity));
 
                         event.consume();
                     } else {
@@ -94,7 +81,8 @@ public class RegionSystem extends BaseComponentSystem {
                             editedRegion.saveComponent(loc);
                             editedRegion.removeComponent(RegionBeingCreatedComponent.class);
                             if (entityManager.getEntitiesWith(ScenarioComponent.class).iterator().hasNext()) {
-                                EntityRef scenario = entityManager.getEntitiesWith(ScenarioComponent.class).iterator().next();
+                                EntityRef scenario =
+                                        entityManager.getEntitiesWith(ScenarioComponent.class).iterator().next();
                                 if (scenario == null) {
                                     return;
                                 }
@@ -105,7 +93,8 @@ public class RegionSystem extends BaseComponentSystem {
                     }
 
                 }
-                break; //Don't need to check any more regions if one already matched(only one region is allowed per person at a time)
+                break; //Don't need to check any more regions if one already matched(only one region is allowed per
+                // person at a time)
             }
         }
     }

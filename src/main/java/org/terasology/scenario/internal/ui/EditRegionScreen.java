@@ -1,18 +1,5 @@
-/*
- * Copyright 2017 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.scenario.internal.ui;
 
 import com.google.common.base.Function;
@@ -20,11 +7,16 @@ import com.google.common.base.Functions;
 import com.google.common.math.DoubleMath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.entitySystem.entity.EntityManager;
-import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.entity.EntityManager;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.logic.players.LocalPlayer;
+import org.terasology.engine.math.Region3i;
+import org.terasology.engine.registry.In;
+import org.terasology.engine.rendering.assets.texture.Texture;
+import org.terasology.engine.rendering.assets.texture.TextureUtil;
+import org.terasology.engine.rendering.nui.CoreScreenLayer;
+import org.terasology.engine.utilities.Assets;
 import org.terasology.gestalt.assets.ResourceUrn;
-import org.terasology.logic.players.LocalPlayer;
-import org.terasology.math.Region3i;
 import org.terasology.math.geom.Vector3i;
 import org.terasology.nui.Color;
 import org.terasology.nui.UIWidget;
@@ -34,10 +26,6 @@ import org.terasology.nui.widgets.UICheckbox;
 import org.terasology.nui.widgets.UIImage;
 import org.terasology.nui.widgets.UISlider;
 import org.terasology.nui.widgets.UIText;
-import org.terasology.registry.In;
-import org.terasology.rendering.assets.texture.Texture;
-import org.terasology.rendering.assets.texture.TextureUtil;
-import org.terasology.rendering.nui.CoreScreenLayer;
 import org.terasology.scenario.components.ScenarioRegionVisibilityComponent;
 import org.terasology.scenario.components.regions.RegionColorComponent;
 import org.terasology.scenario.components.regions.RegionLocationComponent;
@@ -49,27 +37,25 @@ import org.terasology.scenario.internal.events.RegionResizeEvent;
 import org.terasology.scenario.internal.events.RegionTeleportationRequestEvent;
 import org.terasology.scenario.internal.utilities.CieCamColorsScenario;
 import org.terasology.structureTemplates.components.ProtectedRegionsComponent;
-import org.terasology.utilities.Assets;
 
 import java.math.RoundingMode;
 import java.util.List;
 
 /**
- * Screen displayed for editing a region, all changes are made client side and when the "OK" button is pressed the changed values
- * are sent to the server using various events to alter the region entity on the server's side. The color display of the region
- * utilizes a slider and box to generate the color, the rest are very simplistic widgets(number or text entries or checkboxes)
+ * Screen displayed for editing a region, all changes are made client side and when the "OK" button is pressed the
+ * changed values are sent to the server using various events to alter the region entity on the server's side. The color
+ * display of the region utilizes a slider and box to generate the color, the rest are very simplistic widgets(number or
+ * text entries or checkboxes)
  */
 public class EditRegionScreen extends CoreScreenLayer {
     public static final ResourceUrn ASSET_URI = new ResourceUrn("scenario:editRegionScreen!instance");
 
     private static final Logger logger = LoggerFactory.getLogger(EditRegionScreen.class);
-
+    private final List<Color> colors = CieCamColorsScenario.L65C65;
     @In
     EntityManager entityManager;
-
     private HubToolScreen returnScreen;
     private EntityRef baseEntity;
-
     private UIText nameEntry;
     private UICheckbox visiblity;
     private UICheckbox protectedRegion;
@@ -81,12 +67,8 @@ public class EditRegionScreen extends CoreScreenLayer {
     private UIText sizeXField;
     private UIText sizeYField;
     private UIText sizeZField;
-
     @In
     private LocalPlayer localPlayer;
-
-
-    private final List<Color> colors = CieCamColorsScenario.L65C65;
 
     @Override
     public void initialise() {
@@ -154,11 +136,13 @@ public class EditRegionScreen extends CoreScreenLayer {
             returnScreen.getEntity().send(new RegionRecolorEvent(baseEntity, colorImage.getTint()));
         }
         if (visiblity.isChecked()) {
-            ScenarioRegionVisibilityComponent vis = returnScreen.getEntity().getOwner().getComponent(ScenarioRegionVisibilityComponent.class);
+            ScenarioRegionVisibilityComponent vis =
+                    returnScreen.getEntity().getOwner().getComponent(ScenarioRegionVisibilityComponent.class);
             vis.visibleList.add(baseEntity);
             returnScreen.getEntity().getOwner().saveComponent(vis);
         } else {
-            ScenarioRegionVisibilityComponent vis = returnScreen.getEntity().getOwner().getComponent(ScenarioRegionVisibilityComponent.class);
+            ScenarioRegionVisibilityComponent vis =
+                    returnScreen.getEntity().getOwner().getComponent(ScenarioRegionVisibilityComponent.class);
             vis.visibleList.remove(baseEntity);
             returnScreen.getEntity().getOwner().saveComponent(vis);
         }
@@ -172,13 +156,14 @@ public class EditRegionScreen extends CoreScreenLayer {
     }
 
     public void onTeleportButton(UIWidget button) {
-        returnScreen.getEntity().send(new RegionTeleportationRequestEvent(localPlayer.getCharacterEntity(), baseEntity));
+        returnScreen.getEntity().send(new RegionTeleportationRequestEvent(localPlayer.getCharacterEntity(),
+                baseEntity));
     }
 
     public Region3i getRegion() {
         return Region3i.createFromMinAndSize(
-            new Vector3i(integerFromField(minXField), integerFromField(minYField), integerFromField(minZField)),
-            new Vector3i(integerFromField(sizeXField), integerFromField(sizeYField), integerFromField(sizeZField))
+                new Vector3i(integerFromField(minXField), integerFromField(minYField), integerFromField(minZField)),
+                new Vector3i(integerFromField(sizeXField), integerFromField(sizeYField), integerFromField(sizeZField))
         );
     }
 
@@ -193,23 +178,6 @@ public class EditRegionScreen extends CoreScreenLayer {
     @Override
     public boolean isLowerLayerVisible() {
         return false;
-    }
-
-    /**
-     * Calls update() in parent class when the slider value changes
-     */
-    private final class NotifyingBinding extends DefaultBinding<Float> {
-
-        private NotifyingBinding(Float value) {
-            super(value);
-        }
-
-        @Override
-        public void set(Float v) {
-            super.set(v);
-
-            updateImage();
-        }
     }
 
     private float findClosestIndex(Color color) {
@@ -254,5 +222,22 @@ public class EditRegionScreen extends CoreScreenLayer {
         int index = DoubleMath.roundToInt(findex * (colors.size() - 1), RoundingMode.HALF_UP);
         Color color = colors.get(index);
         return color;
+    }
+
+    /**
+     * Calls update() in parent class when the slider value changes
+     */
+    private final class NotifyingBinding extends DefaultBinding<Float> {
+
+        private NotifyingBinding(Float value) {
+            super(value);
+        }
+
+        @Override
+        public void set(Float v) {
+            super.set(v);
+
+            updateImage();
+        }
     }
 }

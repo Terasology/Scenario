@@ -11,8 +11,8 @@ Now we need to write our component class, for an indicator we need to do two ste
 
 
 ```java
-	import org.terasology.entitySystem.Component;
-	import org.terasology.network.Replicate;
+	import org.terasology.engine.entitySystem.Component;
+	import org.terasology.engine.network.Replicate;
 
 	@Replicate
 	public class ScenarioSecondarySpawnComponent implements Component {
@@ -91,8 +91,8 @@ This is the most simple portion of the code and only requires us to indicate to 
 This is the system that will trigger when our event happens and let us construct the information entity that will be passed to any conditionals/actions. In order to setup the listener we need to look at the event we are waiting for. This will be looking at the event that gets passed to the Scenario entity(the entity that has the ScenarioComponent). The event that we are passing is detailed below:
 `PlayerSpawnScenarioEvent.java`
 ``` java
-	import org.terasology.entitySystem.entity.EntityRef;
-	import org.terasology.entitySystem.event.Event;
+	import org.terasology.engine.entitySystem.entity.EntityRef;
+	import org.terasology.engine.entitySystem.event.Event;
 	import org.terasology.scenario.components.events.ScenarioSecondarySpawnComponent;
 
 	public class PlayerSpawnScenarioEvent implements Event {

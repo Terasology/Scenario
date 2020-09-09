@@ -11,8 +11,8 @@ Now we need to write our component class, for an indicator we need to do two ste
 
 
 ```java
-	import org.terasology.entitySystem.Component;
-	import org.terasology.network.Replicate;
+	import org.terasology.engine.entitySystem.Component;
+	import org.terasology.engine.network.Replicate;
 
 	@Replicate
 	public class ScenarioSecondaryBlockCompareComponent implements Component {

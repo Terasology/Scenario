@@ -1,42 +1,29 @@
-/*
- * Copyright 2017 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.scenario.internal.utilities;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.entitySystem.entity.EntityManager;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.prefab.Prefab;
-import org.terasology.entitySystem.systems.BaseComponentSystem;
-import org.terasology.entitySystem.systems.RegisterMode;
-import org.terasology.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.entitySystem.entity.EntityManager;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.prefab.Prefab;
+import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
+import org.terasology.engine.entitySystem.systems.RegisterMode;
+import org.terasology.engine.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.registry.In;
+import org.terasology.engine.registry.Share;
+import org.terasology.engine.rendering.nui.CoreScreenLayer;
+import org.terasology.engine.world.block.BlockManager;
 import org.terasology.gestalt.assets.management.AssetManager;
 import org.terasology.nui.Color;
 import org.terasology.nui.FontColor;
 import org.terasology.nui.UIWidget;
 import org.terasology.nui.widgets.UIButton;
 import org.terasology.nui.widgets.UILabel;
-import org.terasology.registry.In;
-import org.terasology.registry.Share;
-import org.terasology.rendering.nui.CoreScreenLayer;
 import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 import org.terasology.scenario.components.ScenarioLogicTextComponent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateDisplayEvent;
 import org.terasology.scenario.internal.ui.EditParameterScreen;
-import org.terasology.world.block.BlockManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,20 +37,15 @@ import java.util.regex.Pattern;
 @Share(ArgumentParser.class)
 @RegisterSystem(RegisterMode.CLIENT)
 public class ArgumentParser extends BaseComponentSystem {
-    private Logger logger = LoggerFactory.getLogger(ArgumentParser.class);
-
+    private final Logger logger = LoggerFactory.getLogger(ArgumentParser.class);
+    private final Color specialColor = new Color(0, 191, 255);
     @In
     private BlockManager blockManager;
-
     @In
     private EntityManager entityManager;
-
     @In
     private AssetManager assetManager;
-
     private List<String> keys;
-
-    private Color specialColor = new Color(0, 191, 255);
 
     /**
      * Takes in an entity with a textComponent and argumentContainerComponent and parses the arguments from the text and
@@ -85,25 +67,25 @@ public class ArgumentParser extends BaseComponentSystem {
             String type = group.substring(indexColon + 1);
             if (type.equals("Integer")) {
                 args.arguments.put(key, entityManager.create(assetManager.getAsset("scenario:scenarioConstantInt",
-                    Prefab.class).get()));
+                        Prefab.class).get()));
             } else if (type.equals("Block")) {
                 args.arguments.put(key, entityManager.create(assetManager.getAsset("scenario:scenarioConstantBlock",
-                    Prefab.class).get()));
+                        Prefab.class).get()));
             } else if (type.equals("Player")) {
                 args.arguments.put(key, entityManager.create(assetManager.getAsset("scenario:scenarioConstantPlayer",
-                    Prefab.class).get()));
+                        Prefab.class).get()));
             } else if (type.equals("String")) {
                 args.arguments.put(key, entityManager.create(assetManager.getAsset("scenario:scenarioConstantString",
-                    Prefab.class).get()));
+                        Prefab.class).get()));
             } else if (type.equals("Item")) {
                 args.arguments.put(key, entityManager.create(assetManager.getAsset("scenario" +
-                    ":scenarioConstantItemPrefab", Prefab.class).get()));
+                        ":scenarioConstantItemPrefab", Prefab.class).get()));
             } else if (type.equals("Comparator")) {
                 args.arguments.put(key, entityManager.create(assetManager.getAsset("scenario" +
-                    ":scenarioConstantComparator", Prefab.class).get()));
+                        ":scenarioConstantComparator", Prefab.class).get()));
             } else if (type.equals("Region")) {
                 args.arguments.put(key, entityManager.create(assetManager.getAsset("scenario:scenarioConstantRegion",
-                    Prefab.class).get()));
+                        Prefab.class).get()));
             } else {
                 //String parsed incorrectly, should throw some kind of exception probably
                 return;
@@ -191,7 +173,7 @@ public class ArgumentParser extends BaseComponentSystem {
             EntityRef tempEntity = args.arguments.get(tempKey);
             button.subscribe(b -> {
                 EditParameterScreen screen = editScreen.getManager().pushScreen(EditParameterScreen.ASSET_URI,
-                    EditParameterScreen.class);
+                        EditParameterScreen.class);
                 screen.setupParameter(tempKey, tempEntity, editScreen, this);
             });
             output.add(button);

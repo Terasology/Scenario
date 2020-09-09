@@ -1,31 +1,20 @@
-/*
- * Copyright 2017 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.scenario.internal.ui;
 
 import org.joml.Rectanglei;
 import org.joml.Vector2i;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.entitySystem.entity.EntityManager;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.prefab.Prefab;
-import org.terasology.entitySystem.prefab.PrefabManager;
+import org.terasology.engine.entitySystem.entity.EntityManager;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.prefab.Prefab;
+import org.terasology.engine.entitySystem.prefab.PrefabManager;
+import org.terasology.engine.logic.players.LocalPlayer;
+import org.terasology.engine.registry.In;
+import org.terasology.engine.rendering.nui.CoreScreenLayer;
 import org.terasology.gestalt.assets.ResourceUrn;
 import org.terasology.gestalt.assets.management.AssetManager;
-import org.terasology.logic.players.LocalPlayer;
 import org.terasology.nui.Canvas;
 import org.terasology.nui.TextLineBuilder;
 import org.terasology.nui.UIWidget;
@@ -37,8 +26,6 @@ import org.terasology.nui.layouts.ColumnLayout;
 import org.terasology.nui.util.RectUtility;
 import org.terasology.nui.widgets.UIDropdownScrollable;
 import org.terasology.nui.widgets.UILabel;
-import org.terasology.registry.In;
-import org.terasology.rendering.nui.CoreScreenLayer;
 import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 import org.terasology.scenario.components.ScenarioLogicLabelComponent;
 import org.terasology.scenario.components.actions.ScenarioIndicatorActionComponent;
@@ -58,7 +45,7 @@ import java.util.List;
  */
 public class EditLogicScreen extends CoreScreenLayer {
     public static final ResourceUrn ASSET_URI = new ResourceUrn("scenario:editLogicScreen!instance");
-    private static Logger logger = LoggerFactory.getLogger(EditLogicScreen.class);
+    private static final Logger logger = LoggerFactory.getLogger(EditLogicScreen.class);
 
     @In
     PrefabManager prefabManager;
@@ -102,7 +89,8 @@ public class EditLogicScreen extends CoreScreenLayer {
     }
 
 
-    public void setEntities(EntityRef entity, EntityRef target, LogicTreeValue.Type type, HubToolScreen hub, ArgumentParser argumentParser) {
+    public void setEntities(EntityRef entity, EntityRef target, LogicTreeValue.Type type, HubToolScreen hub,
+                            ArgumentParser argumentParser) {
         this.scenarioEntity = entity;
         this.targetEntity = target;
         this.hubtool = hub;
@@ -130,14 +118,16 @@ public class EditLogicScreen extends CoreScreenLayer {
         dropdown.setOptionRenderer(new AbstractItemRenderer<Prefab>() {
             @Override
             public void draw(Prefab value, Canvas canvas) {
-                Rectanglei textRegion = RectUtility.createFromMinAndSize(0, 0, canvas.getRegion().lengthX(), canvas.getRegion().lengthY());
+                Rectanglei textRegion = RectUtility.createFromMinAndSize(0, 0, canvas.getRegion().lengthX(),
+                        canvas.getRegion().lengthY());
                 canvas.drawText(value.getComponent(ScenarioLogicLabelComponent.class).name, textRegion);
             }
 
             @Override
             public Vector2i getPreferredSize(Prefab value, Canvas canvas) {
                 Font font = canvas.getCurrentStyle().getFont();
-                List<String> lines = TextLineBuilder.getLines(font, value.getComponent(ScenarioLogicLabelComponent.class).name, canvas.size().x);
+                List<String> lines = TextLineBuilder.getLines(font,
+                        value.getComponent(ScenarioLogicLabelComponent.class).name, canvas.size().x);
                 return font.getSize(lines);
             }
         });
@@ -161,7 +151,8 @@ public class EditLogicScreen extends CoreScreenLayer {
         if (!temporaryEntity.equals(targetEntity)) {
             ConvertScenarioEntityEvent convertEvent = new ConvertScenarioEntityEvent();
             temporaryEntity.send(convertEvent);
-            ReplaceEntityFromConstructionStringsEvent event = new ReplaceEntityFromConstructionStringsEvent(targetEntity, convertEvent.getOutputList());
+            ReplaceEntityFromConstructionStringsEvent event =
+                    new ReplaceEntityFromConstructionStringsEvent(targetEntity, convertEvent.getOutputList());
             hubtool.getEntity().send(event);
         } else {
             if (temporaryEntity.exists()) {

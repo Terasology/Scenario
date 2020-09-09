@@ -1,18 +1,5 @@
-/*
- * Copyright 2017 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.scenario.internal.ui;
 
 import com.google.common.collect.Iterables;
@@ -22,13 +9,17 @@ import org.joml.Rectanglei;
 import org.joml.Vector2i;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.entitySystem.entity.EntityManager;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.prefab.Prefab;
-import org.terasology.entitySystem.prefab.PrefabManager;
+import org.terasology.engine.entitySystem.entity.EntityManager;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.prefab.Prefab;
+import org.terasology.engine.entitySystem.prefab.PrefabManager;
+import org.terasology.engine.logic.inventory.ItemComponent;
+import org.terasology.engine.registry.In;
+import org.terasology.engine.rendering.nui.CoreScreenLayer;
+import org.terasology.engine.world.block.BlockManager;
+import org.terasology.engine.world.block.BlockUri;
 import org.terasology.gestalt.assets.ResourceUrn;
 import org.terasology.gestalt.assets.management.AssetManager;
-import org.terasology.logic.inventory.ItemComponent;
 import org.terasology.nui.Canvas;
 import org.terasology.nui.FontColor;
 import org.terasology.nui.TextLineBuilder;
@@ -42,8 +33,6 @@ import org.terasology.nui.util.RectUtility;
 import org.terasology.nui.widgets.UIDropdownScrollable;
 import org.terasology.nui.widgets.UILabel;
 import org.terasology.nui.widgets.UIText;
-import org.terasology.registry.In;
-import org.terasology.rendering.nui.CoreScreenLayer;
 import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.components.ScenarioLogicLabelComponent;
@@ -62,8 +51,6 @@ import org.terasology.scenario.components.information.ScenarioValueStringCompone
 import org.terasology.scenario.components.regions.RegionColorComponent;
 import org.terasology.scenario.components.regions.RegionNameComponent;
 import org.terasology.scenario.internal.utilities.ArgumentParser;
-import org.terasology.world.block.BlockManager;
-import org.terasology.world.block.BlockUri;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -72,9 +59,9 @@ import java.util.Set;
 
 /**
  * Screen for editing a parameter/argument of a logic entity, this screen is designed to be recursive in case parameters
- * can have multiple values, such as a random int being an integer parameter, but itself also needs two integer parameters. Does not
- * need to be sent to the server like the logic screen because this is still client side editing and will return to a logic screen before
- * finishing an edit, which that screen would be the one to send to the server
+ * can have multiple values, such as a random int being an integer parameter, but itself also needs two integer
+ * parameters. Does not need to be sent to the server like the logic screen because this is still client side editing
+ * and will return to a logic screen before finishing an edit, which that screen would be the one to send to the server
  */
 public class EditParameterScreen extends CoreScreenLayer {
     public static final ResourceUrn ASSET_URI = new ResourceUrn("scenario:editParameterScreen!instance");
@@ -150,7 +137,8 @@ public class EditParameterScreen extends CoreScreenLayer {
         }
     }
 
-    public void setupParameter(String k, EntityRef entity, CoreScreenLayer coreScreenLayer, ArgumentParser argumentParser) {
+    public void setupParameter(String k, EntityRef entity, CoreScreenLayer coreScreenLayer,
+                               ArgumentParser argumentParser) {
         this.key = k;
         this.baseEntity = entity;
         this.tempEntity = baseEntity.copy();
@@ -208,14 +196,16 @@ public class EditParameterScreen extends CoreScreenLayer {
         dropdown.setOptionRenderer(new AbstractItemRenderer<Prefab>() {
             @Override
             public void draw(Prefab value, Canvas canvas) {
-                Rectanglei textRegion = RectUtility.createFromMinAndSize(0, 0, canvas.getRegion().lengthX(), canvas.getRegion().lengthY());
+                Rectanglei textRegion = RectUtility.createFromMinAndSize(0, 0, canvas.getRegion().lengthX(),
+                        canvas.getRegion().lengthY());
                 canvas.drawText(value.getComponent(ScenarioLogicLabelComponent.class).name, textRegion);
             }
 
             @Override
             public Vector2i getPreferredSize(Prefab value, Canvas canvas) {
                 Font font = canvas.getCurrentStyle().getFont();
-                List<String> lines = TextLineBuilder.getLines(font, value.getComponent(ScenarioLogicLabelComponent.class).name, canvas.size().x);
+                List<String> lines = TextLineBuilder.getLines(font,
+                        value.getComponent(ScenarioLogicLabelComponent.class).name, canvas.size().x);
                 return font.getSize(lines);
             }
         });
@@ -291,7 +281,7 @@ public class EditParameterScreen extends CoreScreenLayer {
 
     private void setupInteraction() {
         if (tempEntity.hasComponent(ScenarioValueIntegerComponent.class) || //Check for constant/base cases
-            tempEntity.hasComponent(ScenarioValueStringComponent.class)) {
+                tempEntity.hasComponent(ScenarioValueStringComponent.class)) {
             String entryValue;
             UIText entry = new UIText();
             entry.setReadOnly(false);
@@ -344,7 +334,7 @@ public class EditParameterScreen extends CoreScreenLayer {
                     @Override
                     public void draw(EntityRef value, Canvas canvas) {
                         String text = FontColor.getColored(value.getComponent(RegionNameComponent.class).regionName,
-                            value.getComponent(RegionColorComponent.class).color);
+                                value.getComponent(RegionColorComponent.class).color);
                         canvas.drawText(text);
                     }
 

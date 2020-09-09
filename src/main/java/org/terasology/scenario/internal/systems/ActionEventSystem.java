@@ -1,44 +1,35 @@
-/*
- * Copyright 2019 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.scenario.internal.systems;
 
 import org.slf4j.LoggerFactory;
-import org.terasology.entitySystem.entity.EntityManager;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.event.ReceiveEvent;
-import org.terasology.entitySystem.prefab.Prefab;
-import org.terasology.entitySystem.systems.BaseComponentSystem;
-import org.terasology.entitySystem.systems.RegisterMode;
-import org.terasology.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.entitySystem.entity.EntityManager;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.event.ReceiveEvent;
+import org.terasology.engine.entitySystem.prefab.Prefab;
+import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
+import org.terasology.engine.entitySystem.systems.RegisterMode;
+import org.terasology.engine.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.logic.characters.CharacterTeleportEvent;
+import org.terasology.engine.logic.chat.ChatMessageEvent;
+import org.terasology.engine.logic.common.DisplayNameComponent;
+import org.terasology.engine.logic.destruction.EngineDamageTypes;
+import org.terasology.engine.logic.inventory.ItemComponent;
+import org.terasology.engine.logic.inventory.events.GiveItemEvent;
+import org.terasology.engine.network.ClientComponent;
+import org.terasology.engine.network.ColorComponent;
+import org.terasology.engine.registry.In;
+import org.terasology.engine.world.block.BlockManager;
+import org.terasology.engine.world.block.family.BlockFamily;
+import org.terasology.engine.world.block.items.BlockItemComponent;
+import org.terasology.engine.world.block.items.BlockItemFactory;
 import org.terasology.gestalt.assets.management.AssetManager;
-import org.terasology.logic.characters.CharacterTeleportEvent;
-import org.terasology.logic.chat.ChatMessageEvent;
-import org.terasology.logic.common.DisplayNameComponent;
-import org.terasology.logic.health.EngineDamageTypes;
-import org.terasology.logic.health.event.DoDamageEvent;
-import org.terasology.logic.health.event.DoRestoreEvent;
-import org.terasology.logic.inventory.InventoryComponent;
-import org.terasology.logic.inventory.InventoryManager;
-import org.terasology.logic.inventory.ItemComponent;
-import org.terasology.logic.inventory.events.GiveItemEvent;
+import org.terasology.health.logic.event.DoDamageEvent;
+import org.terasology.health.logic.event.DoRestoreEvent;
+import org.terasology.inventory.logic.InventoryComponent;
+import org.terasology.inventory.logic.InventoryManager;
 import org.terasology.math.geom.Vector3f;
-import org.terasology.network.ClientComponent;
-import org.terasology.network.ColorComponent;
 import org.terasology.nui.Color;
-import org.terasology.registry.In;
 import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 import org.terasology.scenario.components.actions.ScenarioSecondaryDamageAmountComponent;
 import org.terasology.scenario.components.actions.ScenarioSecondaryGiveBlockComponent;
@@ -58,19 +49,15 @@ import org.terasology.scenario.internal.events.evaluationEvents.EvaluateIntEvent
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateItemPrefabEvent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateRegionEvent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateStringEvent;
-import org.terasology.world.block.BlockManager;
-import org.terasology.world.block.family.BlockFamily;
-import org.terasology.world.block.items.BlockItemComponent;
-import org.terasology.world.block.items.BlockItemFactory;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- * Looks at Scenario logic entities that contain a secondary indicator for an action
- * The event that is looked for is {@link EventTriggerEvent} that will be sent from {@link ScenarioRootManagementSystem}
- * with the informationEntity being filled based on the triggered event
- *
+ * Looks at Scenario logic entities that contain a secondary indicator for an action The event that is looked for is
+ * {@link EventTriggerEvent} that will be sent from {@link ScenarioRootManagementSystem} with the informationEntity
+ * being filled based on the triggered event
+ * <p>
  * This is the actual action result of triggering that action entity
  */
 @RegisterSystem(RegisterMode.AUTHORITY)
@@ -98,7 +85,8 @@ public class ActionEventSystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent //Give Block
-    public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity, ScenarioSecondaryGiveBlockComponent action) {
+    public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity,
+                                    ScenarioSecondaryGiveBlockComponent action) {
         Map<String, EntityRef> variables = entity.getComponent(ScenarioArgumentContainerComponent.class).arguments;
 
         EvaluateBlockEvent blockEvaluateEvent = new EvaluateBlockEvent(event.informationEntity);
@@ -111,7 +99,8 @@ public class ActionEventSystem extends BaseComponentSystem {
 
         EntityRef item = blockItemFactory.newInstance(block, amount);
 
-        ScenarioValuePlayerComponent.PlayerType player = variables.get("player").getComponent(ScenarioValuePlayerComponent.class).type;
+        ScenarioValuePlayerComponent.PlayerType player =
+                variables.get("player").getComponent(ScenarioValuePlayerComponent.class).type;
         if (player == ScenarioValuePlayerComponent.PlayerType.TRIGGERING_PLAYER) {
             EntityRef giveEntity = event.informationEntity.getComponent(InfoTriggeringEntityComponent.class).entity;
             GiveItemEvent giveItemEvent = new GiveItemEvent(giveEntity);
@@ -120,7 +109,8 @@ public class ActionEventSystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent //Give Item
-    public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity, ScenarioSecondaryGiveItemComponent action) {
+    public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity,
+                                    ScenarioSecondaryGiveItemComponent action) {
         Map<String, EntityRef> variables = entity.getComponent(ScenarioArgumentContainerComponent.class).arguments;
 
         EvaluateItemPrefabEvent itemEvaluateEvent = new EvaluateItemPrefabEvent(event.informationEntity);
@@ -131,7 +121,8 @@ public class ActionEventSystem extends BaseComponentSystem {
         variables.get("amount").send(intEvaluateEvent);
         int amount = intEvaluateEvent.getResult();
 
-        ScenarioValuePlayerComponent.PlayerType player = variables.get("player").getComponent(ScenarioValuePlayerComponent.class).type;
+        ScenarioValuePlayerComponent.PlayerType player =
+                variables.get("player").getComponent(ScenarioValuePlayerComponent.class).type;
 
         for (int i = 0; i < amount; i++) {
             EntityRef item = entityManager.create(itemPrefab);
@@ -146,7 +137,8 @@ public class ActionEventSystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent //Logger message
-    public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity, ScenarioSecondaryLogInfoComponent action) {
+    public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity,
+                                    ScenarioSecondaryLogInfoComponent action) {
         Map<String, EntityRef> variables = entity.getComponent(ScenarioArgumentContainerComponent.class).arguments;
 
         EvaluateStringEvent stringEvaluateEvent = new EvaluateStringEvent(event.informationEntity);
@@ -157,7 +149,8 @@ public class ActionEventSystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent //Chat message
-    public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity, ScenarioSecondarySendChatComponent action) {
+    public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity,
+                                    ScenarioSecondarySendChatComponent action) {
         Map<String, EntityRef> variables = entity.getComponent(ScenarioArgumentContainerComponent.class).arguments;
 
         EvaluateStringEvent stringEvaluateEvent = new EvaluateStringEvent(event.informationEntity);
@@ -168,7 +161,8 @@ public class ActionEventSystem extends BaseComponentSystem {
         variables.get("owner").send(stringEvaluateEvent2);
         String from = stringEvaluateEvent2.getResult();
 
-        EntityRef chatMessageEntity = entityManager.create(assetManager.getAsset("scenario:scenarioChatEntity", Prefab.class).get());
+        EntityRef chatMessageEntity = entityManager.create(assetManager.getAsset("scenario:scenarioChatEntity",
+                Prefab.class).get());
         chatMessageEntity.getComponent(DisplayNameComponent.class).name = from;
         chatMessageEntity.saveComponent(chatMessageEntity.getComponent(DisplayNameComponent.class));
         chatMessageEntity.getComponent(ColorComponent.class).color = Color.CYAN;
@@ -180,7 +174,8 @@ public class ActionEventSystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent //Teleport player
-    public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity, ScenarioSecondaryTeleportComponent action) {
+    public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity,
+                                    ScenarioSecondaryTeleportComponent action) {
         Map<String, EntityRef> variables = entity.getComponent(ScenarioArgumentContainerComponent.class).arguments;
 
         EvaluateRegionEvent regionEvaluateEvent = new EvaluateRegionEvent(event.informationEntity);
@@ -189,7 +184,8 @@ public class ActionEventSystem extends BaseComponentSystem {
 
         CharacterTeleportEvent teleportEvent = new CharacterTeleportEvent(location);
 
-        ScenarioValuePlayerComponent.PlayerType playerType = variables.get("player").getComponent(ScenarioValuePlayerComponent.class).type;
+        ScenarioValuePlayerComponent.PlayerType playerType =
+                variables.get("player").getComponent(ScenarioValuePlayerComponent.class).type;
 
         if (playerType == ScenarioValuePlayerComponent.PlayerType.TRIGGERING_PLAYER) {
             event.informationEntity.getComponent(InfoTriggeringEntityComponent.class).entity.send(teleportEvent);
@@ -197,7 +193,8 @@ public class ActionEventSystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent //Take Item
-    public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity, ScenarioSecondaryTakeItemComponent action) {
+    public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity,
+                                    ScenarioSecondaryTakeItemComponent action) {
         Map<String, EntityRef> variables = entity.getComponent(ScenarioArgumentContainerComponent.class).arguments;
 
         EvaluateItemPrefabEvent itemEvaluateEvent = new EvaluateItemPrefabEvent(event.informationEntity);
@@ -208,7 +205,8 @@ public class ActionEventSystem extends BaseComponentSystem {
         variables.get("amount").send(intEvaluateEvent);
         int amount = intEvaluateEvent.getResult();
 
-        ScenarioValuePlayerComponent.PlayerType player = variables.get("player").getComponent(ScenarioValuePlayerComponent.class).type;
+        ScenarioValuePlayerComponent.PlayerType player =
+                variables.get("player").getComponent(ScenarioValuePlayerComponent.class).type;
 
         if (player == ScenarioValuePlayerComponent.PlayerType.TRIGGERING_PLAYER) {
             EntityRef playerEnt = event.informationEntity.getComponent(InfoTriggeringEntityComponent.class).entity;
@@ -231,7 +229,8 @@ public class ActionEventSystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent //Take Block
-    public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity, ScenarioSecondaryTakeBlockComponent action) {
+    public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity,
+                                    ScenarioSecondaryTakeBlockComponent action) {
         Map<String, EntityRef> variables = entity.getComponent(ScenarioArgumentContainerComponent.class).arguments;
 
         EvaluateBlockEvent evaluateBlockEvent = new EvaluateBlockEvent(event.informationEntity);
@@ -242,7 +241,8 @@ public class ActionEventSystem extends BaseComponentSystem {
         variables.get("amount").send(intEvaluateEvent);
         int amount = intEvaluateEvent.getResult();
 
-        ScenarioValuePlayerComponent.PlayerType player = variables.get("player").getComponent(ScenarioValuePlayerComponent.class).type;
+        ScenarioValuePlayerComponent.PlayerType player =
+                variables.get("player").getComponent(ScenarioValuePlayerComponent.class).type;
 
         if (player == ScenarioValuePlayerComponent.PlayerType.TRIGGERING_PLAYER) {
             EntityRef playerEnt = event.informationEntity.getComponent(InfoTriggeringEntityComponent.class).entity;
@@ -272,14 +272,16 @@ public class ActionEventSystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent //Heal Player
-    public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity, ScenarioSecondaryHealAmountComponent action) {
+    public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity,
+                                    ScenarioSecondaryHealAmountComponent action) {
         Map<String, EntityRef> variables = entity.getComponent(ScenarioArgumentContainerComponent.class).arguments;
 
         EvaluateIntEvent intEvaluateEvent = new EvaluateIntEvent(event.informationEntity);
         variables.get("amount").send(intEvaluateEvent);
         int amount = intEvaluateEvent.getResult();
 
-        ScenarioValuePlayerComponent.PlayerType player = variables.get("player").getComponent(ScenarioValuePlayerComponent.class).type;
+        ScenarioValuePlayerComponent.PlayerType player =
+                variables.get("player").getComponent(ScenarioValuePlayerComponent.class).type;
         if (player == ScenarioValuePlayerComponent.PlayerType.TRIGGERING_PLAYER) {
             EntityRef playerEnt = event.informationEntity.getComponent(InfoTriggeringEntityComponent.class).entity;
             playerEnt.send(new DoRestoreEvent(amount, playerEnt));
@@ -287,14 +289,16 @@ public class ActionEventSystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent //Damage Player
-    public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity, ScenarioSecondaryDamageAmountComponent action) {
+    public void onEventTriggerEvent(EventTriggerEvent event, EntityRef entity,
+                                    ScenarioSecondaryDamageAmountComponent action) {
         Map<String, EntityRef> variables = entity.getComponent(ScenarioArgumentContainerComponent.class).arguments;
 
         EvaluateIntEvent intEvaluateEvent = new EvaluateIntEvent(event.informationEntity);
         variables.get("amount").send(intEvaluateEvent);
         int amount = intEvaluateEvent.getResult();
 
-        ScenarioValuePlayerComponent.PlayerType player = variables.get("player").getComponent(ScenarioValuePlayerComponent.class).type;
+        ScenarioValuePlayerComponent.PlayerType player =
+                variables.get("player").getComponent(ScenarioValuePlayerComponent.class).type;
         if (player == ScenarioValuePlayerComponent.PlayerType.TRIGGERING_PLAYER) {
             EntityRef playerEnt = event.informationEntity.getComponent(InfoTriggeringEntityComponent.class).entity;
             playerEnt.send(new DoDamageEvent(amount, EngineDamageTypes.DIRECT.get(), playerEnt));

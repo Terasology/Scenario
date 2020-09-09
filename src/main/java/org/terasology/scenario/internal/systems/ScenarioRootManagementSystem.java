@@ -1,33 +1,20 @@
-/*
- * Copyright 2017 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.scenario.internal.systems;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.entitySystem.entity.EntityManager;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.event.ReceiveEvent;
-import org.terasology.entitySystem.systems.BaseComponentSystem;
-import org.terasology.entitySystem.systems.RegisterMode;
-import org.terasology.entitySystem.systems.RegisterSystem;
-import org.terasology.registry.In;
+import org.terasology.engine.entitySystem.entity.EntityManager;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.event.ReceiveEvent;
+import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
+import org.terasology.engine.entitySystem.systems.RegisterMode;
+import org.terasology.engine.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.registry.In;
+import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.components.TriggerActionListComponent;
 import org.terasology.scenario.components.TriggerConditionListComponent;
-import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 import org.terasology.scenario.components.events.ScenarioSecondaryBlockDestroyComponent;
 import org.terasology.scenario.components.events.ScenarioSecondaryEnterRegionComponent;
 import org.terasology.scenario.components.events.ScenarioSecondaryLeaveRegionComponent;
@@ -46,41 +33,41 @@ import org.terasology.scenario.internal.events.scenarioEvents.PlayerRespawnScena
 import org.terasology.scenario.internal.events.scenarioEvents.PlayerSpawnScenarioEvent;
 
 /**
- * System that relays game events into scenario events and sends them using a filled up information entity that contains information of the trigger
- * which could include who the triggering entity or region is, or block details for breaking the block, etc
- *
- * First checks any conditionals with a {@link ConditionalCheckEvent} and if the conditional is satisfies it
- * Will send {@link EventTriggerEvent} to the attached list of actions, technically in the order of the actions on the hubtool
+ * System that relays game events into scenario events and sends them using a filled up information entity that contains
+ * information of the trigger which could include who the triggering entity or region is, or block details for breaking
+ * the block, etc
+ * <p>
+ * First checks any conditionals with a {@link ConditionalCheckEvent} and if the conditional is satisfies it Will send
+ * {@link EventTriggerEvent} to the attached list of actions, technically in the order of the actions on the hubtool
  */
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class ScenarioRootManagementSystem extends BaseComponentSystem {
+    private final Logger logger = LoggerFactory.getLogger(ScenarioRootManagementSystem.class);
     @In
     EntityManager entityManager;
-
-    private Logger logger = LoggerFactory.getLogger(ScenarioRootManagementSystem.class);
-
-
 
     @ReceiveEvent
     public void onEventTrigger(EventTriggerEvent event, EntityRef entity, TriggerActionListComponent actions) {
         //Check Condition
-        for(EntityRef c : entity.getComponent(TriggerConditionListComponent.class).conditions) {
+        for (EntityRef c : entity.getComponent(TriggerConditionListComponent.class).conditions) {
             ConditionalCheckEvent cond = new ConditionalCheckEvent(event.informationEntity);
             c.send(cond);
-            if (!cond.getResult()){
+            if (!cond.getResult()) {
                 return; //Break check if any conditional is registered as false
             }
         }
         //Send to actions
-        for(EntityRef a : actions.actions) {
-            //Send new event in case eventually a new event needs to be made in which triggers and actions need different data
+        for (EntityRef a : actions.actions) {
+            //Send new event in case eventually a new event needs to be made in which triggers and actions need
+            // different data
             a.send(new EventTriggerEvent(event.informationEntity));
         }
     }
 
 
     @ReceiveEvent
-    public void onPlayerRespawnScenarioEvent(PlayerRespawnScenarioEvent event, EntityRef entity, ScenarioComponent component) {
+    public void onPlayerRespawnScenarioEvent(PlayerRespawnScenarioEvent event, EntityRef entity,
+                                             ScenarioComponent component) {
         Iterable<EntityRef> entityList = entityManager.getEntitiesWith(ScenarioSecondaryRespawnComponent.class);
         InfoTriggeringEntityComponent triggerEntity = new InfoTriggeringEntityComponent();
         triggerEntity.entity = event.getSpawningEntity();
@@ -89,7 +76,8 @@ public class ScenarioRootManagementSystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent
-    public void onPlayerSpawnScenarioEvent(PlayerSpawnScenarioEvent event, EntityRef entity, ScenarioComponent component) {
+    public void onPlayerSpawnScenarioEvent(PlayerSpawnScenarioEvent event, EntityRef entity,
+                                           ScenarioComponent component) {
         Iterable<EntityRef> entityList = entityManager.getEntitiesWith(ScenarioSecondarySpawnComponent.class);
         InfoTriggeringEntityComponent triggerEntity = new InfoTriggeringEntityComponent();
         triggerEntity.entity = event.getSpawningEntity();
