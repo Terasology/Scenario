@@ -131,7 +131,7 @@
                     },
                     "contents": [
                       {
-                        "type": "engine:ScrollableArea",
+                        "type": "nui:ScrollableArea",
                         "id": "scrollAreaRegions",
                         "layoutInfo": {
                           "position-bottom": {},

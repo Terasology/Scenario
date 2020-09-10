@@ -4,7 +4,7 @@
     "type": "RelativeLayout",
     "contents": [
       {
-        "type": "engine:UIBox",
+        "type": "nui:UIBox",
         "id": "newWidget",
         "layoutInfo": {
           "width": 400,
@@ -16,7 +16,7 @@
           "type": "RelativeLayout",
           "contents": [
             {
-              "type": "engine:UILabel",
+              "type": "nui:UILabel",
               "id": "editLabel",
               "layoutInfo": {
                 "position-top": {},
@@ -38,13 +38,13 @@
               },
               "contents": [
                 {
-                  "type": "engine:UILabel",
+                  "type": "nui:UILabel",
                   "id": "selectLabel",
                   "layoutInfo": {},
                   "text": "Select Y"
                 },
                 {
-                  "type": "engine:UIDropdownScrollable",
+                  "type": "nui:UIDropdownScrollable",
                   "id": "selectionDropdown",
                   "layoutInfo": {}
                 }
@@ -63,7 +63,7 @@
               "contents": []
             },
             {
-              "type": "engine:RowLayout",
+              "type": "nui:rowLayout",
               "id": "buttonLayout",
               "layoutInfo": {
                 "position-top": {
@@ -74,13 +74,13 @@
               },
               "contents": [
                 {
-                  "type": "engine:UIButton",
+                  "type": "nui:UIButton",
                   "id": "okButton",
                   "layoutInfo": {},
                   "text": "Accept"
                 },
                 {
-                  "type": "engine:UIButton",
+                  "type": "nui:UIButton",
                   "id": "cancelButton",
                   "layoutInfo": {},
                   "text": "Cancel"

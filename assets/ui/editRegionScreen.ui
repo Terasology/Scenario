@@ -4,7 +4,7 @@
     "type": "RelativeLayout",
     "contents": [
       {
-        "type": "engine:UIBox",
+        "type": "nui:UIBox",
         "id": "newWidget",
         "layoutInfo": {
           "width": 500,
@@ -16,7 +16,7 @@
           "type": "RelativeLayout",
           "contents": [
             {
-              "type": "engine:UILabel",
+              "type": "nui:UILabel",
               "id": "editLabel",
               "layoutInfo": {
                 "position-top": {},
@@ -38,13 +38,13 @@
               },
               "contents": [
                 {
-                  "type": "engine:UILabel",
+                  "type": "nui:UILabel",
                   "id": "selectLabel",
                   "layoutInfo": {},
                   "text": "Region Name"
                 },
                 {
-                  "type": "engine:UIText",
+                  "type": "nui:UIText",
                   "id": "nameEntry",
                   "layoutInfo": {}
                 }
@@ -63,67 +63,67 @@
               },
               "contents": [
                 {
-                  "type": "engine:UILabel",
+                  "type": "nui:UILabel",
                   "layoutInfo": {
                     "relativeWidth": 0.15
                   },
                   "text": "Min- X:"
                 },
                 {
-                  "type": "engine:UIText",
+                  "type": "nui:UIText",
                   "id": "minX",
                   "layoutInfo": {}
                 },
                 {
-                  "type": "engine:UILabel",
+                  "type": "nui:UILabel",
                   "layoutInfo": {},
                   "text": "Y:"
                 },
                 {
-                  "type": "engine:UIText",
+                  "type": "nui:UIText",
                   "id": "minY",
                   "layoutInfo": {}
                 },
                 {
-                  "type": "engine:UILabel",
+                  "type": "nui:UILabel",
                   "layoutInfo": {},
                   "text": "Z:"
                 },
                 {
-                  "type": "engine:UIText",
+                  "type": "nui:UIText",
                   "id": "minZ",
                   "layoutInfo": {}
                 },
                 {
-                  "type": "engine:UILabel",
+                  "type": "nui:UILabel",
                   "layoutInfo": {
                     "relativeWidth": 0.15
                   },
                   "text": "Size- X:"
                 },
                 {
-                  "type": "engine:UIText",
+                  "type": "nui:UIText",
                   "id": "sizeX",
                   "layoutInfo": {}
                 },
                 {
-                  "type": "engine:UILabel",
+                  "type": "nui:UILabel",
                   "layoutInfo": {},
                   "text": "Y:"
                 },
                 {
-                  "type": "engine:UIText",
+                  "type": "nui:UIText",
                   "id": "sizeY",
                   "layoutInfo": {}
                 },
                 {
-                  "type": "engine:UILabel",
+                  "type": "nui:UILabel",
                   "id": "selectLabel",
                   "layoutInfo": {},
                   "text": "Z:"
                 },
                 {
-                  "type": "engine:UIText",
+                  "type": "nui:UIText",
                   "id": "sizeZ",
                   "layoutInfo": {}
                 }
@@ -142,13 +142,13 @@
               },
               "contents": [
                 {
-                  "type": "engine:UILabel",
+                  "type": "nui:UILabel",
                   "id": "visibilityLabel",
                   "layoutInfo": {},
                   "text": "Visibility"
                 },
                 {
-                  "type": "engine:UICheckbox",
+                  "type": "nui:UICheckbox",
                   "id": "visibility",
                   "layoutInfo": {}
                 }
@@ -167,13 +167,13 @@
               },
               "contents": [
                 {
-                  "type": "engine:UILabel",
+                  "type": "nui:UILabel",
                   "id": "protectedLabel",
                   "layoutInfo": {},
                   "text": "Protected"
                 },
                 {
-                  "type": "engine:UICheckbox",
+                  "type": "nui:UICheckbox",
                   "id": "protected",
                   "layoutInfo": {}
                 }
@@ -192,18 +192,18 @@
               },
               "contents": [
                 {
-                  "type": "engine:UILabel",
+                  "type": "nui:UILabel",
                   "id": "colorLabel",
                   "layoutInfo": {},
                   "text": "Color"
                 },
                 {
-                  "type": "engine:UISlider",
+                  "type": "nui:UISlider",
                   "id": "colorSlider",
                   "layoutInfo": {}
                 },
                 {
-                  "type": "engine:UIImage",
+                  "type": "nui:UIImage",
                   "id": "colorImage",
                   "layoutInfo": {
                     "relativeWidth": 0.1
@@ -225,7 +225,7 @@
               },
               "contents": [
                 {
-                  "type": "engine:UIButton",
+                  "type": "nui:UIButton",
                   "id": "teleportButton",
                   "layoutInfo": {},
                   "text": "Teleport to region"
@@ -233,7 +233,7 @@
               ]
             },
             {
-              "type": "engine:RowLayout",
+              "type": "nui:rowLayout",
               "id": "buttonLayout",
               "layoutInfo": {
                 "height": 50,
@@ -241,13 +241,13 @@
               },
               "contents": [
                 {
-                  "type": "engine:UIButton",
+                  "type": "nui:UIButton",
                   "id": "okButton",
                   "layoutInfo": {},
                   "text": "Accept"
                 },
                 {
-                  "type": "engine:UIButton",
+                  "type": "nui:UIButton",
                   "id": "cancelButton",
                   "layoutInfo": {},
                   "text": "Cancel"
