@@ -29,7 +29,6 @@ import org.terasology.logic.players.event.OnPlayerSpawnedEvent;
 import org.terasology.registry.In;
 import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.internal.events.scenarioEvents.DoDestroyScenarioEvent;
-import org.terasology.scenario.internal.events.scenarioEvents.PlayerEnterRegionEvent;
 import org.terasology.scenario.internal.events.scenarioEvents.PlayerRespawnScenarioEvent;
 import org.terasology.scenario.internal.events.scenarioEvents.PlayerSpawnScenarioEvent;
 
@@ -76,7 +75,4 @@ public class EventListeningSystem extends BaseComponentSystem {
             scenario.send(new DoDestroyScenarioEvent(event.getInstigator(), event.getDirectCause(), event.getDamageType(), entity));
         }
     }
-
-
-
 }

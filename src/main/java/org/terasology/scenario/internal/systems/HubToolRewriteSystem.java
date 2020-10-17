@@ -37,7 +37,7 @@ public class HubToolRewriteSystem extends BaseComponentSystem {
     public void onHubtoolRewriteLogicEvent(HubtoolRewriteLogicEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
         if (component.localScreenID != null) { //Makes sure it is the owner of the hubtool
             if (nuiManager.getScreen(component.localScreenID) != null) {
-                ((HubToolScreen)nuiManager.getScreen(component.localScreenID)).redrawLogic();
+                ((HubToolScreen) nuiManager.getScreen(component.localScreenID)).redrawLogic();
             }
         }
     }
@@ -46,7 +46,7 @@ public class HubToolRewriteSystem extends BaseComponentSystem {
     public void onHubtoolRewriteRegionEvent(HubtoolRewriteRegionEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
         if (component.localScreenID != null) { //Makes sure it is the owner of the hubtool
             if (nuiManager.getScreen(component.localScreenID) != null) {
-                ((HubToolScreen)nuiManager.getScreen(component.localScreenID)).redrawRegions();
+                ((HubToolScreen) nuiManager.getScreen(component.localScreenID)).redrawRegions();
             }
         }
     }

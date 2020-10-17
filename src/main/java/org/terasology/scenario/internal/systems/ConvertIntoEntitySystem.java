@@ -54,9 +54,9 @@ public class ConvertIntoEntitySystem extends BaseComponentSystem {
 
     /**
      * Strings follow a pattern of [PREFAB]prefabName{key name for entity argument}[VALUE]value of the component
-     *
-     * Calls to entities that are argument entities that contain a value component are the leaves of the tree and therefore
-     * are evaluated for the value passed with the string
+     * <p>
+     * Calls to entities that are argument entities that contain a value component are the leaves of the tree and
+     * therefore are evaluated for the value passed with the string
      */
 
     @In
@@ -96,7 +96,7 @@ public class ConvertIntoEntitySystem extends BaseComponentSystem {
             EntityRef currentEntity = starterEntity;
             String lastKey = "";
             int lastIndex = 0;
-            while(keyMatcher.find()) {
+            while (keyMatcher.find()) {
                 String key = keyMatcher.group(1);
                 lastKey = key;
                 lastIndex = keyMatcher.end();
@@ -115,8 +115,7 @@ public class ConvertIntoEntitySystem extends BaseComponentSystem {
                 argumentParser.parseDefaults(newEntity);
                 previousEntity.getComponent(ScenarioArgumentContainerComponent.class).arguments.put(lastKey, newEntity);
                 previousEntity.saveComponent(previousEntity.getComponent(ScenarioArgumentContainerComponent.class));
-            }
-            else {
+            } else {
                 //Type doesn't actually matter because the entity will be set up to a constant value at the end and therefore
                 //Will be able to be detected by component
                 String value = s.substring(matcherLast.end());
@@ -167,10 +166,9 @@ public class ConvertIntoEntitySystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity, ScenarioValueRegionComponent component) {
-        if (event.getValue().substring(0,1).equals("x")) { //No network component
+        if (event.getValue().substring(0, 1).equals("x")) { //No network component
             component.regionEntity = entityManager.getEntity(Integer.parseInt(event.getValue().substring(1)));
-        }
-        else {
+        } else {
             for (EntityRef e : entityManager.getEntitiesWith(RegionNameComponent.class)) {
                 if (e.getComponent(NetworkComponent.class).getNetworkId() == Integer.parseInt(event.getValue())) {
                     component.regionEntity = e;

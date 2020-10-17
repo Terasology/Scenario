@@ -59,20 +59,18 @@ public class ScenarioRootManagementSystem extends BaseComponentSystem {
 
     private Logger logger = LoggerFactory.getLogger(ScenarioRootManagementSystem.class);
 
-
-
     @ReceiveEvent
     public void onEventTrigger(EventTriggerEvent event, EntityRef entity, TriggerActionListComponent actions) {
         //Check Condition
-        for(EntityRef c : entity.getComponent(TriggerConditionListComponent.class).conditions) {
+        for (EntityRef c : entity.getComponent(TriggerConditionListComponent.class).conditions) {
             ConditionalCheckEvent cond = new ConditionalCheckEvent(event.informationEntity);
             c.send(cond);
-            if (!cond.getResult()){
+            if (!cond.getResult()) {
                 return; //Break check if any conditional is registered as false
             }
         }
         //Send to actions
-        for(EntityRef a : actions.actions) {
+        for (EntityRef a : actions.actions) {
             //Send new event in case eventually a new event needs to be made in which triggers and actions need different data
             a.send(new EventTriggerEvent(event.informationEntity));
         }

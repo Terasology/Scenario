@@ -15,6 +15,8 @@
  */
 package org.terasology.scenario.internal.systems;
 
+import org.joml.Vector3f;
+import org.joml.Vector3i;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.engine.modes.loadProcesses.AwaitedLocalCharacterSpawnEvent;
@@ -30,13 +32,12 @@ import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.characters.CharacterComponent;
 import org.terasology.logic.location.LocationComponent;
 import org.terasology.logic.players.LocalPlayer;
-import org.terasology.math.Region3i;
-import org.terasology.math.geom.Vector3i;
+import org.terasology.math.JomlUtil;
 import org.terasology.network.NetworkSystem;
+import org.terasology.nui.Color;
 import org.terasology.registry.In;
 import org.terasology.rendering.logic.FloatingTextComponent;
 import org.terasology.rendering.logic.RegionOutlineComponent;
-import org.terasology.nui.Color;
 import org.terasology.scenario.components.ScenarioRegionVisibilityComponent;
 import org.terasology.scenario.components.regions.RegionColorComponent;
 import org.terasology.scenario.components.regions.RegionLocationComponent;
@@ -44,6 +45,7 @@ import org.terasology.scenario.components.regions.RegionNameComponent;
 import org.terasology.scenario.internal.events.RegionAddVisibilityEvent;
 import org.terasology.scenario.internal.events.RegionRedrawEvent;
 import org.terasology.scenario.internal.events.RegionRemoveVisibilityEvent;
+import org.terasology.world.block.BlockRegion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,8 +133,8 @@ public class RegionDisplaySystem extends BaseComponentSystem {
             EntityBuilder entityBuilder = entityManager.newBuilder();
             entityBuilder.setPersistent(false);
             RegionOutlineComponent regionOutlineComponent = new RegionOutlineComponent();
-            regionOutlineComponent.corner1 = new Vector3i(r.region.min());
-            regionOutlineComponent.corner2 = new Vector3i(r.region.max());
+            regionOutlineComponent.corner1 = JomlUtil.from(r.region.getMin(new Vector3i()));
+            regionOutlineComponent.corner2 = JomlUtil.from(r.region.getMax(new Vector3i()));
             regionOutlineComponent.color = r.color;
             entityBuilder.addComponent(regionOutlineComponent);
             regionOutlineAndTextEntities.add(entityBuilder.build());
@@ -144,7 +146,7 @@ public class RegionDisplaySystem extends BaseComponentSystem {
             textComponent.text = r.text;
             textComponent.textColor = r.color;
             LocationComponent loc = new LocationComponent();
-            loc.setWorldPosition(r.region.center());
+            loc.setWorldPosition(r.region.center(new Vector3f()));
             entityBuilder2.addComponent(textComponent);
             entityBuilder2.addComponent(loc);
             regionOutlineAndTextEntities.add(entityBuilder2.build());
@@ -160,7 +162,7 @@ public class RegionDisplaySystem extends BaseComponentSystem {
     }
 
     private class ColoredRegion {
-        public Region3i region;
+        public BlockRegion region;
         public Color color;
         public String text;
     }

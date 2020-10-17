@@ -69,13 +69,12 @@ import java.util.Map;
 public class ConvertEntitySystem extends BaseComponentSystem {
 
     /**
-     * Most entities will follow a similar method, but to leave the system open for future inclusions with new event/action/conditions
-     * it is designed with each specific component(the unique component of a logic prefab). All are based off the component that indicates what
-     * type an entity is.
-     *
+     * Most entities will follow a similar method, but to leave the system open for future inclusions with new
+     * event/action/conditions it is designed with each specific component(the unique component of a logic prefab). All
+     * are based off the component that indicates what type an entity is.
+     * <p>
      * Follows a pattern of [PREFAB]prefabName{key name for entity argument}[VALUE]value of the component
      */
-
 
 
     private static final String PREFAB_MARKER = "[PREFAB]";
@@ -85,10 +84,11 @@ public class ConvertEntitySystem extends BaseComponentSystem {
 
     /**
      * Anything that has an argument container and is not a value would use this serialization
+     *
      * @param event the ConvertScenarioEntityEvent that triggered the original call
      * @param entity The entityRef that the call was sent to
      */
-    public void DefaultSerialize(ConvertScenarioEntityEvent event, EntityRef entity) {
+    public void defaultSerialize(ConvertScenarioEntityEvent event, EntityRef entity) {
         event.getOutputList().add(event.getPrefix() + PREFAB_MARKER + entity.getParentPrefab().getName());
 
         for (Map.Entry<String, EntityRef> e : entity.getComponent(ScenarioArgumentContainerComponent.class).arguments.entrySet()) {
@@ -107,9 +107,8 @@ public class ConvertEntitySystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondarySendChatComponent component) {
-        DefaultSerialize(event, entity);
+        defaultSerialize(event, entity);
     }
-
 
 
     @ReceiveEvent
@@ -119,12 +118,12 @@ public class ConvertEntitySystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioExpressionRandomIntComponent component) {
-        DefaultSerialize(event, entity);
+        defaultSerialize(event, entity);
     }
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioExpressionPlayerNameComponent component) {
-        DefaultSerialize(event, entity);
+        defaultSerialize(event, entity);
     }
 
     @ReceiveEvent
@@ -136,8 +135,7 @@ public class ConvertEntitySystem extends BaseComponentSystem {
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioValueRegionComponent component) {
         if (component.regionEntity.getComponent(NetworkComponent.class).getNetworkId() == 0) { //No network component (local/single player, so can't/don't need to use network id)
             event.getOutputList().add(event.getPrefix() + VALUE_MARKER + "x" + component.regionEntity.getId());
-        }
-        else {
+        } else {
             event.getOutputList().add(event.getPrefix() + VALUE_MARKER + component.regionEntity.getComponent(NetworkComponent.class).getNetworkId());
         }
     }
@@ -169,12 +167,12 @@ public class ConvertEntitySystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioExpressionRegionNameComponent component) {
-        DefaultSerialize(event, entity);
+        defaultSerialize(event, entity);
     }
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondaryPlayerRegionComponent component) {
-        DefaultSerialize(event, entity);
+        defaultSerialize(event, entity);
     }
 
     @ReceiveEvent
@@ -189,12 +187,12 @@ public class ConvertEntitySystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondaryLeaveRegionComponent component) {
-        DefaultSerialize(event, entity);
+        defaultSerialize(event, entity);
     }
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondaryEnterRegionComponent component) {
-        DefaultSerialize(event, entity);
+        defaultSerialize(event, entity);
     }
 
     @ReceiveEvent
@@ -204,66 +202,66 @@ public class ConvertEntitySystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondaryLogInfoComponent component) {
-        DefaultSerialize(event, entity);
+        defaultSerialize(event, entity);
     }
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioExpressionItemCountComponent component) {
-        DefaultSerialize(event, entity);
+        defaultSerialize(event, entity);
     }
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondaryIntCompareComponent component) {
-        DefaultSerialize(event, entity);
+        defaultSerialize(event, entity);
     }
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondaryGiveItemComponent component) {
-        DefaultSerialize(event, entity);
+        defaultSerialize(event, entity);
     }
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondaryGiveBlockComponent component) {
-        DefaultSerialize(event, entity);
+        defaultSerialize(event, entity);
     }
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioExpressionConcatStringComponent component) {
-        DefaultSerialize(event, entity);
+        defaultSerialize(event, entity);
     }
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondaryTeleportComponent component) {
-        DefaultSerialize(event, entity);
+        defaultSerialize(event, entity);
     }
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondaryBlockCompareComponent component) {
-        DefaultSerialize(event, entity);
+        defaultSerialize(event, entity);
     }
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondaryTakeItemComponent component) {
-        DefaultSerialize(event, entity);
+        defaultSerialize(event, entity);
     }
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondaryTakeBlockComponent component) {
-        DefaultSerialize(event, entity);
+        defaultSerialize(event, entity);
     }
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondaryHealAmountComponent component) {
-        DefaultSerialize(event, entity);
+        defaultSerialize(event, entity);
     }
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioSecondaryDamageAmountComponent component) {
-        DefaultSerialize(event, entity);
+        defaultSerialize(event, entity);
     }
 
     @ReceiveEvent
     public void onConvertEntityEvent(ConvertScenarioEntityEvent event, EntityRef entity, ScenarioExpressionBlockCountComponent component) {
-        DefaultSerialize(event, entity);
+        defaultSerialize(event, entity);
     }
 }

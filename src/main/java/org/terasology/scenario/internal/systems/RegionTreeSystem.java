@@ -16,6 +16,7 @@
 package org.terasology.scenario.internal.systems;
 
 import com.google.common.collect.Lists;
+import org.joml.Vector3f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.assets.management.AssetManager;
@@ -29,6 +30,7 @@ import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.characters.CharacterTeleportEvent;
 import org.terasology.logic.chat.ChatMessageEvent;
 import org.terasology.logic.common.DisplayNameComponent;
+import org.terasology.math.JomlUtil;
 import org.terasology.math.Region3i;
 import org.terasology.network.ClientComponent;
 import org.terasology.network.ColorComponent;
@@ -55,6 +57,7 @@ import org.terasology.scenario.internal.events.RegionTreeDeleteEvent;
 import org.terasology.scenario.internal.events.RegionTreeFullAddEvent;
 import org.terasology.scenario.internal.events.RegionTreeMoveEntityEvent;
 import org.terasology.structureTemplates.components.ProtectedRegionsComponent;
+import org.terasology.world.block.BlockRegion;
 
 import java.util.List;
 
@@ -79,7 +82,8 @@ public class RegionTreeSystem extends BaseComponentSystem {
 
     @Override
     public void postBegin() {
-        Iterable<EntityRef> scenario = entityManager.getEntitiesWith(ScenarioComponent.class); // Checks for existing Scenario
+        Iterable<EntityRef> scenario = entityManager.getEntitiesWith(ScenarioComponent.class); // Checks for existing
+        // Scenario
 
         if (!scenario.iterator().hasNext()) { //No scenario exists yet
             scenarioEntity = entityManager.create(assetManager.getAsset("scenario:scenarioEntity", Prefab.class).get());
@@ -87,7 +91,8 @@ public class RegionTreeSystem extends BaseComponentSystem {
             scenarioEntity = scenario.iterator().next();
         }
 
-        chatMessageEntity = entityManager.create(assetManager.getAsset("scenario:scenarioChatEntity", Prefab.class).get());
+        chatMessageEntity =
+            entityManager.create(assetManager.getAsset("scenario:scenarioChatEntity", Prefab.class).get());
         chatMessageEntity.getComponent(DisplayNameComponent.class).name = "Scenario System";
         chatMessageEntity.saveComponent(chatMessageEntity.getComponent(DisplayNameComponent.class));
         chatMessageEntity.getComponent(ColorComponent.class).color = Color.RED;
@@ -95,14 +100,17 @@ public class RegionTreeSystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent
-    public void onRegionTeleportationRequestEvent(RegionTeleportationRequestEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
-        org.terasology.math.geom.Vector3f location = event.getRequestedRegion().getComponent(RegionLocationComponent.class).region.center();
-        CharacterTeleportEvent tele = new CharacterTeleportEvent(location);
+    public void onRegionTeleportationRequestEvent(RegionTeleportationRequestEvent event, EntityRef entity,
+                                                  ScenarioHubToolUpdateComponent component) {
+        Vector3f location =
+            event.getRequestedRegion().getComponent(RegionLocationComponent.class).region.center(new Vector3f());
+        CharacterTeleportEvent tele = new CharacterTeleportEvent(JomlUtil.from(location));
         event.getTeleportedEntity().send(tele);
     }
 
     @ReceiveEvent
-    public void onRegionTreeAddEvent(RegionTreeAddEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
+    public void onRegionTreeAddEvent(RegionTreeAddEvent event, EntityRef entity,
+                                     ScenarioHubToolUpdateComponent component) {
 
         //Makes sure only one region is being created by a person at a time
         for (EntityRef e : entityManager.getEntitiesWith(RegionBeingCreatedComponent.class)) {
@@ -111,16 +119,19 @@ public class RegionTreeSystem extends BaseComponentSystem {
             }
         }
 
-        event.getCreatingEntity().getOwner().send(new ChatMessageEvent("To begin creation of a region left click a block with a hubtool", chatMessageEntity));
+        event.getCreatingEntity().getOwner().send(new ChatMessageEvent("To begin creation of a region left click a " +
+            "block with a hubtool", chatMessageEntity));
 
-        EntityRef newRegion = entityManager.create(assetManager.getAsset("scenario:scenarioCreationEntity", Prefab.class).get());
+        EntityRef newRegion = entityManager.create(assetManager.getAsset("scenario:scenarioCreationEntity",
+            Prefab.class).get());
         newRegion.getComponent(RegionBeingCreatedComponent.class).creatingEntity = event.getCreatingEntity();
         newRegion.saveComponent(newRegion.getComponent(RegionBeingCreatedComponent.class));
 
     }
 
     @ReceiveEvent
-    public void onRegionTreeDeleteEvent(RegionTreeDeleteEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
+    public void onRegionTreeDeleteEvent(RegionTreeDeleteEvent event, EntityRef entity,
+                                        ScenarioHubToolUpdateComponent component) {
         scenarioEntity.getComponent(ScenarioComponent.class).regionEntities.remove(event.getDeleteEntity());
         scenarioEntity.saveComponent(scenarioEntity.getComponent(ScenarioComponent.class));
 
@@ -141,7 +152,8 @@ public class RegionTreeSystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent
-    public void onRegionTreeMoveEntityEvent(RegionTreeMoveEntityEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
+    public void onRegionTreeMoveEntityEvent(RegionTreeMoveEntityEvent event, EntityRef entity,
+                                            ScenarioHubToolUpdateComponent component) {
         List<EntityRef> list = scenarioEntity.getComponent(ScenarioComponent.class).regionEntities;
 
         int startIndex = list.indexOf(event.getMoveEntity());
@@ -177,7 +189,8 @@ public class RegionTreeSystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent
-    public void onRegionRenameEvent(RegionRenameEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
+    public void onRegionRenameEvent(RegionRenameEvent event, EntityRef entity,
+                                    ScenarioHubToolUpdateComponent component) {
         event.getRegionEntity().getComponent(RegionNameComponent.class).regionName = event.getNewName();
         event.getRegionEntity().saveComponent(event.getRegionEntity().getComponent(RegionNameComponent.class));
 
@@ -192,7 +205,8 @@ public class RegionTreeSystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent
-    public void onRegionRecolorEvent(RegionRecolorEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
+    public void onRegionRecolorEvent(RegionRecolorEvent event, EntityRef entity,
+                                     ScenarioHubToolUpdateComponent component) {
         event.getRegionEntity().getComponent(RegionColorComponent.class).color = event.getNewColor();
         event.getRegionEntity().saveComponent(event.getRegionEntity().getComponent(RegionColorComponent.class));
 
@@ -207,12 +221,13 @@ public class RegionTreeSystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent
-    public void onRegionProtectEvent(RegionProtectEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
+    public void onRegionProtectEvent(RegionProtectEvent event, EntityRef entity,
+                                     ScenarioHubToolUpdateComponent component) {
         event.getRegionEntity().removeComponent(ProtectedRegionsComponent.class);
         if (event.isProtected()) {
             ProtectedRegionsComponent protectedRegionsComponent = new ProtectedRegionsComponent();
             List<Region3i> absoluteRegions = Lists.newArrayList();
-            absoluteRegions.add(event.getRegionEntity().getComponent(RegionLocationComponent.class).region);
+            absoluteRegions.add(JomlUtil.from(event.getRegionEntity().getComponent(RegionLocationComponent.class).region));
             protectedRegionsComponent.regions = absoluteRegions;
             event.getRegionEntity().addComponent(protectedRegionsComponent);
         }
@@ -224,9 +239,11 @@ public class RegionTreeSystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent
-    public void onRegionResizeEvent(RegionResizeEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
-        RegionLocationComponent regionLocationComponent = event.getRegionEntity().getComponent(RegionLocationComponent.class);
-        regionLocationComponent.region = event.getRegion();
+    public void onRegionResizeEvent(RegionResizeEvent event, EntityRef entity,
+                                    ScenarioHubToolUpdateComponent component) {
+        RegionLocationComponent regionLocationComponent =
+            event.getRegionEntity().getComponent(RegionLocationComponent.class);
+        regionLocationComponent.region = JomlUtil.from(event.getRegion());
         event.getRegionEntity().saveComponent(regionLocationComponent);
 
         scenarioEntity.saveComponent(scenarioEntity.getComponent(ScenarioComponent.class));

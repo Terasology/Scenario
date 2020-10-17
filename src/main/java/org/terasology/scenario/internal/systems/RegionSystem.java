@@ -15,6 +15,7 @@
  */
 package org.terasology.scenario.internal.systems;
 
+import org.joml.Vector3i;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.assets.management.AssetManager;
@@ -30,8 +31,6 @@ import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.characters.events.AttackEvent;
 import org.terasology.logic.chat.ChatMessageEvent;
 import org.terasology.logic.common.DisplayNameComponent;
-import org.terasology.math.Region3i;
-import org.terasology.math.geom.Vector3i;
 import org.terasology.network.ColorComponent;
 import org.terasology.nui.Color;
 import org.terasology.registry.In;
@@ -39,6 +38,7 @@ import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.components.regions.RegionBeingCreatedComponent;
 import org.terasology.scenario.components.regions.RegionLocationComponent;
 import org.terasology.scenario.internal.events.RegionTreeFullAddEvent;
+import org.terasology.world.block.BlockRegion;
 
 import java.util.Iterator;
 
@@ -80,7 +80,7 @@ public class RegionSystem extends BaseComponentSystem {
             if (editedRegion.getComponent(RegionBeingCreatedComponent.class).creatingEntity.equals(event.getInstigator())) {
                 if (event.getDirectCause().getParentPrefab() != null && event.getDirectCause().getParentPrefab().equals(assetManager.getAsset("scenario:hubtool", Prefab.class).get())) {
                     RegionBeingCreatedComponent create = editedRegion.getComponent(RegionBeingCreatedComponent.class);
-                    Vector3i pos = blockComponent.getPosition();
+                    Vector3i pos = blockComponent.getPosition(new Vector3i());
                     if (create.firstHit == null) {
                         create.firstHit = pos;
 
@@ -90,7 +90,7 @@ public class RegionSystem extends BaseComponentSystem {
                     } else {
                         if (!pos.equals(create.firstHit)) {
                             RegionLocationComponent loc = editedRegion.getComponent(RegionLocationComponent.class);
-                            loc.region = Region3i.createBounded(pos, create.firstHit);
+                            loc.region = new BlockRegion(pos, create.firstHit);//Region3i.createBounded(pos, create.firstHit);
                             editedRegion.saveComponent(loc);
                             editedRegion.removeComponent(RegionBeingCreatedComponent.class);
                             if (entityManager.getEntitiesWith(ScenarioComponent.class).iterator().hasNext()) {
