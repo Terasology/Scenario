@@ -34,6 +34,7 @@ import org.terasology.logic.inventory.InventoryComponent;
 import org.terasology.logic.inventory.InventoryManager;
 import org.terasology.logic.inventory.ItemComponent;
 import org.terasology.logic.inventory.events.GiveItemEvent;
+import org.terasology.math.JomlUtil;
 import org.terasology.math.geom.Vector3f;
 import org.terasology.network.ClientComponent;
 import org.terasology.network.ColorComponent;
@@ -185,7 +186,7 @@ public class ActionEventSystem extends BaseComponentSystem {
 
         EvaluateRegionEvent regionEvaluateEvent = new EvaluateRegionEvent(event.informationEntity);
         variables.get("region1").send(regionEvaluateEvent);
-        Vector3f location = regionEvaluateEvent.getResult().getComponent(RegionLocationComponent.class).region.center();
+        Vector3f location = JomlUtil.from(regionEvaluateEvent.getResult().getComponent(RegionLocationComponent.class).region.center(new org.joml.Vector3f()));
 
         CharacterTeleportEvent teleportEvent = new CharacterTeleportEvent(location);
 

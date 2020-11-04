@@ -226,8 +226,8 @@ public class RegionTreeSystem extends BaseComponentSystem {
         event.getRegionEntity().removeComponent(ProtectedRegionsComponent.class);
         if (event.isProtected()) {
             ProtectedRegionsComponent protectedRegionsComponent = new ProtectedRegionsComponent();
-            List<Region3i> absoluteRegions = Lists.newArrayList();
-            absoluteRegions.add(JomlUtil.from(event.getRegionEntity().getComponent(RegionLocationComponent.class).region));
+            List<BlockRegion> absoluteRegions = Lists.newArrayList();
+            absoluteRegions.add(event.getRegionEntity().getComponent(RegionLocationComponent.class).region);
             protectedRegionsComponent.regions = absoluteRegions;
             event.getRegionEntity().addComponent(protectedRegionsComponent);
         }

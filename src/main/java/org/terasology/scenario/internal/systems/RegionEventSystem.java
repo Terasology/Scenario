@@ -71,7 +71,7 @@ public class RegionEventSystem extends BaseComponentSystem implements UpdateSubs
                 List<EntityRef> tempList = containing.entities;
                 for (EntityRef character : entityManager.getEntitiesWith(CharacterComponent.class)) {
                     Vector3f loc = character.getComponent(LocationComponent.class).getWorldPosition(new Vector3f());
-                    if (locationRegion.region.encompasses((int) loc.x, (int) loc.y, (int) loc.z)) {
+                    if (locationRegion.region.containsPoint((int) loc.x, (int) loc.y, (int) loc.z)) {
                         if (!tempList.contains(character)) { //Just entered region
                             tempList.add(character);
                             PlayerEnterRegionEvent newEvent = new PlayerEnterRegionEvent(character, region);
