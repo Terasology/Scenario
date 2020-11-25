@@ -29,6 +29,7 @@ import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.characters.CharacterTeleportEvent;
 import org.terasology.logic.chat.ChatMessageEvent;
 import org.terasology.logic.common.DisplayNameComponent;
+import org.terasology.math.JomlUtil;
 import org.terasology.math.Region3i;
 import org.terasology.network.ClientComponent;
 import org.terasology.network.ColorComponent;
@@ -97,7 +98,7 @@ public class RegionTreeSystem extends BaseComponentSystem {
     @ReceiveEvent
     public void onRegionTeleportationRequestEvent(RegionTeleportationRequestEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
         org.terasology.math.geom.Vector3f location = event.getRequestedRegion().getComponent(RegionLocationComponent.class).region.center();
-        CharacterTeleportEvent tele = new CharacterTeleportEvent(location);
+        CharacterTeleportEvent tele = new CharacterTeleportEvent(JomlUtil.from(location));
         event.getTeleportedEntity().send(tele);
     }
 
