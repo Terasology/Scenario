@@ -31,11 +31,10 @@ import org.terasology.logic.characters.CharacterTeleportEvent;
 import org.terasology.logic.chat.ChatMessageEvent;
 import org.terasology.logic.common.DisplayNameComponent;
 import org.terasology.math.JomlUtil;
-import org.terasology.math.Region3i;
 import org.terasology.network.ClientComponent;
 import org.terasology.network.ColorComponent;
-import org.terasology.registry.In;
 import org.terasology.nui.Color;
+import org.terasology.registry.In;
 import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.components.ScenarioHubToolUpdateComponent;
 import org.terasology.scenario.components.ScenarioRegionVisibilityComponent;
@@ -104,7 +103,7 @@ public class RegionTreeSystem extends BaseComponentSystem {
                                                   ScenarioHubToolUpdateComponent component) {
         Vector3f location =
             event.getRequestedRegion().getComponent(RegionLocationComponent.class).region.center(new Vector3f());
-        CharacterTeleportEvent tele = new CharacterTeleportEvent(JomlUtil.from(location));
+        CharacterTeleportEvent tele = new CharacterTeleportEvent(location);
         event.getTeleportedEntity().send(tele);
     }
 

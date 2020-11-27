@@ -15,6 +15,7 @@
  */
 package org.terasology.scenario.internal.systems;
 
+import org.joml.Vector3f;
 import org.slf4j.LoggerFactory;
 import org.terasology.assets.management.AssetManager;
 import org.terasology.entitySystem.entity.EntityManager;
@@ -27,19 +28,17 @@ import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.characters.CharacterTeleportEvent;
 import org.terasology.logic.chat.ChatMessageEvent;
 import org.terasology.logic.common.DisplayNameComponent;
+import org.terasology.logic.health.EngineDamageTypes;
 import org.terasology.logic.health.event.DoDamageEvent;
 import org.terasology.logic.health.event.DoRestoreEvent;
-import org.terasology.logic.health.EngineDamageTypes;
 import org.terasology.logic.inventory.InventoryComponent;
 import org.terasology.logic.inventory.InventoryManager;
 import org.terasology.logic.inventory.ItemComponent;
 import org.terasology.logic.inventory.events.GiveItemEvent;
-import org.terasology.math.JomlUtil;
-import org.terasology.math.geom.Vector3f;
 import org.terasology.network.ClientComponent;
 import org.terasology.network.ColorComponent;
-import org.terasology.registry.In;
 import org.terasology.nui.Color;
+import org.terasology.registry.In;
 import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 import org.terasology.scenario.components.actions.ScenarioSecondaryDamageAmountComponent;
 import org.terasology.scenario.components.actions.ScenarioSecondaryGiveBlockComponent;
@@ -186,7 +185,7 @@ public class ActionEventSystem extends BaseComponentSystem {
 
         EvaluateRegionEvent regionEvaluateEvent = new EvaluateRegionEvent(event.informationEntity);
         variables.get("region1").send(regionEvaluateEvent);
-        Vector3f location = JomlUtil.from(regionEvaluateEvent.getResult().getComponent(RegionLocationComponent.class).region.center(new org.joml.Vector3f()));
+        Vector3f location = regionEvaluateEvent.getResult().getComponent(RegionLocationComponent.class).region.center(new Vector3f());
 
         CharacterTeleportEvent teleportEvent = new CharacterTeleportEvent(location);
 
