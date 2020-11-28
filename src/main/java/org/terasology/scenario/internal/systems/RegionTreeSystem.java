@@ -56,6 +56,7 @@ import org.terasology.scenario.internal.events.RegionTreeDeleteEvent;
 import org.terasology.scenario.internal.events.RegionTreeFullAddEvent;
 import org.terasology.scenario.internal.events.RegionTreeMoveEntityEvent;
 import org.terasology.structureTemplates.components.ProtectedRegionsComponent;
+import org.terasology.world.block.BlockRegion;
 
 import java.util.List;
 
@@ -212,8 +213,8 @@ public class RegionTreeSystem extends BaseComponentSystem {
         event.getRegionEntity().removeComponent(ProtectedRegionsComponent.class);
         if (event.isProtected()) {
             ProtectedRegionsComponent protectedRegionsComponent = new ProtectedRegionsComponent();
-            List<Region3i> absoluteRegions = Lists.newArrayList();
-            absoluteRegions.add(event.getRegionEntity().getComponent(RegionLocationComponent.class).region);
+            List<BlockRegion> absoluteRegions = Lists.newArrayList();
+            absoluteRegions.add(JomlUtil.from(event.getRegionEntity().getComponent(RegionLocationComponent.class).region));
             protectedRegionsComponent.regions = absoluteRegions;
             event.getRegionEntity().addComponent(protectedRegionsComponent);
         }
