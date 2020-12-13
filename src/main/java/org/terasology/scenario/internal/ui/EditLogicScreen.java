@@ -15,7 +15,7 @@
  */
 package org.terasology.scenario.internal.ui;
 
-import org.joml.Rectanglei;
+import org.joml.primitives.Rectanglei;
 import org.joml.Vector2i;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
