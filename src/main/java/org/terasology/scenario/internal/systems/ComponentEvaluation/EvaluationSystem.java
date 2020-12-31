@@ -228,7 +228,7 @@ public class EvaluationSystem extends BaseComponentSystem {
 
         Vector3f loc = player.getComponent(LocationComponent.class).getWorldPosition(new Vector3f());
 
-        event.setResult(regionComp.region.containsPoint((int) loc.x, (int) loc.y, (int) loc.z));
+        event.setResult(regionComp.region.contains((int) loc.x, (int) loc.y, (int) loc.z));
     }
 
     @ReceiveEvent
