@@ -1,16 +1,28 @@
 {
-    "id" : "Scenario",
-    "version" : "1.0.0",
-    "author" : "Cata",
-    "displayName" : "Scenario",
-    "description" : "The Scenario module allows for creations of scenarios, which are \"static worlds\" with logic attached to them.",
-    "dependencies" : [
-        {"id" : "CoreAssets", "minVersion" : "2.0.1"},
-        {"id" : "Health", "minVersion" : "1.0.0"},
-        {"id" : "Inventory", "minVersion" : "1.1.0"},
-        {"id" : "StructureTemplates", "minVersion" : "1.0.0"}
-    ],
-    "serverSideOnly" : false,
-    "isAugmentation": true,
-    "isSpecial": true
+  "id": "Scenario",
+  "version": "1.1.0-SNAPSHOT",
+  "author": "Cata",
+  "displayName": "Scenario",
+  "description": "The Scenario module allows for creations of scenarios, which are \"static worlds\" with logic attached to them.",
+  "dependencies": [
+    {
+      "id": "CoreAssets",
+      "minVersion": "2.0.1"
+    },
+    {
+      "id": "Health",
+      "minVersion": "1.0.0"
+    },
+    {
+      "id": "Inventory",
+      "minVersion": "1.1.0"
+    },
+    {
+      "id": "StructureTemplates",
+      "minVersion": "1.0.0"
+    }
+  ],
+  "serverSideOnly": false,
+  "isAugmentation": true,
+  "isSpecial": true
 }
