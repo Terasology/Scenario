@@ -56,7 +56,7 @@ import java.util.List;
  * Allows for clients to make request to the entity tree that is contained on the server's side.
  */
 @RegisterSystem(RegisterMode.AUTHORITY)
-public class EntityTreeSystem extends BaseComponentSystem{
+public class EntityTreeSystem extends BaseComponentSystem {
     private static final Logger logger = LoggerFactory.getLogger(EntityTreeSystem.class);
 
     @In
@@ -82,16 +82,15 @@ public class EntityTreeSystem extends BaseComponentSystem{
 
         if (!scenario.iterator().hasNext()) { //No scenario exists yet
             scenarioEntity = entityManager.create(assetManager.getAsset("scenario:scenarioEntity", Prefab.class).get());
-        }
-        else {
+        } else {
             scenarioEntity = scenario.iterator().next();
         }
     }
 
     /**
-     * Adding event, attaches to the scenarioComponent.actions in the Scenario root and then adds a new empty list
-     * for eventually adding actions to that event. Updates the hub tool's screen if it was passed with the event.
-     * Does this by indicating to all hubtools that it's logic is "dirty" and needs to be refreshed and telling the adding hubtool
+     * Adding event, attaches to the scenarioComponent.actions in the Scenario root and then adds a new empty list for
+     * eventually adding actions to that event. Updates the hub tool's screen if it was passed with the event. Does this
+     * by indicating to all hubtools that it's logic is "dirty" and needs to be refreshed and telling the adding hubtool
      * what entity was just added so that it can prompt open the edit screen
      */
     @ReceiveEvent
@@ -120,10 +119,9 @@ public class EntityTreeSystem extends BaseComponentSystem{
     }
 
     /**
-     * Adding action, attaches to the ActionListComponent in the event entity.
-     * Updates the hub tool's screen if it was passed with the event.
-     * Does this by indicating to all hubtools that it's logic is "dirty" and needs to be refreshed and telling the adding hubtool
-     * what entity was just added so that it can prompt open the edit screen
+     * Adding action, attaches to the ActionListComponent in the event entity. Updates the hub tool's screen if it was
+     * passed with the event. Does this by indicating to all hubtools that it's logic is "dirty" and needs to be
+     * refreshed and telling the adding hubtool what entity was just added so that it can prompt open the edit screen
      */
     @ReceiveEvent
     public void onLogicTreeAddActionEvent(LogicTreeAddActionEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
@@ -153,9 +151,9 @@ public class EntityTreeSystem extends BaseComponentSystem{
 
     /**
      * Adding condition, attaches to the scenarioComponent.actions in the Scenario root and then adds a new empty list
-     * for eventually adding actions to that event. Updates the hub tool's screen if it was passed with the event.
-     * Does this by indicating to all hubtools that it's logic is "dirty" and needs to be refreshed and telling the adding hubtool
-     * what entity was just added so that it can prompt open the edit screen
+     * for eventually adding actions to that event. Updates the hub tool's screen if it was passed with the event. Does
+     * this by indicating to all hubtools that it's logic is "dirty" and needs to be refreshed and telling the adding
+     * hubtool what entity was just added so that it can prompt open the edit screen
      */
     @ReceiveEvent
     public void onLogicTreeAddConditionEvent(LogicTreeAddConditionEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
@@ -183,8 +181,8 @@ public class EntityTreeSystem extends BaseComponentSystem{
     }
 
     /**
-     * Adds a trigger entity to the trigger list of the scenario entity, tells all hubtools to redraw and adds the new entity
-     * to the expansion list of the creating hubtool
+     * Adds a trigger entity to the trigger list of the scenario entity, tells all hubtools to redraw and adds the new
+     * entity to the expansion list of the creating hubtool
      */
     @ReceiveEvent
     public void onLogicTreeAddTriggerEvent(LogicTreeAddTriggerEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
@@ -219,9 +217,9 @@ public class EntityTreeSystem extends BaseComponentSystem{
     }
 
     /**
-     * Checks if the deleted entity is an event or action and then removes and saves the correct entities.
-     * Event just needs to update scenario root, action needs to update both scenario and the event it is attached to
-     * Updates the hub tool's screen if it was passed with the event.
+     * Checks if the deleted entity is an event or action and then removes and saves the correct entities. Event just
+     * needs to update scenario root, action needs to update both scenario and the event it is attached to Updates the
+     * hub tool's screen if it was passed with the event.
      */
     @ReceiveEvent
     public void onLogicTreeDeleteEvent(LogicTreeDeleteEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
@@ -231,22 +229,19 @@ public class EntityTreeSystem extends BaseComponentSystem{
                 events.events.remove(event.getDeleteEntity());
                 event.getDeleteFromEntity().saveComponent(events);
                 event.getDeleteEntity().destroy();
-            }
-            else if (event.getDeleteEntity().hasComponent(ScenarioIndicatorConditionalComponent.class)) { //Condition
+            } else if (event.getDeleteEntity().hasComponent(ScenarioIndicatorConditionalComponent.class)) { //Condition
                 TriggerConditionListComponent conds = event.getDeleteFromEntity().getComponent(TriggerConditionListComponent.class);
                 conds.conditions.remove(event.getDeleteEntity());
                 event.getDeleteFromEntity().saveComponent(conds);
                 event.getDeleteEntity().destroy();
-            }
-            else if (event.getDeleteEntity().hasComponent(ScenarioIndicatorActionComponent.class)) { //Action
+            } else if (event.getDeleteEntity().hasComponent(ScenarioIndicatorActionComponent.class)) { //Action
                 TriggerActionListComponent actions = event.getDeleteFromEntity().getComponent(TriggerActionListComponent.class);
                 actions.actions.remove(event.getDeleteEntity());
                 event.getDeleteFromEntity().saveComponent(actions);
                 event.getDeleteEntity().destroy();
             }
             entity.saveComponent(component);
-        }
-        else { //Must be a trigger, not an event/action/conditional
+        } else { //Must be a trigger, not an event/action/conditional
             scenarioEntity.getComponent(ScenarioComponent.class).triggerEntities.remove(event.getDeleteEntity());
             scenarioEntity.saveComponent(scenarioEntity.getComponent(ScenarioComponent.class));
             event.getDeleteEntity().destroy();
@@ -287,8 +282,7 @@ public class EntityTreeSystem extends BaseComponentSystem{
         if (startIndex < endIndex) {
             list.add(endIndex, list.get(startIndex));
             list.remove(startIndex);
-        }
-        else {
+        } else {
             list.add(endIndex, list.get(startIndex));
             list.remove(startIndex + 1);
         }
@@ -322,8 +316,8 @@ public class EntityTreeSystem extends BaseComponentSystem{
     }
 
     /**
-     * Takes the serialized list from a client and constructs it back into an entity and replaces the original entity in the logic tree.
-     * Serialised using ConvertEntitySystem and converts back into entity using ConvertIntoEntitySystem
+     * Takes the serialized list from a client and constructs it back into an entity and replaces the original entity in
+     * the logic tree. Serialised using ConvertEntitySystem and converts back into entity using ConvertIntoEntitySystem
      */
     @ReceiveEvent
     public void onReplaceEntityWithPrefabEvent(ReplaceEntityFromConstructionStringsEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
@@ -339,8 +333,7 @@ public class EntityTreeSystem extends BaseComponentSystem{
             actions.actions.add(index, newEntity);
             owningTrigger.saveComponent(actions);
             scenarioEntity.saveComponent(scenarioEntity.getComponent(ScenarioComponent.class));
-        }
-        else if (event.getReplaced().hasComponent(ScenarioIndicatorEventComponent.class)) {
+        } else if (event.getReplaced().hasComponent(ScenarioIndicatorEventComponent.class)) {
             TriggerEventListComponent events = owningTrigger.getComponent(TriggerEventListComponent.class);
             newEntity.setOwner(owningTrigger);
             int index = events.events.indexOf(event.getReplaced());
@@ -348,8 +341,7 @@ public class EntityTreeSystem extends BaseComponentSystem{
             events.events.add(index, newEntity);
             owningTrigger.saveComponent(events);
             scenarioEntity.saveComponent(scenarioEntity.getComponent(ScenarioComponent.class));
-        }
-        else if (event.getReplaced().hasComponent(ScenarioIndicatorConditionalComponent.class)) {
+        } else if (event.getReplaced().hasComponent(ScenarioIndicatorConditionalComponent.class)) {
             TriggerConditionListComponent conds = owningTrigger.getComponent(TriggerConditionListComponent.class);
             newEntity.setOwner(owningTrigger);
             int index = conds.conditions.indexOf(event.getReplaced());
@@ -366,6 +358,4 @@ public class EntityTreeSystem extends BaseComponentSystem{
         }
 
     }
-
-
 }

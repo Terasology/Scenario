@@ -15,6 +15,7 @@
  */
 package org.terasology.scenario.internal.systems;
 
+import org.joml.Vector3f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.entitySystem.entity.EntityManager;
@@ -25,7 +26,6 @@ import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.entitySystem.systems.UpdateSubscriberSystem;
 import org.terasology.logic.characters.CharacterComponent;
 import org.terasology.logic.location.LocationComponent;
-import org.terasology.math.geom.Vector3f;
 import org.terasology.registry.In;
 import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.components.regions.RegionContainingEntitiesComponent;
@@ -41,7 +41,7 @@ import java.util.List;
  * Will update the {@link RegionContainingEntitiesComponent} of all the scenario region entities that are being monitored
  */
 @RegisterSystem(RegisterMode.AUTHORITY)
-public class RegionEventSystem extends BaseComponentSystem implements UpdateSubscriberSystem{
+public class RegionEventSystem extends BaseComponentSystem implements UpdateSubscriberSystem {
     @In
     private EntityManager entityManager;
 
@@ -50,8 +50,8 @@ public class RegionEventSystem extends BaseComponentSystem implements UpdateSubs
     private EntityRef scenario;
 
     /**
-     * Region system's update that monitors the regions and updates them with players entering and leaving regions and triggering
-     * events when the respective event occurs to pass to the scenario
+     * Region system's update that monitors the regions and updates them with players entering and leaving regions and
+     * triggering events when the respective event occurs to pass to the scenario
      *
      * @param delta The time (in seconds) since the last engine update.
      */
@@ -64,22 +64,20 @@ public class RegionEventSystem extends BaseComponentSystem implements UpdateSubs
                 }
                 scenario = tempScen;
             }
-        }
-        else {
+        } else {
             for (EntityRef region : scenario.getComponent(ScenarioComponent.class).regionEntities) {
                 RegionLocationComponent locationRegion = region.getComponent(RegionLocationComponent.class);
                 RegionContainingEntitiesComponent containing = region.getComponent(RegionContainingEntitiesComponent.class);
                 List<EntityRef> tempList = containing.entities;
                 for (EntityRef character : entityManager.getEntitiesWith(CharacterComponent.class)) {
-                    Vector3f loc = character.getComponent(LocationComponent.class).getWorldPosition();
-                    if (locationRegion.region.encompasses((int)loc.x, (int)loc.y, (int)loc.z)) {
+                    Vector3f loc = character.getComponent(LocationComponent.class).getWorldPosition(new Vector3f());
+                    if (locationRegion.region.contains((int) loc.x, (int) loc.y, (int) loc.z)) {
                         if (!tempList.contains(character)) { //Just entered region
                             tempList.add(character);
                             PlayerEnterRegionEvent newEvent = new PlayerEnterRegionEvent(character, region);
                             scenario.send(newEvent);
                         }
-                    }
-                    else {
+                    } else {
                         if (tempList.contains(character)) { //Just left region
                             tempList.remove(character);
                             PlayerLeaveRegionEvent newEvent = new PlayerLeaveRegionEvent(character, region);
@@ -93,5 +91,4 @@ public class RegionEventSystem extends BaseComponentSystem implements UpdateSubs
             scenario.saveComponent(scenario.getComponent(ScenarioComponent.class));
         }
     }
-
 }

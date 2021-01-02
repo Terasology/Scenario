@@ -15,6 +15,7 @@
  */
 package org.terasology.scenario.internal.systems.ComponentEvaluation;
 
+import org.joml.Vector3f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.entitySystem.entity.EntityRef;
@@ -28,7 +29,6 @@ import org.terasology.logic.common.DisplayNameComponent;
 import org.terasology.logic.inventory.InventoryComponent;
 import org.terasology.logic.inventory.ItemComponent;
 import org.terasology.logic.location.LocationComponent;
-import org.terasology.math.geom.Vector3f;
 import org.terasology.network.ClientComponent;
 import org.terasology.nui.FontColor;
 import org.terasology.registry.In;
@@ -226,9 +226,9 @@ public class EvaluationSystem extends BaseComponentSystem {
         EntityRef player = event.getPassedEntity().getComponent(InfoTriggeringEntityComponent.class).entity.getOwner().getComponent(ClientComponent.class).character;
         RegionLocationComponent regionComp = region.getComponent(RegionLocationComponent.class);
 
-        Vector3f loc = player.getComponent(LocationComponent.class).getWorldPosition();
+        Vector3f loc = player.getComponent(LocationComponent.class).getWorldPosition(new Vector3f());
 
-        event.setResult(regionComp.region.encompasses((int)loc.x, (int)loc.y, (int)loc.z));
+        event.setResult(regionComp.region.contains((int) loc.x, (int) loc.y, (int) loc.z));
     }
 
     @ReceiveEvent

@@ -50,6 +50,7 @@ import org.terasology.scenario.internal.events.RegionTeleportationRequestEvent;
 import org.terasology.scenario.internal.utilities.CieCamColorsScenario;
 import org.terasology.structureTemplates.components.ProtectedRegionsComponent;
 import org.terasology.utilities.Assets;
+import org.terasology.world.block.BlockRegion;
 
 import java.math.RoundingMode;
 import java.util.List;
@@ -127,14 +128,14 @@ public class EditRegionScreen extends CoreScreenLayer {
         visiblity.setChecked(returnScreen.getEntity().getOwner().getComponent(ScenarioRegionVisibilityComponent.class).visibleList.contains(entity));
         protectedRegion.setChecked(entity.hasComponent(ProtectedRegionsComponent.class));
 
-        Region3i region = entity.getComponent(RegionLocationComponent.class).region;
+        BlockRegion region = entity.getComponent(RegionLocationComponent.class).region;
 
         minXField.setText(Integer.toString(region.minX()));
         minYField.setText(Integer.toString(region.minY()));
         minZField.setText(Integer.toString(region.minZ()));
-        sizeXField.setText(Integer.toString(region.sizeX()));
-        sizeYField.setText(Integer.toString(region.sizeY()));
-        sizeZField.setText(Integer.toString(region.sizeZ()));
+        sizeXField.setText(Integer.toString(region.getSizeX()));
+        sizeYField.setText(Integer.toString(region.getSizeY()));
+        sizeZField.setText(Integer.toString(region.getSizeZ()));
 
         if (colorSlider != null) {
             Color color = entity.getComponent(RegionColorComponent.class).color;

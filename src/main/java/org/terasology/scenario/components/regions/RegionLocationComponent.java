@@ -16,12 +16,10 @@
 package org.terasology.scenario.components.regions;
 
 import org.terasology.entitySystem.Component;
-import org.terasology.math.Region3i;
 import org.terasology.network.FieldReplicateType;
 import org.terasology.network.Replicate;
 import org.terasology.scenario.components.ScenarioComponent;
-import org.terasology.scenario.internal.systems.RegionSystem;
-import org.terasology.structureTemplates.components.ProtectedRegionsComponent;
+import org.terasology.world.block.BlockRegion;
 
 /**
  * Creation component for a Scenario argument entity, contains the actual Region3i of the region
@@ -30,5 +28,5 @@ import org.terasology.structureTemplates.components.ProtectedRegionsComponent;
  */
 public class RegionLocationComponent implements Component {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
-    public Region3i region;
+    public BlockRegion region;
 }
