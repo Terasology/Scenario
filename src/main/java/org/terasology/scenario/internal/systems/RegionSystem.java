@@ -90,7 +90,7 @@ public class RegionSystem extends BaseComponentSystem {
                     } else {
                         if (!pos.equals(create.firstHit)) {
                             RegionLocationComponent loc = editedRegion.getComponent(RegionLocationComponent.class);
-                            loc.region = new BlockRegion(pos, create.firstHit);//Region3i.createBounded(pos, create.firstHit);
+                            loc.region = new BlockRegion(pos).union(create.firstHit);
                             editedRegion.saveComponent(loc);
                             editedRegion.removeComponent(RegionBeingCreatedComponent.class);
                             if (entityManager.getEntitiesWith(ScenarioComponent.class).iterator().hasNext()) {

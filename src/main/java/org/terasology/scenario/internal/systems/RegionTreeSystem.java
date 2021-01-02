@@ -81,8 +81,8 @@ public class RegionTreeSystem extends BaseComponentSystem {
 
     @Override
     public void postBegin() {
-        Iterable<EntityRef> scenario = entityManager.getEntitiesWith(ScenarioComponent.class); // Checks for existing
-        // Scenario
+		// Checks for existing scenarios
+        Iterable<EntityRef> scenario = entityManager.getEntitiesWith(ScenarioComponent.class); 
 
         if (!scenario.iterator().hasNext()) { //No scenario exists yet
             scenarioEntity = entityManager.create(assetManager.getAsset("scenario:scenarioEntity", Prefab.class).get());
