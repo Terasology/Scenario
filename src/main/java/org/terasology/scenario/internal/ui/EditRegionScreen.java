@@ -24,8 +24,6 @@ import org.terasology.assets.ResourceUrn;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.players.LocalPlayer;
-import org.terasology.math.Region3i;
-import org.terasology.math.geom.Vector3i;
 import org.terasology.nui.Color;
 import org.terasology.nui.UIWidget;
 import org.terasology.nui.WidgetUtil;
@@ -176,11 +174,9 @@ public class EditRegionScreen extends CoreScreenLayer {
         returnScreen.getEntity().send(new RegionTeleportationRequestEvent(localPlayer.getCharacterEntity(), baseEntity));
     }
 
-    public Region3i getRegion() {
-        return Region3i.createFromMinAndSize(
-            new Vector3i(integerFromField(minXField), integerFromField(minYField), integerFromField(minZField)),
-            new Vector3i(integerFromField(sizeXField), integerFromField(sizeYField), integerFromField(sizeZField))
-        );
+    public BlockRegion getRegion() {
+        return new BlockRegion(integerFromField(minXField), integerFromField(minYField), integerFromField(minZField))
+                .setSize(integerFromField(sizeXField), integerFromField(sizeYField), integerFromField(sizeZField));
     }
 
     private Integer integerFromField(UIText field) {

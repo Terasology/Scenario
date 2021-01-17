@@ -30,7 +30,6 @@ import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.characters.CharacterTeleportEvent;
 import org.terasology.logic.chat.ChatMessageEvent;
 import org.terasology.logic.common.DisplayNameComponent;
-import org.terasology.math.JomlUtil;
 import org.terasology.network.ClientComponent;
 import org.terasology.network.ColorComponent;
 import org.terasology.nui.Color;
@@ -242,7 +241,7 @@ public class RegionTreeSystem extends BaseComponentSystem {
                                     ScenarioHubToolUpdateComponent component) {
         RegionLocationComponent regionLocationComponent =
             event.getRegionEntity().getComponent(RegionLocationComponent.class);
-        regionLocationComponent.region = JomlUtil.from(event.getRegion());
+        regionLocationComponent.region = new BlockRegion(event.getRegion());
         event.getRegionEntity().saveComponent(regionLocationComponent);
 
         scenarioEntity.saveComponent(scenarioEntity.getComponent(ScenarioComponent.class));
