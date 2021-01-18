@@ -18,7 +18,7 @@ package org.terasology.scenario.internal.ui;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import org.joml.Rectanglei;
+import org.terasology.joml.geom.Rectanglei;
 import org.joml.Vector2i;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
