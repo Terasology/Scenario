@@ -32,7 +32,6 @@ import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.characters.CharacterComponent;
 import org.terasology.logic.location.LocationComponent;
 import org.terasology.logic.players.LocalPlayer;
-import org.terasology.math.JomlUtil;
 import org.terasology.network.NetworkSystem;
 import org.terasology.nui.Color;
 import org.terasology.registry.In;
@@ -133,8 +132,8 @@ public class RegionDisplaySystem extends BaseComponentSystem {
             EntityBuilder entityBuilder = entityManager.newBuilder();
             entityBuilder.setPersistent(false);
             RegionOutlineComponent regionOutlineComponent = new RegionOutlineComponent();
-            regionOutlineComponent.corner1 = JomlUtil.from(r.region.getMin(new Vector3i()));
-            regionOutlineComponent.corner2 = JomlUtil.from(r.region.getMax(new Vector3i()));
+            regionOutlineComponent.corner1 = r.region.getMin(new Vector3i());
+            regionOutlineComponent.corner2 = r.region.getMax(new Vector3i());
             regionOutlineComponent.color = r.color;
             entityBuilder.addComponent(regionOutlineComponent);
             regionOutlineAndTextEntities.add(entityBuilder.build());
