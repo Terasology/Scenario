@@ -20,7 +20,6 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.network.FieldReplicateType;
 import org.terasology.network.NoReplicate;
 import org.terasology.network.Replicate;
-import org.terasology.scenario.internal.ui.HubToolScreen;
 
 /**
  * Component that lets the client know that the scenario entity was updated and therefore it should redraw on the next update

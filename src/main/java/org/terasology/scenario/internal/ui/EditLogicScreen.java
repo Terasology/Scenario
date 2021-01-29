@@ -15,7 +15,6 @@
  */
 package org.terasology.scenario.internal.ui;
 
-import org.terasology.joml.geom.Rectanglei;
 import org.joml.Vector2i;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +24,7 @@ import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.prefab.Prefab;
 import org.terasology.entitySystem.prefab.PrefabManager;
+import org.terasology.joml.geom.Rectanglei;
 import org.terasology.logic.players.LocalPlayer;
 import org.terasology.nui.Canvas;
 import org.terasology.nui.TextLineBuilder;
@@ -39,9 +39,9 @@ import org.terasology.nui.widgets.UIDropdownScrollable;
 import org.terasology.nui.widgets.UILabel;
 import org.terasology.registry.In;
 import org.terasology.rendering.nui.CoreScreenLayer;
+import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 import org.terasology.scenario.components.ScenarioLogicLabelComponent;
 import org.terasology.scenario.components.actions.ScenarioIndicatorActionComponent;
-import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 import org.terasology.scenario.components.conditionals.ScenarioIndicatorConditionalComponent;
 import org.terasology.scenario.components.events.ScenarioIndicatorEventComponent;
 import org.terasology.scenario.internal.events.ConvertScenarioEntityEvent;

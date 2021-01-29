@@ -16,12 +16,9 @@
 package org.terasology.scenario.components.regions;
 
 import org.terasology.entitySystem.Component;
-import org.terasology.math.Region3i;
 import org.terasology.network.FieldReplicateType;
 import org.terasology.network.Replicate;
 import org.terasology.scenario.components.ScenarioComponent;
-import org.terasology.scenario.internal.systems.RegionSystem;
-import org.terasology.structureTemplates.components.ProtectedRegionsComponent;
 
 /**
  * Creation component for a Scenario argument entity, includes the name of the region

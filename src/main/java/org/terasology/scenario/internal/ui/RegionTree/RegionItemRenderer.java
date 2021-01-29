@@ -15,14 +15,14 @@
  */
 package org.terasology.scenario.internal.ui.RegionTree;
 
-import org.terasology.joml.geom.Rectanglei;
 import org.joml.Vector2i;
+import org.terasology.joml.geom.Rectanglei;
 import org.terasology.nui.Canvas;
+import org.terasology.nui.Color;
 import org.terasology.nui.FontColor;
 import org.terasology.nui.TextLineBuilder;
 import org.terasology.nui.asset.font.Font;
 import org.terasology.nui.itemRendering.AbstractItemRenderer;
-import org.terasology.nui.Color;
 import org.terasology.nui.util.RectUtility;
 import org.terasology.scenario.components.regions.RegionColorComponent;
 import org.terasology.scenario.components.regions.RegionNameComponent;

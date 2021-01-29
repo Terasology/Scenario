@@ -19,7 +19,6 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 import org.terasology.network.ServerEvent;
 import org.terasology.scenario.internal.systems.EntityTreeSystem;
-import org.terasology.scenario.internal.ui.HubToolScreen;
 
 /**
  * Event for deleting an entity from the logic tree. Sent to the root entity.
