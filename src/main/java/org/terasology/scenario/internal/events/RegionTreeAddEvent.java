@@ -19,7 +19,6 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 import org.terasology.network.ServerEvent;
 import org.terasology.scenario.internal.systems.RegionTreeSystem;
-import org.terasology.scenario.internal.ui.HubToolScreen;
 
 /**
  * Event that is called to begin a region creation, only sets up a region entity that is in process of being created, does not completely

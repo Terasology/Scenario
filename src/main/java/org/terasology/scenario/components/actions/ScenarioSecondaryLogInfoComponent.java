@@ -17,10 +17,7 @@ package org.terasology.scenario.components.actions;
 
 import org.terasology.entitySystem.Component;
 import org.terasology.network.Replicate;
-import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 import org.terasology.scenario.components.ScenarioComponent;
-import org.terasology.scenario.components.ScenarioLogicLabelComponent;
-import org.terasology.scenario.components.ScenarioLogicTextComponent;
 
 /**
  * Secondary Indicator component for a Scenario logic entity, indicates that the entity is an action that logs to the authoritie's logger

@@ -17,9 +17,6 @@ package org.terasology.scenario.components.actions;
 
 import org.terasology.entitySystem.Component;
 import org.terasology.network.Replicate;
-import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
-import org.terasology.scenario.components.ScenarioLogicLabelComponent;
-import org.terasology.scenario.components.ScenarioLogicTextComponent;
 import org.terasology.scenario.components.ScenarioComponent;
 
 /**

@@ -15,8 +15,8 @@
  */
 package org.terasology.scenario.internal.ui.LogicTree;
 
-import org.terasology.joml.geom.Rectanglei;
 import org.joml.Vector2i;
+import org.terasology.joml.geom.Rectanglei;
 import org.terasology.nui.Canvas;
 import org.terasology.nui.TextLineBuilder;
 import org.terasology.nui.asset.font.Font;
