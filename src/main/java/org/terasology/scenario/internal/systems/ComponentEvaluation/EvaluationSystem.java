@@ -117,7 +117,7 @@ public class EvaluationSystem extends BaseComponentSystem {
     public void onEvaluateBlockEvent(EvaluateBlockEvent event, EntityRef entity, ScenarioValueTriggeringBlockComponent comp) {
         EntityRef passed = event.getPassedEntity();
         BlockComponent block = passed.getComponent(InfoDestroyedBlockComponent.class).destroyedBlock.getComponent(BlockComponent.class);
-        event.setResult(block.block.getBlockFamily());
+        event.setResult(block.getBlock().getBlockFamily());
     }
 
     @ReceiveEvent
