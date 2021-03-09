@@ -15,11 +15,11 @@
  */
 package org.terasology.scenario.components.information;
 
-import org.terasology.entitySystem.Component;
-import org.terasology.network.FieldReplicateType;
-import org.terasology.network.Replicate;
+import org.terasology.engine.entitySystem.Component;
+import org.terasology.engine.network.FieldReplicateType;
+import org.terasology.engine.network.Replicate;
+import org.terasology.engine.world.block.family.BlockFamily;
 import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
-import org.terasology.world.block.family.BlockFamily;
 
 /**
  * Value component for a Scenario argument entity, Contains a blockFamily value

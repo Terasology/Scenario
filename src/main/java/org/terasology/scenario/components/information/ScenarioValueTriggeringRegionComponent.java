@@ -15,7 +15,7 @@
  */
 package org.terasology.scenario.components.information;
 
-import org.terasology.entitySystem.Component;
+import org.terasology.engine.entitySystem.Component;
 import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 
 /**

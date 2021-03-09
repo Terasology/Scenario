@@ -15,10 +15,10 @@
  */
 package org.terasology.scenario.components;
 
-import org.terasology.entitySystem.Component;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.network.NetworkComponent;
-import org.terasology.network.Replicate;
+import org.terasology.engine.entitySystem.Component;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.network.NetworkComponent;
+import org.terasology.engine.network.Replicate;
 import org.terasology.scenario.components.information.IndentificationComponents.ScenarioTypeIntegerComponent;
 import org.terasology.scenario.components.information.ScenarioValueStringComponent;
 

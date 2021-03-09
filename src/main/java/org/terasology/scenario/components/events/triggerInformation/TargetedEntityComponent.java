@@ -15,8 +15,8 @@
  */
 package org.terasology.scenario.components.events.triggerInformation;
 
-import org.terasology.entitySystem.Component;
-import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.Component;
+import org.terasology.engine.entitySystem.entity.EntityRef;
 
 /**
  * Component that contains the targeted entity when a logic event is triggered

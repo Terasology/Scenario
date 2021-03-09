@@ -15,7 +15,7 @@
  */
 package org.terasology.scenario.internal.events;
 
-import org.terasology.entitySystem.event.Event;
+import org.terasology.engine.entitySystem.event.Event;
 import org.terasology.scenario.internal.systems.ConvertEntitySystem;
 
 import java.util.ArrayList;

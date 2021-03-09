@@ -15,9 +15,9 @@
  */
 package org.terasology.scenario.components.events.triggerInformation;
 
-import org.terasology.entitySystem.Component;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.prefab.Prefab;
+import org.terasology.engine.entitySystem.Component;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.prefab.Prefab;
 
 /**
  * Component that is attached to the data entity that is passed when an event in the Scenario logic occurs.

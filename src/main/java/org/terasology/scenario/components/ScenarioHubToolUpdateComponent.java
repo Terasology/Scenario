@@ -15,11 +15,11 @@
  */
 package org.terasology.scenario.components;
 
-import org.terasology.entitySystem.Component;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.network.FieldReplicateType;
-import org.terasology.network.NoReplicate;
-import org.terasology.network.Replicate;
+import org.terasology.engine.entitySystem.Component;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.network.FieldReplicateType;
+import org.terasology.engine.network.NoReplicate;
+import org.terasology.engine.network.Replicate;
 
 /**
  * Component that lets the client know that the scenario entity was updated and therefore it should redraw on the next update

@@ -17,13 +17,14 @@ package org.terasology.scenario.internal.systems.ComponentEvaluation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.event.ReceiveEvent;
-import org.terasology.entitySystem.prefab.PrefabManager;
-import org.terasology.entitySystem.systems.BaseComponentSystem;
-import org.terasology.entitySystem.systems.RegisterMode;
-import org.terasology.entitySystem.systems.RegisterSystem;
-import org.terasology.registry.In;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.event.ReceiveEvent;
+import org.terasology.engine.entitySystem.prefab.PrefabManager;
+import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
+import org.terasology.engine.entitySystem.systems.RegisterMode;
+import org.terasology.engine.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.registry.In;
+import org.terasology.engine.world.block.BlockManager;
 import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 import org.terasology.scenario.components.information.ScenarioExpressionBlockCountComponent;
 import org.terasology.scenario.components.information.ScenarioExpressionConcatStringComponent;
@@ -43,7 +44,6 @@ import org.terasology.scenario.components.information.ScenarioValueTriggeringBlo
 import org.terasology.scenario.components.information.ScenarioValueTriggeringRegionComponent;
 import org.terasology.scenario.components.regions.RegionNameComponent;
 import org.terasology.scenario.internal.events.evaluationEvents.EvaluateDisplayEvent;
-import org.terasology.world.block.BlockManager;
 
 import java.util.Map;
 

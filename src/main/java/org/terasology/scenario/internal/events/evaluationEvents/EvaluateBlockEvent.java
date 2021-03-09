@@ -15,10 +15,10 @@
  */
 package org.terasology.scenario.internal.events.evaluationEvents;
 
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.event.Event;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.event.Event;
+import org.terasology.engine.world.block.family.BlockFamily;
 import org.terasology.scenario.internal.systems.ScenarioRootManagementSystem;
-import org.terasology.world.block.family.BlockFamily;
 
 /**
  * Event utilized by {@link ScenarioRootManagementSystem} in order to request

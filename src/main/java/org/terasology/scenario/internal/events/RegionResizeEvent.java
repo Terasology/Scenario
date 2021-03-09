@@ -15,12 +15,12 @@
  */
 package org.terasology.scenario.internal.events;
 
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.event.Event;
-import org.terasology.network.ServerEvent;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.event.Event;
+import org.terasology.engine.network.ServerEvent;
+import org.terasology.engine.world.block.BlockRegion;
+import org.terasology.engine.world.block.BlockRegionc;
 import org.terasology.scenario.internal.systems.RegionTreeSystem;
-import org.terasology.world.block.BlockRegion;
-import org.terasology.world.block.BlockRegionc;
 
 /**
  * Event that is called to resize a region entity

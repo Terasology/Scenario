@@ -19,26 +19,26 @@ import org.joml.Vector3i;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.assets.management.AssetManager;
-import org.terasology.entitySystem.entity.EntityManager;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.event.EventPriority;
-import org.terasology.entitySystem.event.ReceiveEvent;
-import org.terasology.entitySystem.prefab.Prefab;
-import org.terasology.entitySystem.prefab.PrefabManager;
-import org.terasology.entitySystem.systems.BaseComponentSystem;
-import org.terasology.entitySystem.systems.RegisterMode;
-import org.terasology.entitySystem.systems.RegisterSystem;
-import org.terasology.logic.characters.events.AttackEvent;
-import org.terasology.logic.chat.ChatMessageEvent;
-import org.terasology.logic.common.DisplayNameComponent;
-import org.terasology.network.ColorComponent;
+import org.terasology.engine.entitySystem.entity.EntityManager;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.event.EventPriority;
+import org.terasology.engine.entitySystem.event.ReceiveEvent;
+import org.terasology.engine.entitySystem.prefab.Prefab;
+import org.terasology.engine.entitySystem.prefab.PrefabManager;
+import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
+import org.terasology.engine.entitySystem.systems.RegisterMode;
+import org.terasology.engine.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.logic.characters.events.AttackEvent;
+import org.terasology.engine.logic.chat.ChatMessageEvent;
+import org.terasology.engine.logic.common.DisplayNameComponent;
+import org.terasology.engine.network.ColorComponent;
+import org.terasology.engine.registry.In;
+import org.terasology.engine.world.block.BlockRegion;
 import org.terasology.nui.Color;
-import org.terasology.registry.In;
 import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.components.regions.RegionBeingCreatedComponent;
 import org.terasology.scenario.components.regions.RegionLocationComponent;
 import org.terasology.scenario.internal.events.RegionTreeFullAddEvent;
-import org.terasology.world.block.BlockRegion;
 
 import java.util.Iterator;
 
@@ -73,7 +73,7 @@ public class RegionSystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent(priority = EventPriority.PRIORITY_CRITICAL)
-    public void onAttackEntity(AttackEvent event, EntityRef targetEntity, org.terasology.world.block.BlockComponent blockComponent) {
+    public void onAttackEntity(AttackEvent event, EntityRef targetEntity, org.terasology.engine.world.block.BlockComponent blockComponent) {
         Iterator<EntityRef> entities = entityManager.getEntitiesWith(RegionBeingCreatedComponent.class).iterator();
         while (entities.hasNext()) {
             EntityRef editedRegion = entities.next();

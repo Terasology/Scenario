@@ -19,8 +19,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.rendering.nui.NUIManager;
-import org.terasology.rendering.nui.contextMenu.MenuTree;
+import org.terasology.engine.rendering.nui.NUIManager;
+import org.terasology.engine.rendering.nui.contextMenu.MenuTree;
 import org.terasology.scenario.internal.ui.HubToolScreen;
 
 import java.util.List;

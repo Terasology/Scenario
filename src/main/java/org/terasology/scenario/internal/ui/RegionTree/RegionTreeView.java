@@ -15,11 +15,11 @@
  */
 package org.terasology.scenario.internal.ui.RegionTree;
 
+import org.terasology.engine.rendering.nui.NUIManager;
+import org.terasology.engine.rendering.nui.contextMenu.ContextMenuUtils;
+import org.terasology.engine.rendering.nui.contextMenu.MenuTree;
 import org.terasology.input.MouseInput;
 import org.terasology.nui.widgets.UITreeView;
-import org.terasology.rendering.nui.NUIManager;
-import org.terasology.rendering.nui.contextMenu.ContextMenuUtils;
-import org.terasology.rendering.nui.contextMenu.MenuTree;
 import org.terasology.scenario.internal.ui.HubToolScreen;
 
 import java.util.function.Function;

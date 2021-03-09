@@ -15,11 +15,12 @@
  */
 package org.terasology.scenario.components;
 
-import org.terasology.entitySystem.Component;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.network.FieldReplicateType;
-import org.terasology.network.NetworkComponent;
-import org.terasology.network.Replicate;
+import org.terasology.engine.entitySystem.Component;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.network.FieldReplicateType;
+import org.terasology.engine.network.NetworkComponent;
+import org.terasology.engine.network.Replicate;
+import org.terasology.engine.world.block.BlockRegion;
 import org.terasology.scenario.components.actions.ScenarioIndicatorActionComponent;
 import org.terasology.scenario.components.actions.ScenarioSecondaryGiveBlockComponent;
 import org.terasology.scenario.components.regions.RegionBeingCreatedComponent;
@@ -29,7 +30,6 @@ import org.terasology.scenario.components.regions.RegionLocationComponent;
 import org.terasology.scenario.components.regions.RegionNameComponent;
 import org.terasology.scenario.internal.systems.RegionSystem;
 import org.terasology.structureTemplates.components.ProtectedRegionsComponent;
-import org.terasology.world.block.BlockRegion;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -2,11 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 package org.terasology.scenario.components.regions;
 
-import org.terasology.entitySystem.Component;
-import org.terasology.network.FieldReplicateType;
-import org.terasology.network.Replicate;
+import org.terasology.engine.entitySystem.Component;
+import org.terasology.engine.network.FieldReplicateType;
+import org.terasology.engine.network.Replicate;
+import org.terasology.engine.world.block.BlockRegion;
 import org.terasology.scenario.components.ScenarioComponent;
-import org.terasology.world.block.BlockRegion;
 
 /**
  * Creation component for a Scenario argument entity, contains the actual BlockRegion of the region

@@ -17,8 +17,8 @@ package org.terasology.scenario.internal.ui.LogicTree;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.rendering.assets.texture.TextureRegion;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.rendering.assets.texture.TextureRegion;
 import org.terasology.scenario.components.ScenarioLogicTextComponent;
 import org.terasology.scenario.internal.utilities.ArgumentParser;
 

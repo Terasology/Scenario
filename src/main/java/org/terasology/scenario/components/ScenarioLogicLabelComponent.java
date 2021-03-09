@@ -15,9 +15,9 @@
  */
 package org.terasology.scenario.components;
 
-import org.terasology.entitySystem.Component;
-import org.terasology.network.FieldReplicateType;
-import org.terasology.network.Replicate;
+import org.terasology.engine.entitySystem.Component;
+import org.terasology.engine.network.FieldReplicateType;
+import org.terasology.engine.network.Replicate;
 
 /**
  * Label component for a Scenario logic entity, includes the text displayed on a dropdown menu for selecting an entity prefab in the logic editor
