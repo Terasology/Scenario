@@ -23,7 +23,7 @@ import org.terasology.engine.entitySystem.event.ReceiveEvent;
 import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
 import org.terasology.engine.entitySystem.systems.RegisterMode;
 import org.terasology.engine.entitySystem.systems.RegisterSystem;
-import org.terasology.logic.health.DoDestroyEvent;
+import org.terasology.engine.logic.health.DoDestroyEvent;
 import org.terasology.engine.logic.players.event.OnPlayerRespawnedEvent;
 import org.terasology.engine.logic.players.event.OnPlayerSpawnedEvent;
 import org.terasology.engine.registry.In;

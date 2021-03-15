@@ -13,7 +13,7 @@ import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
 import org.terasology.engine.entitySystem.systems.RegisterMode;
 import org.terasology.engine.entitySystem.systems.RegisterSystem;
 import org.terasology.engine.logic.common.DisplayNameComponent;
-import org.terasology.engine.logic.inventory.InventoryComponent;
+import org.terasology.logic.inventory.InventoryComponent;
 import org.terasology.engine.logic.inventory.ItemComponent;
 import org.terasology.engine.logic.location.LocationComponent;
 import org.terasology.engine.network.ClientComponent;
