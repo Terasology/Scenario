@@ -19,7 +19,7 @@ import com.google.common.collect.Lists;
 import org.joml.Vector3f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.assets.management.AssetManager;
+import org.terasology.gestalt.assets.management.AssetManager;
 import org.terasology.engine.entitySystem.entity.EntityManager;
 import org.terasology.engine.entitySystem.entity.EntityRef;
 import org.terasology.engine.entitySystem.event.ReceiveEvent;
@@ -81,7 +81,7 @@ public class RegionTreeSystem extends BaseComponentSystem {
     @Override
     public void postBegin() {
 		// Checks for existing scenarios
-        Iterable<EntityRef> scenario = entityManager.getEntitiesWith(ScenarioComponent.class); 
+        Iterable<EntityRef> scenario = entityManager.getEntitiesWith(ScenarioComponent.class);
 
         if (!scenario.iterator().hasNext()) { //No scenario exists yet
             scenarioEntity = entityManager.create(assetManager.getAsset("scenario:scenarioEntity", Prefab.class).get());
