@@ -10,11 +10,11 @@ To start off we need to create a new Component that will be used to identify the
 Now we need to write our component class, for an indicator we need to do two steps, first we need to annotate the class with a `@Replicate` annotation and have it implement the `Component` interface. This results in our class looking like this:
 
 ```java
-    import org.terasology.engine.entitySystem.Component;
+    import org.terasology.gestalt.entitysystem.component.Component;
 import org.terasology.engine.network.Replicate;
 
 @Replicate
-public class ScenarioSecondaryBlockCompareComponent implements Component {
+public class ScenarioSecondaryBlockCompareComponent implements Component<ScenarioSecondaryBlockCompareComponent> {
 }
 ```
 

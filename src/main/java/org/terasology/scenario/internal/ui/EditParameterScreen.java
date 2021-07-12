@@ -109,7 +109,7 @@ public class EditParameterScreen extends CoreScreenLayer {
     private UIDropdownScrollable<String> blockDropdown;
     private UIDropdownScrollable<String> itemDropdown;
     private UIDropdownScrollable<EntityRef> regionDropdown;
-    private UIDropdownScrollable<ScenarioValueComparatorComponent.comparison> comparisonDropdown;
+    private UIDropdownScrollable<ScenarioValueComparatorComponent.Comparison> comparisonDropdown;
     private List<UIWidget> oldWidgets;
 
     private List<String> blocksURI;
@@ -325,7 +325,7 @@ public class EditParameterScreen extends CoreScreenLayer {
             emptyVariables();
 
             comparisonDropdown = new UIDropdownScrollable<>();
-            comparisonDropdown.setOptions(Arrays.asList(ScenarioValueComparatorComponent.comparison.values()));
+            comparisonDropdown.setOptions(Arrays.asList(ScenarioValueComparatorComponent.Comparison.values()));
             comparisonDropdown.setSelection(tempEntity.getComponent(ScenarioValueComparatorComponent.class).compare);
 
             variables.addWidget(comparisonDropdown);
