@@ -23,4 +23,12 @@ public class TriggerNameComponent implements Component<TriggerNameComponent> {
 
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public EntityRef entityForAction;
+
+    @Override
+    public void copy(TriggerNameComponent other) {
+        this.name = other.name;
+        this.entityForEvent = other.entityForEvent;
+        this.entityForCondition = other.entityForCondition;
+        this.entityForAction = other.entityForAction;
+    }
 }

@@ -15,5 +15,10 @@ import org.terasology.scenario.components.ScenarioComponent;
  */
 public class RegionColorComponent implements Component<RegionColorComponent> {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
-    public Color color = Color.WHITE;
+    public Color color = new Color(Color.white);
+
+    @Override
+    public void copy(RegionColorComponent other) {
+        this.color = new Color(other.color);
+    }
 }

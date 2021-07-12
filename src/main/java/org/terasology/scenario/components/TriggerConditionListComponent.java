@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package org.terasology.scenario.components;
 
+import com.google.common.collect.Lists;
 import org.terasology.engine.entitySystem.entity.EntityRef;
 import org.terasology.engine.network.FieldReplicateType;
 import org.terasology.engine.network.Replicate;
@@ -18,4 +19,9 @@ import java.util.List;
 public class TriggerConditionListComponent implements Component<TriggerConditionListComponent> {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public List<EntityRef> conditions = new ArrayList<>();
+
+    @Override
+    public void copy(TriggerConditionListComponent other) {
+        this.conditions = Lists.newArrayList(other.conditions);
+    }
 }

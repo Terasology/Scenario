@@ -13,4 +13,8 @@ import org.terasology.scenario.components.ScenarioComponent;
  */
 @Replicate
 public class ScenarioSecondaryIntCompareComponent implements Component<ScenarioSecondaryIntCompareComponent> {
+    @Override
+    public void copy(ScenarioSecondaryIntCompareComponent other) {
+
+    }
 }

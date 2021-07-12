@@ -21,4 +21,9 @@ import org.terasology.scenario.internal.utilities.ArgumentParser;
 public class ScenarioLogicTextComponent implements Component<ScenarioLogicTextComponent> {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public String text;
+
+    @Override
+    public void copy(ScenarioLogicTextComponent other) {
+        this.text = other.text;
+    }
 }

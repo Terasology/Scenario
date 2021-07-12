@@ -13,4 +13,8 @@ import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
  */
 @Replicate
 public class ScenarioTypeIntegerComponent implements Component<ScenarioTypeIntegerComponent> {
+    @Override
+    public void copy(ScenarioTypeIntegerComponent other) {
+
+    }
 }

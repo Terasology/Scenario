@@ -16,4 +16,9 @@ import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 public class ScenarioValueRegionComponent implements Component<ScenarioValueRegionComponent> {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public EntityRef regionEntity;
+
+    @Override
+    public void copy(ScenarioValueRegionComponent other) {
+
+    }
 }

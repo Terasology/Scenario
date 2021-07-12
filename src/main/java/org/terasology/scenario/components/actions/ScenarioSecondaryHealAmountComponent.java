@@ -13,4 +13,8 @@ import org.terasology.scenario.components.ScenarioComponent;
  */
 @Replicate
 public class ScenarioSecondaryHealAmountComponent implements Component<ScenarioSecondaryHealAmountComponent> {
+    @Override
+    public void copy(ScenarioSecondaryHealAmountComponent other) {
+
+    }
 }

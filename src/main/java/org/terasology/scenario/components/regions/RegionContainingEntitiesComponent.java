@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package org.terasology.scenario.components.regions;
 
+import com.google.common.collect.Lists;
 import org.terasology.engine.entitySystem.entity.EntityRef;
 import org.terasology.engine.network.FieldReplicateType;
 import org.terasology.engine.network.Replicate;
@@ -19,4 +20,9 @@ import java.util.List;
 public class RegionContainingEntitiesComponent implements Component<RegionContainingEntitiesComponent> {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public List<EntityRef> entities = new ArrayList<>();
+
+    @Override
+    public void copy(RegionContainingEntitiesComponent other) {
+        this.entities = Lists.newArrayList(other.entities);
+    }
 }

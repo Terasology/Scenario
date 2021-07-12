@@ -20,4 +20,10 @@ public class RegionBeingCreatedComponent implements Component<RegionBeingCreated
 
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public EntityRef creatingEntity;
+
+    @Override
+    public void copy(RegionBeingCreatedComponent other) {
+        this.firstHit = other.firstHit;
+        this.creatingEntity = other.creatingEntity;
+    }
 }

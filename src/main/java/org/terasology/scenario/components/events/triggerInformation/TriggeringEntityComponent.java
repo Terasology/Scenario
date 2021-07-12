@@ -13,4 +13,9 @@ public class TriggeringEntityComponent implements Component<TriggeringEntityComp
      * Entity that triggers the event
      */
     public EntityRef entity;
+
+    @Override
+    public void copy(TriggeringEntityComponent other) {
+        this.entity = other.entity;
+    }
 }

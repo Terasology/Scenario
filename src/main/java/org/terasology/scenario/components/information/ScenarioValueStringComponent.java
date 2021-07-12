@@ -15,4 +15,9 @@ import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 public class ScenarioValueStringComponent implements Component<ScenarioValueStringComponent> {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public String string;
+
+    @Override
+    public void copy(ScenarioValueStringComponent other) {
+        this.string = other.string;
+    }
 }

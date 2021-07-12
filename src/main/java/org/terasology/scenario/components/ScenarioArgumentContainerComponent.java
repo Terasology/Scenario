@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package org.terasology.scenario.components;
 
+import com.google.common.collect.Maps;
 import org.terasology.engine.entitySystem.entity.EntityRef;
 import org.terasology.engine.network.NetworkComponent;
 import org.terasology.engine.network.Replicate;
@@ -25,5 +26,10 @@ import java.util.Map;
 @Replicate
 public class ScenarioArgumentContainerComponent implements Component<ScenarioArgumentContainerComponent> {
     @Replicate
-    public Map<String, EntityRef> arguments;
+    public Map<String, EntityRef> arguments = Maps.newHashMap();
+
+    @Override
+    public void copy(ScenarioArgumentContainerComponent other) {
+        this.arguments = Maps.newHashMap(other.arguments);
+    }
 }

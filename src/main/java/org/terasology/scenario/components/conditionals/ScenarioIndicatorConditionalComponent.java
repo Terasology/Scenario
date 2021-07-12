@@ -13,4 +13,8 @@ import org.terasology.scenario.components.ScenarioComponent;
  */
 @Replicate
 public class ScenarioIndicatorConditionalComponent implements Component<ScenarioIndicatorConditionalComponent> {
+    @Override
+    public void copy(ScenarioIndicatorConditionalComponent other) {
+
+    }
 }

@@ -13,4 +13,9 @@ public class InfoTargetedEntityComponent implements Component<InfoTargetedEntity
      * entity that was targeted
      */
     public EntityRef entity;
+
+    @Override
+    public void copy(InfoTargetedEntityComponent other) {
+        this.entity = other.entity;
+    }
 }

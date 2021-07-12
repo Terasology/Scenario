@@ -14,4 +14,9 @@ import org.terasology.gestalt.entitysystem.component.Component;
 public class ScenarioLogicLabelComponent implements Component<ScenarioLogicLabelComponent> {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public String name;
+
+    @Override
+    public void copy(ScenarioLogicLabelComponent other) {
+        this.name = other.name;
+    }
 }

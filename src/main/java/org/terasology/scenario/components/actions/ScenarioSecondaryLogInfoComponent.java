@@ -14,4 +14,8 @@ import org.terasology.scenario.components.ScenarioComponent;
  */
 @Replicate
 public class ScenarioSecondaryLogInfoComponent implements Component<ScenarioSecondaryLogInfoComponent> {
+    @Override
+    public void copy(ScenarioSecondaryLogInfoComponent other) {
+
+    }
 }

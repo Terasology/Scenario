@@ -15,4 +15,9 @@ import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 public class ScenarioValueItemPrefabUriComponent implements Component<ScenarioValueItemPrefabUriComponent> {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public String prefabURI;
+
+    @Override
+    public void copy(ScenarioValueItemPrefabUriComponent other) {
+
+    }
 }

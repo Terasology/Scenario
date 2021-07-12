@@ -13,7 +13,7 @@ import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
  */
 @Replicate
 public class ScenarioValueComparatorComponent implements Component<ScenarioValueComparatorComponent> {
-    public enum comparison {
+    public enum Comparison {
         GREATER_THAN(">") {
             public boolean evaluate(int x, int y) {
                 return x > y;
@@ -47,7 +47,7 @@ public class ScenarioValueComparatorComponent implements Component<ScenarioValue
 
         private String stringRepresentation;
 
-        comparison(String stringRepresentation) {
+        Comparison(String stringRepresentation) {
             this.stringRepresentation = stringRepresentation;
         }
 
@@ -58,5 +58,10 @@ public class ScenarioValueComparatorComponent implements Component<ScenarioValue
         public abstract boolean evaluate(int x, int y);
     }
 
-    public comparison compare = comparison.EQUAL_TO;
+    public Comparison compare = Comparison.EQUAL_TO;
+
+    @Override
+    public void copy(ScenarioValueComparatorComponent other) {
+        this.compare = other.compare;
+    }
 }

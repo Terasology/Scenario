@@ -16,4 +16,9 @@ import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 public class ScenarioValueBlockFamilyComponent implements Component<ScenarioValueBlockFamilyComponent> {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public BlockFamily value;
+
+    @Override
+    public void copy(ScenarioValueBlockFamilyComponent other) {
+
+    }
 }

@@ -13,4 +13,8 @@ import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
  */
 @Replicate
 public class ScenarioExpressionBlockCountComponent implements Component<ScenarioExpressionBlockCountComponent> {
+    @Override
+    public void copy(ScenarioExpressionBlockCountComponent other) {
+
+    }
 }

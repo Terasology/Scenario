@@ -13,4 +13,9 @@ public class InfoTriggeringEntityComponent implements Component<InfoTriggeringEn
      * The entity that triggered the event and cause it to occur (Will usually be a player character)
      */
     public EntityRef entity;
+
+    @Override
+    public void copy(InfoTriggeringEntityComponent other) {
+        this.entity = other.entity;
+    }
 }

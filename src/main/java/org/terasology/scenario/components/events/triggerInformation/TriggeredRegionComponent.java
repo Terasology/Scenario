@@ -12,4 +12,9 @@ public class TriggeredRegionComponent implements Component<TriggeredRegionCompon
      * Targeted region for a triggered logic event
      */
     public EntityRef region;
+
+    @Override
+    public void copy(TriggeredRegionComponent other) {
+        this.region = other.region;
+    }
 }

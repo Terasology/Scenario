@@ -15,4 +15,9 @@ import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 public class ScenarioValueIntegerComponent implements Component<ScenarioValueIntegerComponent> {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public int value;
+
+    @Override
+    public void copy(ScenarioValueIntegerComponent other) {
+
+    }
 }

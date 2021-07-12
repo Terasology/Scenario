@@ -13,4 +13,9 @@ public class TargetedEntityComponent implements Component<TargetedEntityComponen
      * Entity targeted for a triggered logic event
      */
     public EntityRef entity;
+
+    @Override
+    public void copy(TargetedEntityComponent other) {
+        this.entity = other.entity;
+    }
 }

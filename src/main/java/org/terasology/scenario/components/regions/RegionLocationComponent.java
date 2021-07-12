@@ -15,5 +15,10 @@ import org.terasology.scenario.components.ScenarioComponent;
  */
 public class RegionLocationComponent implements Component<RegionLocationComponent> {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
-    public BlockRegion region;
+    public BlockRegion region = new BlockRegion(BlockRegion.INVALID);
+
+    @Override
+    public void copy(RegionLocationComponent other) {
+        this.region.set(other.region);
+    }
 }

@@ -11,4 +11,8 @@ import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
  * Argument Entities detailed in {@link ScenarioArgumentContainerComponent}
  */
 public class ScenarioValueTriggeringRegionComponent implements Component<ScenarioValueTriggeringRegionComponent> {
+    @Override
+    public void copy(ScenarioValueTriggeringRegionComponent other) {
+
+    }
 }

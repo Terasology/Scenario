@@ -13,4 +13,8 @@ import org.terasology.scenario.components.ScenarioComponent;
  */
 @Replicate
 public class ScenarioSecondaryTakeItemComponent implements Component<ScenarioSecondaryTakeItemComponent> {
+    @Override
+    public void copy(ScenarioSecondaryTakeItemComponent other) {
+
+    }
 }

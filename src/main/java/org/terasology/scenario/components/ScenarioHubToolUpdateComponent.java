@@ -17,4 +17,10 @@ public class ScenarioHubToolUpdateComponent implements Component<ScenarioHubTool
 
     @Replicate(FieldReplicateType.SERVER_TO_OWNER)
     public EntityRef addedEntity;
+
+    @Override
+    public void copy(ScenarioHubToolUpdateComponent other) {
+        this.localScreenID = other.localScreenID;
+        this.addedEntity = other.addedEntity;
+    }
 }

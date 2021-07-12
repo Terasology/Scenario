@@ -13,4 +13,8 @@ import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
  */
 @Replicate
 public class ScenarioExpressionRandomIntComponent implements Component<ScenarioExpressionRandomIntComponent> {
+    @Override
+    public void copy(ScenarioExpressionRandomIntComponent other) {
+
+    }
 }

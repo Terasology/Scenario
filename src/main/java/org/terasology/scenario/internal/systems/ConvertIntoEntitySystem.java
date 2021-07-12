@@ -160,7 +160,7 @@ public class ConvertIntoEntitySystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity, ScenarioValueComparatorComponent component) {
-        component.compare = ScenarioValueComparatorComponent.comparison.valueOf(event.getValue());
+        component.compare = ScenarioValueComparatorComponent.Comparison.valueOf(event.getValue());
         entity.saveComponent(component);
     }
 

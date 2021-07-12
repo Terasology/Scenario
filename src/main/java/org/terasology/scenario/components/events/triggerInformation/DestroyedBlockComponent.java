@@ -24,4 +24,11 @@ public class DestroyedBlockComponent implements Component<DestroyedBlockComponen
      * prefab of the item used to destroy the block
      */
     public Prefab damageType;
+
+    @Override
+    public void copy(DestroyedBlockComponent other) {
+        this.destroyedBlock = other.destroyedBlock;
+        this.directCause = other.directCause;
+        this.damageType = other.damageType;
+    }
 }

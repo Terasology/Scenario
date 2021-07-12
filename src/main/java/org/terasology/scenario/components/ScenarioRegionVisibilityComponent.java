@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package org.terasology.scenario.components;
 
+import com.google.common.collect.Sets;
 import org.terasology.engine.entitySystem.entity.EntityRef;
 import org.terasology.engine.network.FieldReplicateType;
 import org.terasology.engine.network.Replicate;
@@ -18,4 +19,9 @@ import java.util.Set;
 public class ScenarioRegionVisibilityComponent implements Component<ScenarioRegionVisibilityComponent> {
     @Replicate(FieldReplicateType.OWNER_TO_SERVER)
     public Set<EntityRef> visibleList = new HashSet<>();
+
+    @Override
+    public void copy(ScenarioRegionVisibilityComponent other) {
+        visibleList = Sets.newHashSet(other.visibleList);
+    }
 }

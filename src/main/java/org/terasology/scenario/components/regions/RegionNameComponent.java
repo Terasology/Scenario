@@ -16,4 +16,9 @@ import org.terasology.scenario.components.ScenarioComponent;
 public class RegionNameComponent implements Component<RegionNameComponent> {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public String regionName = "New Region";
+
+    @Override
+    public void copy(RegionNameComponent other) {
+        this.regionName = other.regionName;
+    }
 }

@@ -15,4 +15,9 @@ import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 public class ScenarioValueBlockUriComponent implements Component<ScenarioValueBlockUriComponent> {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public String block_uri;
+
+    @Override
+    public void copy(ScenarioValueBlockUriComponent other) {
+
+    }
 }

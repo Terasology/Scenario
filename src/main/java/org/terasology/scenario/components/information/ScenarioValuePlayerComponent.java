@@ -16,6 +16,11 @@ public class ScenarioValuePlayerComponent implements Component<ScenarioValuePlay
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public PlayerType type = PlayerType.TRIGGERING_PLAYER;
 
+    @Override
+    public void copy(ScenarioValuePlayerComponent other) {
+
+    }
+
     public enum PlayerType {
         TRIGGERING_PLAYER,
         TARGETED_PLAYER,
