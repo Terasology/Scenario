@@ -14,7 +14,7 @@ import org.terasology.scenario.components.ScenarioComponent;
 @Replicate
 public class ScenarioSecondaryBlockCompareComponent implements Component<ScenarioSecondaryBlockCompareComponent> {
     @Override
-    public void copy(ScenarioSecondaryBlockCompareComponent other) {
+    public void copyFrom(ScenarioSecondaryBlockCompareComponent other) {
 
     }
 }

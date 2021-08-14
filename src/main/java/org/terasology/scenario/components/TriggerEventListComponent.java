@@ -21,7 +21,7 @@ public class TriggerEventListComponent implements Component<TriggerEventListComp
     public List<EntityRef> events = new ArrayList<>();
 
     @Override
-    public void copy(TriggerEventListComponent other) {
+    public void copyFrom(TriggerEventListComponent other) {
         this.events = Lists.newArrayList(other.events);
     }
 }

@@ -14,7 +14,7 @@ import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 @Replicate
 public class ScenarioTypeBlockComponent implements Component<ScenarioTypeBlockComponent> {
     @Override
-    public void copy(ScenarioTypeBlockComponent other) {
+    public void copyFrom(ScenarioTypeBlockComponent other) {
 
     }
 }

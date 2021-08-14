@@ -23,7 +23,7 @@ public class ScenarioLogicTextComponent implements Component<ScenarioLogicTextCo
     public String text;
 
     @Override
-    public void copy(ScenarioLogicTextComponent other) {
+    public void copyFrom(ScenarioLogicTextComponent other) {
         this.text = other.text;
     }
 }

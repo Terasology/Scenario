@@ -17,7 +17,7 @@ public class ScenarioValueItemPrefabUriComponent implements Component<ScenarioVa
     public String prefabURI;
 
     @Override
-    public void copy(ScenarioValueItemPrefabUriComponent other) {
+    public void copyFrom(ScenarioValueItemPrefabUriComponent other) {
 
     }
 }

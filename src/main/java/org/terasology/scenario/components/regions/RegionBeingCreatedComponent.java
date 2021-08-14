@@ -22,7 +22,7 @@ public class RegionBeingCreatedComponent implements Component<RegionBeingCreated
     public EntityRef creatingEntity;
 
     @Override
-    public void copy(RegionBeingCreatedComponent other) {
+    public void copyFrom(RegionBeingCreatedComponent other) {
         this.firstHit = other.firstHit;
         this.creatingEntity = other.creatingEntity;
     }

@@ -21,7 +21,7 @@ public class ScenarioRegionVisibilityComponent implements Component<ScenarioRegi
     public Set<EntityRef> visibleList = new HashSet<>();
 
     @Override
-    public void copy(ScenarioRegionVisibilityComponent other) {
+    public void copyFrom(ScenarioRegionVisibilityComponent other) {
         visibleList = Sets.newHashSet(other.visibleList);
     }
 }

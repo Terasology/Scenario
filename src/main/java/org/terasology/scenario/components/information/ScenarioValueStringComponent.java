@@ -17,7 +17,7 @@ public class ScenarioValueStringComponent implements Component<ScenarioValueStri
     public String string;
 
     @Override
-    public void copy(ScenarioValueStringComponent other) {
+    public void copyFrom(ScenarioValueStringComponent other) {
         this.string = other.string;
     }
 }

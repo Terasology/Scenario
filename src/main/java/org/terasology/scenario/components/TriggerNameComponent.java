@@ -25,7 +25,7 @@ public class TriggerNameComponent implements Component<TriggerNameComponent> {
     public EntityRef entityForAction;
 
     @Override
-    public void copy(TriggerNameComponent other) {
+    public void copyFrom(TriggerNameComponent other) {
         this.name = other.name;
         this.entityForEvent = other.entityForEvent;
         this.entityForCondition = other.entityForCondition;

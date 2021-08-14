@@ -19,7 +19,7 @@ public class ScenarioHubToolUpdateComponent implements Component<ScenarioHubTool
     public EntityRef addedEntity;
 
     @Override
-    public void copy(ScenarioHubToolUpdateComponent other) {
+    public void copyFrom(ScenarioHubToolUpdateComponent other) {
         this.localScreenID = other.localScreenID;
         this.addedEntity = other.addedEntity;
     }

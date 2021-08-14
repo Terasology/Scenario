@@ -14,7 +14,7 @@ import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 @Replicate
 public class ScenarioExpressionConcatStringComponent implements Component<ScenarioExpressionConcatStringComponent> {
     @Override
-    public void copy(ScenarioExpressionConcatStringComponent other) {
+    public void copyFrom(ScenarioExpressionConcatStringComponent other) {
 
     }
 }

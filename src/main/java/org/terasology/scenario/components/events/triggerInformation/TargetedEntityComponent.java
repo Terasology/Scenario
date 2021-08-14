@@ -15,7 +15,7 @@ public class TargetedEntityComponent implements Component<TargetedEntityComponen
     public EntityRef entity;
 
     @Override
-    public void copy(TargetedEntityComponent other) {
+    public void copyFrom(TargetedEntityComponent other) {
         this.entity = other.entity;
     }
 }

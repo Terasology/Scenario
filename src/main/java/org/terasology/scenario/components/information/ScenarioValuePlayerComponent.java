@@ -17,7 +17,7 @@ public class ScenarioValuePlayerComponent implements Component<ScenarioValuePlay
     public PlayerType type = PlayerType.TRIGGERING_PLAYER;
 
     @Override
-    public void copy(ScenarioValuePlayerComponent other) {
+    public void copyFrom(ScenarioValuePlayerComponent other) {
 
     }
 

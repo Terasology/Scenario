@@ -19,7 +19,7 @@ public class HubToolExpansionComponent implements Component<HubToolExpansionComp
     public Set<EntityRef> expandedList = new HashSet<>();
 
     @Override
-    public void copy(HubToolExpansionComponent other) {
+    public void copyFrom(HubToolExpansionComponent other) {
         this.expandedList = Sets.newHashSet(other.expandedList);
     }
 }

@@ -60,7 +60,7 @@ public class ScenarioComponent implements Component<ScenarioComponent> {
     public List<EntityRef> regionEntities = new ArrayList<>();
 
     @Override
-    public void copy(ScenarioComponent other) {
+    public void copyFrom(ScenarioComponent other) {
         this.triggerEntities = Lists.newArrayList(other.triggerEntities);
         this.regionEntities = Lists.newArrayList(other.regionEntities);
     }

@@ -14,7 +14,7 @@ import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 @Replicate
 public class ScenarioExpressionPlayerNameComponent implements Component<ScenarioExpressionPlayerNameComponent> {
     @Override
-    public void copy(ScenarioExpressionPlayerNameComponent other) {
+    public void copyFrom(ScenarioExpressionPlayerNameComponent other) {
 
     }
 }

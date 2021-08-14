@@ -16,7 +16,7 @@ public class ScenarioLogicLabelComponent implements Component<ScenarioLogicLabel
     public String name;
 
     @Override
-    public void copy(ScenarioLogicLabelComponent other) {
+    public void copyFrom(ScenarioLogicLabelComponent other) {
         this.name = other.name;
     }
 }

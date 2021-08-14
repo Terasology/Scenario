@@ -18,7 +18,7 @@ public class ScenarioValueRegionComponent implements Component<ScenarioValueRegi
     public EntityRef regionEntity;
 
     @Override
-    public void copy(ScenarioValueRegionComponent other) {
+    public void copyFrom(ScenarioValueRegionComponent other) {
 
     }
 }

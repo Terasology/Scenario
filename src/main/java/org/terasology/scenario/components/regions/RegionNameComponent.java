@@ -18,7 +18,7 @@ public class RegionNameComponent implements Component<RegionNameComponent> {
     public String regionName = "New Region";
 
     @Override
-    public void copy(RegionNameComponent other) {
+    public void copyFrom(RegionNameComponent other) {
         this.regionName = other.regionName;
     }
 }

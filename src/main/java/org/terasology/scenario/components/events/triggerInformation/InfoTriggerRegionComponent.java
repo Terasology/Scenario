@@ -14,7 +14,7 @@ public class InfoTriggerRegionComponent implements Component<InfoTriggerRegionCo
     public EntityRef region;
 
     @Override
-    public void copy(InfoTriggerRegionComponent other) {
+    public void copyFrom(InfoTriggerRegionComponent other) {
         this.region = other.region;
     }
 }

@@ -17,7 +17,7 @@ public class ScenarioValueIntegerComponent implements Component<ScenarioValueInt
     public int value;
 
     @Override
-    public void copy(ScenarioValueIntegerComponent other) {
+    public void copyFrom(ScenarioValueIntegerComponent other) {
 
     }
 }

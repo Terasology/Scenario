@@ -15,7 +15,7 @@ public class TriggeringEntityComponent implements Component<TriggeringEntityComp
     public EntityRef entity;
 
     @Override
-    public void copy(TriggeringEntityComponent other) {
+    public void copyFrom(TriggeringEntityComponent other) {
         this.entity = other.entity;
     }
 }

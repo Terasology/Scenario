@@ -17,7 +17,7 @@ public class ScenarioValueBlockUriComponent implements Component<ScenarioValueBl
     public String block_uri;
 
     @Override
-    public void copy(ScenarioValueBlockUriComponent other) {
+    public void copyFrom(ScenarioValueBlockUriComponent other) {
 
     }
 }

@@ -14,7 +14,7 @@ import org.terasology.scenario.components.ScenarioComponent;
 @Replicate
 public class ScenarioSecondaryEnterRegionComponent implements Component<ScenarioSecondaryEnterRegionComponent> {
     @Override
-    public void copy(ScenarioSecondaryEnterRegionComponent other) {
+    public void copyFrom(ScenarioSecondaryEnterRegionComponent other) {
 
     }
 }

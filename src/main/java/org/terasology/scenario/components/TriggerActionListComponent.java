@@ -20,7 +20,7 @@ public class TriggerActionListComponent implements Component<TriggerActionListCo
     public List<EntityRef> actions = new ArrayList<>();
 
     @Override
-    public void copy(TriggerActionListComponent other) {
+    public void copyFrom(TriggerActionListComponent other) {
         this.actions = Lists.newArrayList(other.actions);
     }
 }

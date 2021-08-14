@@ -29,7 +29,7 @@ public class ScenarioArgumentContainerComponent implements Component<ScenarioArg
     public Map<String, EntityRef> arguments = Maps.newHashMap();
 
     @Override
-    public void copy(ScenarioArgumentContainerComponent other) {
+    public void copyFrom(ScenarioArgumentContainerComponent other) {
         this.arguments = Maps.newHashMap(other.arguments);
     }
 }

@@ -12,7 +12,7 @@ import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
  */
 public class ScenarioValueTriggeringRegionComponent implements Component<ScenarioValueTriggeringRegionComponent> {
     @Override
-    public void copy(ScenarioValueTriggeringRegionComponent other) {
+    public void copyFrom(ScenarioValueTriggeringRegionComponent other) {
 
     }
 }

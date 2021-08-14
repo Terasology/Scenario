@@ -18,7 +18,7 @@ public class ScenarioValueBlockFamilyComponent implements Component<ScenarioValu
     public BlockFamily value;
 
     @Override
-    public void copy(ScenarioValueBlockFamilyComponent other) {
+    public void copyFrom(ScenarioValueBlockFamilyComponent other) {
 
     }
 }

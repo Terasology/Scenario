@@ -21,7 +21,7 @@ public class TriggerConditionListComponent implements Component<TriggerCondition
     public List<EntityRef> conditions = new ArrayList<>();
 
     @Override
-    public void copy(TriggerConditionListComponent other) {
+    public void copyFrom(TriggerConditionListComponent other) {
         this.conditions = Lists.newArrayList(other.conditions);
     }
 }

@@ -14,7 +14,7 @@ import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 @Replicate
 public class ScenarioExpressionItemCountComponent implements Component<ScenarioExpressionItemCountComponent> {
     @Override
-    public void copy(ScenarioExpressionItemCountComponent other) {
+    public void copyFrom(ScenarioExpressionItemCountComponent other) {
 
     }
 }

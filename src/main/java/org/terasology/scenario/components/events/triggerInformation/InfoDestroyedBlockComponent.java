@@ -26,7 +26,7 @@ public class InfoDestroyedBlockComponent implements Component<InfoDestroyedBlock
     public Prefab damageType;
 
     @Override
-    public void copy(InfoDestroyedBlockComponent other) {
+    public void copyFrom(InfoDestroyedBlockComponent other) {
         this.destroyedBlock = other.destroyedBlock;
         this.directCause = other.directCause;
         this.damageType = other.damageType;

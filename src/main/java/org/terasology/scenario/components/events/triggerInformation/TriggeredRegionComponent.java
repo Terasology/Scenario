@@ -14,7 +14,7 @@ public class TriggeredRegionComponent implements Component<TriggeredRegionCompon
     public EntityRef region;
 
     @Override
-    public void copy(TriggeredRegionComponent other) {
+    public void copyFrom(TriggeredRegionComponent other) {
         this.region = other.region;
     }
 }

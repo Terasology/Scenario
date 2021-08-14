@@ -22,7 +22,7 @@ public class RegionContainingEntitiesComponent implements Component<RegionContai
     public List<EntityRef> entities = new ArrayList<>();
 
     @Override
-    public void copy(RegionContainingEntitiesComponent other) {
+    public void copyFrom(RegionContainingEntitiesComponent other) {
         this.entities = Lists.newArrayList(other.entities);
     }
 }

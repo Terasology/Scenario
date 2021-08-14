@@ -61,7 +61,7 @@ public class ScenarioValueComparatorComponent implements Component<ScenarioValue
     public Comparison compare = Comparison.EQUAL_TO;
 
     @Override
-    public void copy(ScenarioValueComparatorComponent other) {
+    public void copyFrom(ScenarioValueComparatorComponent other) {
         this.compare = other.compare;
     }
 }

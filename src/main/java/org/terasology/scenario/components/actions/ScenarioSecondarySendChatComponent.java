@@ -14,7 +14,7 @@ import org.terasology.scenario.components.ScenarioComponent;
 @Replicate
 public class ScenarioSecondarySendChatComponent implements Component<ScenarioSecondarySendChatComponent> {
     @Override
-    public void copy(ScenarioSecondarySendChatComponent other) {
+    public void copyFrom(ScenarioSecondarySendChatComponent other) {
 
     }
 }

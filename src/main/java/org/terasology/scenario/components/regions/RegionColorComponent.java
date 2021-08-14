@@ -18,7 +18,7 @@ public class RegionColorComponent implements Component<RegionColorComponent> {
     public Color color = new Color(Color.white);
 
     @Override
-    public void copy(RegionColorComponent other) {
+    public void copyFrom(RegionColorComponent other) {
         this.color = new Color(other.color);
     }
 }

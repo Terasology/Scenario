@@ -18,7 +18,7 @@ public class RegionLocationComponent implements Component<RegionLocationComponen
     public BlockRegion region = new BlockRegion(BlockRegion.INVALID);
 
     @Override
-    public void copy(RegionLocationComponent other) {
+    public void copyFrom(RegionLocationComponent other) {
         this.region.set(other.region);
     }
 }

@@ -15,7 +15,7 @@ public class InfoTriggeringEntityComponent implements Component<InfoTriggeringEn
     public EntityRef entity;
 
     @Override
-    public void copy(InfoTriggeringEntityComponent other) {
+    public void copyFrom(InfoTriggeringEntityComponent other) {
         this.entity = other.entity;
     }
 }
