@@ -25,18 +25,18 @@ import org.terasology.scenario.internal.systems.ScenarioRootManagementSystem;
  * a value or expression logic entity to be evaluated into a comparator comparison value
  */
 public class EvaluateComparatorEvent implements Event {
-    private ScenarioValueComparatorComponent.comparison result;
+    private ScenarioValueComparatorComponent.Comparison result;
     private EntityRef passedEntity;
 
     public EvaluateComparatorEvent(EntityRef passed) {
         this.passedEntity = passed;
     }
 
-    public void setResult(ScenarioValueComparatorComponent.comparison result) {
+    public void setResult(ScenarioValueComparatorComponent.Comparison result) {
         this.result = result;
     }
 
-    public ScenarioValueComparatorComponent.comparison getResult() {
+    public ScenarioValueComparatorComponent.Comparison getResult() {
         return result;
     }
 

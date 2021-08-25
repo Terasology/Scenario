@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 package org.terasology.scenario.components.regions;
 
-import org.terasology.engine.entitySystem.Component;
 import org.terasology.engine.network.FieldReplicateType;
 import org.terasology.engine.network.Replicate;
 import org.terasology.engine.world.block.BlockRegion;
+import org.terasology.gestalt.entitysystem.component.Component;
 import org.terasology.scenario.components.ScenarioComponent;
 
 /**
@@ -13,7 +13,12 @@ import org.terasology.scenario.components.ScenarioComponent;
  *
  * Scenario region entities are detailed in {@link ScenarioComponent}
  */
-public class RegionLocationComponent implements Component {
+public class RegionLocationComponent implements Component<RegionLocationComponent> {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
-    public BlockRegion region;
+    public BlockRegion region = new BlockRegion(BlockRegion.INVALID);
+
+    @Override
+    public void copyFrom(RegionLocationComponent other) {
+        this.region.set(other.region);
+    }
 }
