@@ -16,7 +16,7 @@
 package org.terasology.scenario.internal.events.evaluationEvents;
 
 import org.terasology.engine.entitySystem.entity.EntityRef;
-import org.terasology.engine.entitySystem.event.Event;
+import org.terasology.gestalt.entitysystem.event.Event;
 import org.terasology.scenario.components.information.ScenarioValueComparatorComponent;
 import org.terasology.scenario.internal.systems.ScenarioRootManagementSystem;
 

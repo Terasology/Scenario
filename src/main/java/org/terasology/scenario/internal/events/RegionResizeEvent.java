@@ -16,10 +16,10 @@
 package org.terasology.scenario.internal.events;
 
 import org.terasology.engine.entitySystem.entity.EntityRef;
-import org.terasology.engine.entitySystem.event.Event;
 import org.terasology.engine.network.ServerEvent;
 import org.terasology.engine.world.block.BlockRegion;
 import org.terasology.engine.world.block.BlockRegionc;
+import org.terasology.gestalt.entitysystem.event.Event;
 import org.terasology.scenario.internal.systems.RegionTreeSystem;
 
 /**
