@@ -18,10 +18,10 @@ package org.terasology.scenario.internal.systems;
 import org.joml.Vector3i;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.gestalt.assets.management.AssetManager;
 import org.terasology.engine.entitySystem.entity.EntityManager;
 import org.terasology.engine.entitySystem.entity.EntityRef;
 import org.terasology.engine.entitySystem.event.EventPriority;
+import org.terasology.engine.entitySystem.event.Priority;
 import org.terasology.engine.entitySystem.event.ReceiveEvent;
 import org.terasology.engine.entitySystem.prefab.Prefab;
 import org.terasology.engine.entitySystem.prefab.PrefabManager;
@@ -34,6 +34,7 @@ import org.terasology.engine.logic.common.DisplayNameComponent;
 import org.terasology.engine.network.ColorComponent;
 import org.terasology.engine.registry.In;
 import org.terasology.engine.world.block.BlockRegion;
+import org.terasology.gestalt.assets.management.AssetManager;
 import org.terasology.nui.Color;
 import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.components.regions.RegionBeingCreatedComponent;
@@ -72,7 +73,8 @@ public class RegionSystem extends BaseComponentSystem {
         chatMessageEntity.saveComponent(chatMessageEntity.getComponent(ColorComponent.class));
     }
 
-    @ReceiveEvent(priority = EventPriority.PRIORITY_CRITICAL)
+    @Priority(EventPriority.PRIORITY_CRITICAL)
+    @ReceiveEvent
     public void onAttackEntity(AttackEvent event, EntityRef targetEntity, org.terasology.engine.world.block.BlockComponent blockComponent) {
         Iterator<EntityRef> entities = entityManager.getEntitiesWith(RegionBeingCreatedComponent.class).iterator();
         while (entities.hasNext()) {

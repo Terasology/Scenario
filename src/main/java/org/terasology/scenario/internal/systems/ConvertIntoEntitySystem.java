@@ -17,7 +17,6 @@ package org.terasology.scenario.internal.systems;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.gestalt.assets.management.AssetManager;
 import org.terasology.engine.entitySystem.entity.EntityManager;
 import org.terasology.engine.entitySystem.entity.EntityRef;
 import org.terasology.engine.entitySystem.event.ReceiveEvent;
@@ -28,6 +27,7 @@ import org.terasology.engine.entitySystem.systems.RegisterSystem;
 import org.terasology.engine.network.NetworkComponent;
 import org.terasology.engine.registry.In;
 import org.terasology.engine.world.block.BlockManager;
+import org.terasology.gestalt.assets.management.AssetManager;
 import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 import org.terasology.scenario.components.ScenarioHubToolUpdateComponent;
 import org.terasology.scenario.components.information.ScenarioValueBlockUriComponent;
