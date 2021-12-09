@@ -1,23 +1,9 @@
-/*
- * Copyright 2017 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2021 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.scenario.internal.ui;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.gestalt.assets.management.AssetManager;
 import org.terasology.engine.entitySystem.entity.EntityManager;
 import org.terasology.engine.entitySystem.entity.EntityRef;
 import org.terasology.engine.logic.players.LocalPlayer;
@@ -26,6 +12,7 @@ import org.terasology.engine.rendering.assets.texture.Texture;
 import org.terasology.engine.rendering.nui.BaseInteractionScreen;
 import org.terasology.engine.rendering.nui.contextMenu.MenuTree;
 import org.terasology.engine.world.block.BlockManager;
+import org.terasology.gestalt.assets.management.AssetManager;
 import org.terasology.nui.UIWidget;
 import org.terasology.nui.databinding.ReadOnlyBinding;
 import org.terasology.nui.widgets.UIBox;
@@ -57,11 +44,12 @@ import org.terasology.scenario.internal.utilities.ArgumentParser;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
- * The main screen for the hubtool. Holds the three tabs(Scenario, logic, and regions) and sets up the logic for each
- * one of these tabs, displaying the logic and regions as treeViews and allows for editing using the context menus of the tree nodes
- * Is designed around a server-side entity tree to store the data which allows for multiple clients to edit the same tree and all have the same visual display
+ * The main screen for the hubtool. Holds the three tabs(Scenario, logic, and regions) and sets up the logic for each one of these tabs,
+ * displaying the logic and regions as treeViews and allows for editing using the context menus of the tree nodes Is designed around a
+ * server-side entity tree to store the data which allows for multiple clients to edit the same tree and all have the same visual display
  * while keeping the client side changes (region visibility or the actual expansion/contractions of the tree views)
  */
 public class HubToolScreen extends BaseInteractionScreen {
@@ -99,7 +87,7 @@ public class HubToolScreen extends BaseInteractionScreen {
     @In
     private ArgumentParser argumentParser;
 
-    private Logger logger = LoggerFactory.getLogger(HubToolScreen.class);
+    private final Logger logger = LoggerFactory.getLogger(HubToolScreen.class);
 
 
     @Override
@@ -165,36 +153,36 @@ public class HubToolScreen extends BaseInteractionScreen {
         if (addEventButton != null) {
             addEventButton.subscribe(this::onAddEventButton);
             addEventButton.bindEnabled(
-                new ReadOnlyBinding<Boolean>() {
-                    @Override
-                    public Boolean get() {
-                        return checkCanAddEvent();
+                    new ReadOnlyBinding<Boolean>() {
+                        @Override
+                        public Boolean get() {
+                            return checkCanAddEvent();
+                        }
                     }
-                }
             );
         }
 
         if (addActionButton != null) {
             addActionButton.subscribe(this::onAddActionButton);
             addActionButton.bindEnabled(
-                new ReadOnlyBinding<Boolean>() {
-                    @Override
-                    public Boolean get() {
-                        return checkCanAddAction();
+                    new ReadOnlyBinding<Boolean>() {
+                        @Override
+                        public Boolean get() {
+                            return checkCanAddAction();
+                        }
                     }
-                }
             );
         }
 
         if (deleteButton != null) {
             deleteButton.subscribe(this::onDeleteButton);
             deleteButton.bindEnabled(
-                new ReadOnlyBinding<Boolean>() {
-                    @Override
-                    public Boolean get() {
-                        return checkCanDelete();
+                    new ReadOnlyBinding<Boolean>() {
+                        @Override
+                        public Boolean get() {
+                            return checkCanDelete();
+                        }
                     }
-                }
             );
         }
 
@@ -285,15 +273,9 @@ public class HubToolScreen extends BaseInteractionScreen {
     }
 
     private boolean canEdit(LogicTree node) {
-        if (node.getValue().getValueType() == LogicTreeValue.Type.CONDITIONAL ||
-            node.getValue().getValueType() == LogicTreeValue.Type.EVENT ||
-            node.getValue().getValueType() == LogicTreeValue.Type.ACTION) {
-            return true;
-        } else {
-            return false;
-        }
-
-
+        return node.getValue().getValueType() == LogicTreeValue.Type.CONDITIONAL
+                || node.getValue().getValueType() == LogicTreeValue.Type.EVENT
+                || node.getValue().getValueType() == LogicTreeValue.Type.ACTION;
     }
 
     private void pushEditScreen(LogicTree node) {
@@ -421,8 +403,8 @@ public class HubToolScreen extends BaseInteractionScreen {
     }
 
     /**
-     * When the hub tool screen is opened then rebuild the tree. Eventually the scenario structure will include a
-     * clean/dirty design to prevent having to rebuild the entire tree every time.
+     * When the hub tool screen is opened then rebuild the tree. Eventually the scenario structure will include a clean/dirty design to
+     * prevent having to rebuild the entire tree every time.
      */
     @Override
     public void onOpened() {
@@ -476,8 +458,8 @@ public class HubToolScreen extends BaseInteractionScreen {
     /**
      * Function for updating the currently displayed tree with a new root for the scenario tree.
      *
-     * @param newScenario must have a ScenarioComponent in order to build the tree detailed from it. automatically
-     *     open the edit screen
+     * @param newScenario must have a ScenarioComponent in order to build the tree detailed from it. automatically open the edit
+     *         screen
      */
     public void updateTree(EntityRef newScenario) {
         if (newScenario.getComponent(ScenarioComponent.class) != null) {
@@ -517,7 +499,9 @@ public class HubToolScreen extends BaseInteractionScreen {
         }
         ScenarioComponent scenario = entity.getComponent(ScenarioComponent.class);
         LogicTreeView tempTreeView = new LogicTreeView();
-        LogicTree returnTree = new LogicTree(new LogicTreeValue("Scenario", assetManager.getAsset("Scenario:scenarioText", Texture.class).get(), LogicTreeValue.Type.SCENARIO, entity, argumentParser), this);
+        LogicTree returnTree = new LogicTree(new LogicTreeValue("Scenario",
+                assetManager.getAsset("Scenario:scenarioText", Texture.class).get(), LogicTreeValue.Type.SCENARIO, entity,
+                argumentParser), this);
         tempTreeView.setModel(returnTree.getRoot());
         returnTree.setExpandedNoEntity(true);
 
@@ -531,19 +515,26 @@ public class HubToolScreen extends BaseInteractionScreen {
                 LogicTreeValue value;
 
                 //Assumes all components are non-null, if one isn't then it's a bad trigger entity anyways and will cause problems elsewhere
-                value = new LogicTreeValue(name.name, assetManager.getAsset("Scenario:triggerText", Texture.class).get(), LogicTreeValue.Type.TRIGGER, t, argumentParser);
-                LogicTree event = new LogicTree(new LogicTreeValue("Events", assetManager.getAsset("Scenario:eventText", Texture.class).get(), LogicTreeValue.Type.EVENT_NAME, t, argumentParser), this);
-                if (getInteractionTarget().getComponent(HubToolExpansionComponent.class).expandedList.contains(t.getComponent(TriggerNameComponent.class).entityForEvent)) {
+                value = new LogicTreeValue(name.name, assetManager.getAsset("Scenario:triggerText", Texture.class).get(),
+                        LogicTreeValue.Type.TRIGGER, t, argumentParser);
+                LogicTree event = new LogicTree(new LogicTreeValue("Events",
+                        assetManager.getAsset("Scenario:eventText", Texture.class).get(), LogicTreeValue.Type.EVENT_NAME, t,
+                        argumentParser), this);
+                Set<EntityRef> expandedList = getInteractionTarget().getComponent(HubToolExpansionComponent.class).expandedList;
+
+                if (expandedList.contains(t.getComponent(TriggerNameComponent.class).entityForEvent)) {
                     event.setExpandedNoEntity(true);
                 }
 
-                LogicTree condition = new LogicTree(new LogicTreeValue("Conditionals", assetManager.getAsset("Scenario:conditionalText", Texture.class).get(), LogicTreeValue.Type.CONDITIONAL_NAME, t, argumentParser), this);
-                if (getInteractionTarget().getComponent(HubToolExpansionComponent.class).expandedList.contains(t.getComponent(TriggerNameComponent.class).entityForCondition)) {
+                LogicTree condition = new LogicTree(new LogicTreeValue("Conditionals", assetManager.getAsset("Scenario:conditionalText",
+                        Texture.class).get(), LogicTreeValue.Type.CONDITIONAL_NAME, t, argumentParser), this);
+                if (expandedList.contains(t.getComponent(TriggerNameComponent.class).entityForCondition)) {
                     condition.setExpandedNoEntity(true);
                 }
 
-                LogicTree action = new LogicTree(new LogicTreeValue("Actions", assetManager.getAsset("Scenario:actionText", Texture.class).get(), LogicTreeValue.Type.ACTION_NAME, t, argumentParser), this);
-                if (getInteractionTarget().getComponent(HubToolExpansionComponent.class).expandedList.contains(t.getComponent(TriggerNameComponent.class).entityForAction)) {
+                LogicTree action = new LogicTree(new LogicTreeValue("Actions", assetManager.getAsset("Scenario:actionText",
+                        Texture.class).get(), LogicTreeValue.Type.ACTION_NAME, t, argumentParser), this);
+                if (expandedList.contains(t.getComponent(TriggerNameComponent.class).entityForAction)) {
                     action.setExpandedNoEntity(true);
                 }
 
@@ -562,7 +553,7 @@ public class HubToolScreen extends BaseInteractionScreen {
                     checkAndAdd(a, LogicTreeValue.Type.ACTION, "Scenario:actionText", action);
                 }
                 returnTree.addChild(tempTriggerTree);
-                tempTriggerTree.setExpandedNoEntity(getInteractionTarget().getComponent(HubToolExpansionComponent.class).expandedList.contains(t));
+                tempTriggerTree.setExpandedNoEntity(expandedList.contains(t));
 
             }
         }
@@ -572,7 +563,8 @@ public class HubToolScreen extends BaseInteractionScreen {
     private void checkAndAdd(EntityRef wantToAdd, LogicTreeValue.Type type, String textureUrn, LogicTree addTo) {
         if (addedEntity != null && addedEntity.equals(wantToAdd)) {
             addedEntity = null;
-            newAddedEntityTree = new LogicTree(new LogicTreeValue(assetManager.getAsset(textureUrn, Texture.class).get(), type, wantToAdd, argumentParser), this);
+            newAddedEntityTree = new LogicTree(new LogicTreeValue(assetManager.getAsset(textureUrn, Texture.class).get(), type, wantToAdd,
+                    argumentParser), this);
             addTo.addChild(newAddedEntityTree);
         } else {
             addTo.addChild(new LogicTreeValue(assetManager.getAsset(textureUrn, Texture.class).get(), type, wantToAdd, argumentParser));

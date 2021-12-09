@@ -9,7 +9,7 @@ import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 
 /**
  * Value component for a Scenario argument entity, Contains a string value
- *
+ * <p>
  * Argument Entities detailed in {@link ScenarioArgumentContainerComponent}
  */
 public class ScenarioValueStringComponent implements Component<ScenarioValueStringComponent> {

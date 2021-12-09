@@ -11,7 +11,7 @@ import org.terasology.scenario.components.ScenarioComponent;
 
 /**
  * Creation component for a Scenario argument entity, indicates that this region is currently being created
- *
+ * <p>
  * Scenario region entities are detailed in {@link ScenarioComponent}
  */
 public class RegionBeingCreatedComponent implements Component<RegionBeingCreatedComponent> {

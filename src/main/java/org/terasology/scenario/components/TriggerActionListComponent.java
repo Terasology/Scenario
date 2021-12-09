@@ -10,9 +10,10 @@ import org.terasology.gestalt.entitysystem.component.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * List for actions in a trigger where action entities are Scenario logic entities with an Action indicator component
- *
+ * <p>
  * Scenario logic entities detailed in {@link ScenarioComponent}
  */
 public class TriggerActionListComponent implements Component<TriggerActionListComponent> {

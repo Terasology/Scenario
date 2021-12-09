@@ -1,29 +1,16 @@
-/*
- * Copyright 2017 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2021 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.scenario.internal.systems;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.engine.entitySystem.entity.EntityManager;
 import org.terasology.engine.entitySystem.entity.EntityRef;
-import org.terasology.engine.entitySystem.event.ReceiveEvent;
 import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
 import org.terasology.engine.entitySystem.systems.RegisterMode;
 import org.terasology.engine.entitySystem.systems.RegisterSystem;
 import org.terasology.engine.registry.In;
+import org.terasology.gestalt.entitysystem.event.ReceiveEvent;
 import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 import org.terasology.scenario.components.ScenarioComponent;
 import org.terasology.scenario.components.TriggerActionListComponent;
@@ -46,18 +33,18 @@ import org.terasology.scenario.internal.events.scenarioEvents.PlayerRespawnScena
 import org.terasology.scenario.internal.events.scenarioEvents.PlayerSpawnScenarioEvent;
 
 /**
- * System that relays game events into scenario events and sends them using a filled up information entity that contains information of the trigger
- * which could include who the triggering entity or region is, or block details for breaking the block, etc
- *
- * First checks any conditionals with a {@link ConditionalCheckEvent} and if the conditional is satisfies it
- * Will send {@link EventTriggerEvent} to the attached list of actions, technically in the order of the actions on the hubtool
+ * System that relays game events into scenario events and sends them using a filled up information entity that contains information of the
+ * trigger which could include who the triggering entity or region is, or block details for breaking the block, etc
+ * <p>
+ * First checks any conditionals with a {@link ConditionalCheckEvent} and if the conditional is satisfies it Will send {@link
+ * EventTriggerEvent} to the attached list of actions, technically in the order of the actions on the hubtool
  */
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class ScenarioRootManagementSystem extends BaseComponentSystem {
     @In
     EntityManager entityManager;
 
-    private Logger logger = LoggerFactory.getLogger(ScenarioRootManagementSystem.class);
+    private final Logger logger = LoggerFactory.getLogger(ScenarioRootManagementSystem.class);
 
     @ReceiveEvent
     public void onEventTrigger(EventTriggerEvent event, EntityRef entity, TriggerActionListComponent actions) {

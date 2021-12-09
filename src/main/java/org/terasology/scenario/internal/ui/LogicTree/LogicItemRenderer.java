@@ -1,18 +1,5 @@
-/*
- * Copyright 2017 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2021 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.scenario.internal.ui.LogicTree;
 
 import org.joml.Vector2i;
@@ -27,8 +14,7 @@ import org.terasology.nui.util.RectUtility;
 import java.util.List;
 
 /**
- * Renderer for the treeview representation of a {@link LogicTreeValue}.
- * Holds the different ways to display different types of logic
+ * Renderer for the treeview representation of a {@link LogicTreeValue}. Holds the different ways to display different types of logic
  */
 public class LogicItemRenderer extends AbstractItemRenderer<LogicTreeValue> {
     private final int marginTop;
@@ -56,11 +42,11 @@ public class LogicItemRenderer extends AbstractItemRenderer<LogicTreeValue> {
                 // doesn't fit
                 int iconHeight = canvas.size().y - marginTop - marginBottom;
                 canvas.drawTexture(texture, RectUtility.createFromMinAndSize(marginLeft, marginTop,
-                    texture.getWidth(), iconHeight));
+                        texture.getWidth(), iconHeight));
             } else { // Center Vertically if fit
                 int iconVerticalPosition = (canvas.size().y - texture.getHeight()) / 2;
                 canvas.drawTexture(texture, RectUtility.createFromMinAndSize(marginLeft, iconVerticalPosition,
-                    texture.getWidth(), texture.getHeight()));
+                        texture.getWidth(), texture.getHeight()));
             }
         }
 
@@ -92,7 +78,7 @@ public class LogicItemRenderer extends AbstractItemRenderer<LogicTreeValue> {
         }
 
         Rectanglei textRegion = RectUtility.createFromMinAndSize(iconWidth, 0,
-            canvas.getRegion().lengthX() - iconWidth, canvas.getRegion().lengthY());
+                canvas.getRegion().lengthX() - iconWidth, canvas.getRegion().lengthY());
         canvas.drawText(text, textRegion);
     }
 

@@ -8,7 +8,7 @@ import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 
 /**
  * Expression component for a Scenario argument entity, Evaluates the name of a player entity
- *
+ * <p>
  * Argument Entities detailed in {@link ScenarioArgumentContainerComponent}
  */
 @Replicate

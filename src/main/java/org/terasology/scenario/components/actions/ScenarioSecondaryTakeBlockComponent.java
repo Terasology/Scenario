@@ -8,7 +8,7 @@ import org.terasology.scenario.components.ScenarioComponent;
 
 /**
  * Secondary Indicator component for a Scenario logic entity, indicates that the entity is an action to take blocks from a player.
- *
+ * <p>
  * Scenario logic entities detailed in {@link ScenarioComponent}
  */
 @Replicate

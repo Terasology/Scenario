@@ -8,7 +8,7 @@ import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 
 /**
  * Value component for a Scenario argument entity, Contains a comparator value
- *
+ * <p>
  * Argument Entities detailed in {@link ScenarioArgumentContainerComponent}
  */
 @Replicate
@@ -45,7 +45,7 @@ public class ScenarioValueComparatorComponent implements Component<ScenarioValue
             }
         };
 
-        private String stringRepresentation;
+        private final String stringRepresentation;
 
         Comparison(String stringRepresentation) {
             this.stringRepresentation = stringRepresentation;

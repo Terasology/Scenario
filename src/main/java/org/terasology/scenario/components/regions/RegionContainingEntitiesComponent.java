@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * Creation component for a Scenario argument entity, includes a list of player character entities that are contained within the region
- *
+ * <p>
  * Scenario region entities are detailed in {@link ScenarioComponent}
  */
 public class RegionContainingEntitiesComponent implements Component<RegionContainingEntitiesComponent> {

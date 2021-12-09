@@ -1,26 +1,11 @@
-/*
- * Copyright 2017 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2021 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.scenario.internal.systems;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.gestalt.assets.management.AssetManager;
 import org.terasology.engine.entitySystem.entity.EntityManager;
 import org.terasology.engine.entitySystem.entity.EntityRef;
-import org.terasology.engine.entitySystem.event.ReceiveEvent;
 import org.terasology.engine.entitySystem.prefab.Prefab;
 import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
 import org.terasology.engine.entitySystem.systems.RegisterMode;
@@ -28,6 +13,8 @@ import org.terasology.engine.entitySystem.systems.RegisterSystem;
 import org.terasology.engine.network.NetworkComponent;
 import org.terasology.engine.registry.In;
 import org.terasology.engine.world.block.BlockManager;
+import org.terasology.gestalt.assets.management.AssetManager;
+import org.terasology.gestalt.entitysystem.event.ReceiveEvent;
 import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 import org.terasology.scenario.components.ScenarioHubToolUpdateComponent;
 import org.terasology.scenario.components.information.ScenarioValueBlockUriComponent;
@@ -55,9 +42,12 @@ public class ConvertIntoEntitySystem extends BaseComponentSystem {
     /**
      * Strings follow a pattern of [PREFAB]prefabName{key name for entity argument}[VALUE]value of the component
      * <p>
-     * Calls to entities that are argument entities that contain a value component are the leaves of the tree and
-     * therefore are evaluated for the value passed with the string
+     * Calls to entities that are argument entities that contain a value component are the leaves of the tree and therefore are evaluated
+     * for the value passed with the string
      */
+
+
+    private static final String PREFAB_MARKER = "PREFAB";
 
     @In
     EntityManager entityManager;
@@ -71,11 +61,10 @@ public class ConvertIntoEntitySystem extends BaseComponentSystem {
     @In
     ArgumentParser argumentParser;
 
-    private Logger logger = LoggerFactory.getLogger(ConvertIntoEntitySystem.class);
+    private final Logger logger = LoggerFactory.getLogger(ConvertIntoEntitySystem.class);
 
-    private Pattern patternMain = Pattern.compile("\\[(.*?)\\]");
-    private Pattern keyPattern = Pattern.compile("\\{(.*?)\\}");
-    private static final String PREFAB_MARKER = "PREFAB";
+    private final Pattern patternMain = Pattern.compile("\\[(.*?)\\]");
+    private final Pattern keyPattern = Pattern.compile("\\{(.*?)\\}");
 
 
     @ReceiveEvent
@@ -129,44 +118,52 @@ public class ConvertIntoEntitySystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent
-    public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity, ScenarioValueIntegerComponent component) {
+    public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity,
+                                                 ScenarioValueIntegerComponent component) {
         component.value = Integer.parseInt(event.getValue());
         entity.saveComponent(component);
     }
 
     @ReceiveEvent
-    public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity, ScenarioValueBlockUriComponent component) {
-        component.block_uri = event.getValue();
+    public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity,
+                                                 ScenarioValueBlockUriComponent component) {
+        component.blockUri = event.getValue();
         entity.saveComponent(component);
     }
 
     @ReceiveEvent
-    public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity, ScenarioValuePlayerComponent component) {
+    public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity,
+                                                 ScenarioValuePlayerComponent component) {
         component.type = ScenarioValuePlayerComponent.PlayerType.valueOf(event.getValue());
         entity.saveComponent(component);
     }
 
     @ReceiveEvent
-    public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity, ScenarioValueStringComponent component) {
+    public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity,
+                                                 ScenarioValueStringComponent component) {
         component.string = event.getValue();
         entity.saveComponent(component);
     }
 
     @ReceiveEvent
-    public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity, ScenarioValueItemPrefabUriComponent component) {
+    public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event,
+                                                 EntityRef entity,
+                                                 ScenarioValueItemPrefabUriComponent component) {
         component.prefabURI = event.getValue();
         entity.saveComponent(component);
     }
 
     @ReceiveEvent
-    public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity, ScenarioValueComparatorComponent component) {
+    public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity,
+                                                 ScenarioValueComparatorComponent component) {
         component.compare = ScenarioValueComparatorComponent.Comparison.valueOf(event.getValue());
         entity.saveComponent(component);
     }
 
     @ReceiveEvent
-    public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity, ScenarioValueRegionComponent component) {
-        if (event.getValue().substring(0, 1).equals("x")) { //No network component
+    public void onConvertIntoEntityConstantEvent(ConvertIntoEntityConstantEvent event, EntityRef entity,
+                                                 ScenarioValueRegionComponent component) {
+        if (event.getValue().charAt(0) == 'x') { //No network component
             component.regionEntity = entityManager.getEntity(Integer.parseInt(event.getValue().substring(1)));
         } else {
             for (EntityRef e : entityManager.getEntitiesWith(RegionNameComponent.class)) {

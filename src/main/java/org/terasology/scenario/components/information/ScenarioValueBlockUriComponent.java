@@ -9,12 +9,12 @@ import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 
 /**
  * Value component for a Scenario argument entity, Contains a block's uri value
- *
+ * <p>
  * Argument Entities detailed in {@link ScenarioArgumentContainerComponent}
  */
 public class ScenarioValueBlockUriComponent implements Component<ScenarioValueBlockUriComponent> {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
-    public String block_uri;
+    public String blockUri;
 
     @Override
     public void copyFrom(ScenarioValueBlockUriComponent other) {

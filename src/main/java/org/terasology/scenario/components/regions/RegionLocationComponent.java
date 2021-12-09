@@ -10,7 +10,7 @@ import org.terasology.scenario.components.ScenarioComponent;
 
 /**
  * Creation component for a Scenario argument entity, contains the actual BlockRegion of the region
- *
+ * <p>
  * Scenario region entities are detailed in {@link ScenarioComponent}
  */
 public class RegionLocationComponent implements Component<RegionLocationComponent> {

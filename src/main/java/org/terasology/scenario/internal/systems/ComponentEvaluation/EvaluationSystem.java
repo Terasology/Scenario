@@ -6,14 +6,12 @@ import org.joml.Vector3f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.engine.entitySystem.entity.EntityRef;
-import org.terasology.engine.entitySystem.event.ReceiveEvent;
 import org.terasology.engine.entitySystem.prefab.Prefab;
 import org.terasology.engine.entitySystem.prefab.PrefabManager;
 import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
 import org.terasology.engine.entitySystem.systems.RegisterMode;
 import org.terasology.engine.entitySystem.systems.RegisterSystem;
 import org.terasology.engine.logic.common.DisplayNameComponent;
-import org.terasology.module.inventory.components.InventoryComponent;
 import org.terasology.engine.logic.inventory.ItemComponent;
 import org.terasology.engine.logic.location.LocationComponent;
 import org.terasology.engine.network.ClientComponent;
@@ -24,6 +22,8 @@ import org.terasology.engine.world.block.BlockComponent;
 import org.terasology.engine.world.block.BlockManager;
 import org.terasology.engine.world.block.family.BlockFamily;
 import org.terasology.engine.world.block.items.BlockItemComponent;
+import org.terasology.gestalt.entitysystem.event.ReceiveEvent;
+import org.terasology.module.inventory.components.InventoryComponent;
 import org.terasology.nui.FontColor;
 import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 import org.terasology.scenario.components.conditionals.ScenarioSecondaryBlockCompareComponent;
@@ -61,26 +61,24 @@ import org.terasology.scenario.internal.events.evaluationEvents.EvaluateStringEv
 import java.util.Map;
 
 /**
- * This is a system that takes argument entities that contain value or expression components and evaluates them
- * into the actual value type that can be used
- *
+ * This is a system that takes argument entities that contain value or expression components and evaluates them into the actual value type
+ * that can be used
+ * <p>
  * Events watched are any evaluation events that are not the display evaluation
- *
- * Argument entities include:
- *   Network Component
- *   Type Component
- *   Value or Expression Component (Values are constant values, expressions are evaluated to obtain the value)
+ * <p>
+ * Argument entities include: Network Component Type Component Value or Expression Component (Values are constant values, expressions are
+ * evaluated to obtain the value)
  */
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class EvaluationSystem extends BaseComponentSystem {
 
-    private Logger logger = LoggerFactory.getLogger(EvaluationSystem.class);
+    private final Logger logger = LoggerFactory.getLogger(EvaluationSystem.class);
 
     @In
-    BlockManager blockManager;
+    private BlockManager blockManager;
 
     @In
-    PrefabManager prefabManager;
+    private PrefabManager prefabManager;
 
     @ReceiveEvent
     public void onEvaluateIntEvent(EvaluateIntEvent event, EntityRef entity, ScenarioValueIntegerComponent component) {
@@ -110,7 +108,7 @@ public class EvaluationSystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void onEvaluateBlockEvent(EvaluateBlockEvent event, EntityRef entity, ScenarioValueBlockUriComponent component) {
-        event.setResult(blockManager.getBlockFamily(component.block_uri));
+        event.setResult(blockManager.getBlockFamily(component.blockUri));
     }
 
     @ReceiveEvent
@@ -202,7 +200,8 @@ public class EvaluationSystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent
-    public void onEvaluatePlayerRegionComparison(ConditionalCheckEvent event, EntityRef entity, ScenarioSecondaryPlayerRegionComponent comp) {
+    public void onEvaluatePlayerRegionComparison(ConditionalCheckEvent event, EntityRef entity,
+                                                 ScenarioSecondaryPlayerRegionComponent comp) {
         Map<String, EntityRef> args = entity.getComponent(ScenarioArgumentContainerComponent.class).arguments;
 
         EvaluateRegionEvent evalRegion = new EvaluateRegionEvent(event.getPassedEntity());
@@ -210,7 +209,8 @@ public class EvaluationSystem extends BaseComponentSystem {
         EntityRef region = evalRegion.getResult();
 
         //TODO: Replaced once evaluation of player is done
-        EntityRef player = event.getPassedEntity().getComponent(InfoTriggeringEntityComponent.class).entity.getOwner().getComponent(ClientComponent.class).character;
+        EntityRef player = event.getPassedEntity().getComponent(InfoTriggeringEntityComponent.class)
+                .entity.getOwner().getComponent(ClientComponent.class).character;
         RegionLocationComponent regionComp = region.getComponent(RegionLocationComponent.class);
 
         Vector3f loc = player.getComponent(LocationComponent.class).getWorldPosition(new Vector3f());
@@ -271,7 +271,7 @@ public class EvaluationSystem extends BaseComponentSystem {
 
         if (player == ScenarioValuePlayerComponent.PlayerType.TRIGGERING_PLAYER) {
             EntityRef playerEntity = event.getPassedEntity().getComponent(InfoTriggeringEntityComponent.class).entity;
-            InventoryComponent  invent = playerEntity.getComponent(InventoryComponent.class);
+            InventoryComponent invent = playerEntity.getComponent(InventoryComponent.class);
             for (EntityRef e : invent.itemSlots) {
                 if (e.exists() && e.hasComponent(BlockItemComponent.class)) {
                     if (e.getComponent(BlockItemComponent.class).blockFamily.equals(blockFamily)) {

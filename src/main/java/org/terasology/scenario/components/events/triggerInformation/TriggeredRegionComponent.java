@@ -4,6 +4,7 @@ package org.terasology.scenario.components.events.triggerInformation;
 
 import org.terasology.engine.entitySystem.entity.EntityRef;
 import org.terasology.gestalt.entitysystem.component.Component;
+
 /**
  * Component that contains the triggered region for an event
  */

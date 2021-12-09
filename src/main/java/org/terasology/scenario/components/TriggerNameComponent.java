@@ -8,8 +8,8 @@ import org.terasology.engine.network.Replicate;
 import org.terasology.gestalt.entitysystem.component.Component;
 
 /**
- * Component that includes the details about a trigger, currently it is a name and three empty entities that are
- * used for the entity expansion of a hub tool that represent the blank event/condition/action portions of the UI
+ * Component that includes the details about a trigger, currently it is a name and three empty entities that are used for the entity
+ * expansion of a hub tool that represent the blank event/condition/action portions of the UI
  */
 public class TriggerNameComponent implements Component<TriggerNameComponent> {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)

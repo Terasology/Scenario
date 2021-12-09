@@ -1,18 +1,5 @@
-/*
- * Copyright 2017 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2021 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.scenario.internal.ui.LogicTree;
 
 import org.slf4j.Logger;
@@ -23,17 +10,17 @@ import org.terasology.scenario.components.ScenarioLogicTextComponent;
 import org.terasology.scenario.internal.utilities.ArgumentParser;
 
 /**
- * Value for the logic tree, currently it entails the text to display, the image attached,
- * if it is an event or root (Used to denote which buttons/context options are available),
- * and the entity that is attached to the value allowing for easy reference with out traversing the entity tree structure
+ * Value for the logic tree, currently it entails the text to display, the image attached, if it is an event or root (Used to denote which
+ * buttons/context options are available), and the entity that is attached to the value allowing for easy reference with out traversing the
+ * entity tree structure
  */
 public class LogicTreeValue {
-    private Logger logger = LoggerFactory.getLogger(LogicTreeValue.class);
+    private final Logger logger = LoggerFactory.getLogger(LogicTreeValue.class);
 
     private String text;
-    private TextureRegion textureRegion;
+    private final TextureRegion textureRegion;
     private EntityRef entity;
-    private Type valueType;
+    private final Type valueType;
     private ArgumentParser parser;
 
     public enum Type {
@@ -88,7 +75,7 @@ public class LogicTreeValue {
         return valueType;
     }
 
-    public void setEntity (EntityRef entity) {
+    public void setEntity(EntityRef entity) {
         this.entity = entity;
     }
 

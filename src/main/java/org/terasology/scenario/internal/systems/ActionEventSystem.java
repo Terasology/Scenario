@@ -1,26 +1,11 @@
-/*
- * Copyright 2019 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2021 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.scenario.internal.systems;
 
 import org.joml.Vector3f;
 import org.slf4j.LoggerFactory;
-import org.terasology.gestalt.assets.management.AssetManager;
 import org.terasology.engine.entitySystem.entity.EntityManager;
 import org.terasology.engine.entitySystem.entity.EntityRef;
-import org.terasology.engine.entitySystem.event.ReceiveEvent;
 import org.terasology.engine.entitySystem.prefab.Prefab;
 import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
 import org.terasology.engine.entitySystem.systems.RegisterMode;
@@ -29,10 +14,6 @@ import org.terasology.engine.logic.characters.CharacterTeleportEvent;
 import org.terasology.engine.logic.chat.ChatMessageEvent;
 import org.terasology.engine.logic.common.DisplayNameComponent;
 import org.terasology.engine.logic.health.EngineDamageTypes;
-import org.terasology.module.health.events.DoDamageEvent;
-import org.terasology.module.health.events.DoRestoreEvent;
-import org.terasology.module.inventory.components.InventoryComponent;
-import org.terasology.module.inventory.systems.InventoryManager;
 import org.terasology.engine.logic.inventory.ItemComponent;
 import org.terasology.engine.logic.inventory.events.GiveItemEvent;
 import org.terasology.engine.network.ClientComponent;
@@ -42,6 +23,12 @@ import org.terasology.engine.world.block.BlockManager;
 import org.terasology.engine.world.block.family.BlockFamily;
 import org.terasology.engine.world.block.items.BlockItemComponent;
 import org.terasology.engine.world.block.items.BlockItemFactory;
+import org.terasology.gestalt.assets.management.AssetManager;
+import org.terasology.gestalt.entitysystem.event.ReceiveEvent;
+import org.terasology.module.health.events.DoDamageEvent;
+import org.terasology.module.health.events.DoRestoreEvent;
+import org.terasology.module.inventory.components.InventoryComponent;
+import org.terasology.module.inventory.systems.InventoryManager;
 import org.terasology.nui.Color;
 import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 import org.terasology.scenario.components.actions.ScenarioSecondaryDamageAmountComponent;
@@ -67,10 +54,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Looks at Scenario logic entities that contain a secondary indicator for an action
- * The event that is looked for is {@link EventTriggerEvent} that will be sent from {@link ScenarioRootManagementSystem}
- * with the informationEntity being filled based on the triggered event
- *
+ * Looks at Scenario logic entities that contain a secondary indicator for an action The event that is looked for is {@link
+ * EventTriggerEvent} that will be sent from {@link ScenarioRootManagementSystem} with the informationEntity being filled based on the
+ * triggered event
+ * <p>
  * This is the actual action result of triggering that action entity
  */
 @RegisterSystem(RegisterMode.AUTHORITY)

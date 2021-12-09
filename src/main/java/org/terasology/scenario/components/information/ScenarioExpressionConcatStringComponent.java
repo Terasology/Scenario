@@ -8,7 +8,7 @@ import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 
 /**
  * Expression component for a Scenario argument entity, indicates that the entity will concatenate strings together
- *
+ * <p>
  * Argument Entities detailed in {@link ScenarioArgumentContainerComponent}
  */
 @Replicate

@@ -12,7 +12,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Component that gets attached to a scenario hub tool that contains the list of entities that are expanded in the treeview of the logic entities
+ * Component that gets attached to a scenario hub tool that contains the list of entities that are expanded in the treeview of the logic
+ * entities
  */
 public class HubToolExpansionComponent implements Component<HubToolExpansionComponent> {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)

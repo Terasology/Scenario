@@ -9,7 +9,7 @@ import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 
 /**
  * Value component for a Scenario argument entity, Contains a player type(Targeted or Triggering) value
- *
+ * <p>
  * Argument Entities detailed in {@link ScenarioArgumentContainerComponent}
  */
 public class ScenarioValuePlayerComponent implements Component<ScenarioValuePlayerComponent> {

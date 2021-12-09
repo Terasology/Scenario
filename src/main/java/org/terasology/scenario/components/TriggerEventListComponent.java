@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * List for events in a trigger where action entities are Scenario logic entities with an Event indicator component
- *
+ * <p>
  * Scenario logic entities detailed in {@link ScenarioComponent}
  */
 public class TriggerEventListComponent implements Component<TriggerEventListComponent> {
