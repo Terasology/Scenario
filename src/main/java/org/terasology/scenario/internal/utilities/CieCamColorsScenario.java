@@ -1,18 +1,5 @@
-/*
- * Copyright 2017 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2021 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.scenario.internal.utilities;
 
@@ -21,17 +8,15 @@ import org.terasology.nui.Color;
 
 
 /**
- * Viewing conditions are modeled after sRGB's "typical" viewing environment with 200 cd/m2.
- * Consecutive colors have a delta E distance of at least 1.
- * Delta E distance is defined in CAM02-UCS as published in "Uniform Colour Spaces Based on
- * CIECAM02 Colour Appearance Model" (Luo et al.)
+ * Viewing conditions are modeled after sRGB's "typical" viewing environment with 200 cd/m2. Consecutive colors have a delta E distance of
+ * at least 1. Delta E distance is defined in CAM02-UCS as published in "Uniform Colour Spaces Based on CIECAM02 Colour Appearance Model"
+ * (Luo et al.)
  */
 public final class CieCamColorsScenario {
 
     /**
-     * Luminance (in CIE-Lch) is 65 for all color tones, Chroma is at 65.
-     * The entire hue circle is sampled (non-linearly).
-     * The color plane is transformed with some clipping (mostly blue and red) into RGB.
+     * Luminance (in CIE-Lch) is 65 for all color tones, Chroma is at 65. The entire hue circle is sampled (non-linearly). The color plane
+     * is transformed with some clipping (mostly blue and red) into RGB.
      */
     public static final ImmutableList<Color> L65C65 = ImmutableList.of(
             new Color(0xFF77AEFF), new Color(0xFF77ABFF), new Color(0xFF77A8FF), new Color(0xFF77A5FF),

@@ -7,8 +7,9 @@ import org.terasology.engine.network.Replicate;
 import org.terasology.gestalt.entitysystem.component.Component;
 
 /**
- * Label component for a Scenario logic entity, includes the text displayed on a dropdown menu for selecting an entity prefab in the logic editor
- *
+ * Label component for a Scenario logic entity, includes the text displayed on a dropdown menu for selecting an entity prefab in the logic
+ * editor
+ * <p>
  * Scenario logic entities detailed in {@link ScenarioComponent}
  */
 public class ScenarioLogicLabelComponent implements Component<ScenarioLogicLabelComponent> {

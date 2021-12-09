@@ -1,18 +1,5 @@
-/*
- * Copyright 2017 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2021 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.scenario.internal.systems.ComponentEvaluation;
 
 import org.slf4j.Logger;
@@ -48,20 +35,18 @@ import org.terasology.scenario.internal.events.evaluationEvents.EvaluateDisplayE
 import java.util.Map;
 
 /**
- * This is a system that takes argument entities that contain value or expression components and evaluates them
- * into a string that is used for display.
- *
+ * This is a system that takes argument entities that contain value or expression components and evaluates them into a string that is used
+ * for display.
+ * <p>
  * Events watched are {@link EvaluateDisplayEvent}
- *
- * Argument entities include:
- *   Network Component
- *   Type Component
- *   Value or Expression Component (Values are constant values, expressions are evaluated to obtain the value)
+ * <p>
+ * Argument entities include: Network Component Type Component Value or Expression Component (Values are constant values, expressions are
+ * evaluated to obtain the value)
  */
 @RegisterSystem(RegisterMode.CLIENT)
 public class EvaluationDisplaySystem extends BaseComponentSystem {
 
-    private static Logger logger = LoggerFactory.getLogger(EvaluationDisplaySystem.class);
+    private static final Logger logger = LoggerFactory.getLogger(EvaluationDisplaySystem.class);
 
     @In
     BlockManager blockManager;
@@ -86,7 +71,7 @@ public class EvaluationDisplaySystem extends BaseComponentSystem {
 
     @ReceiveEvent //BlockConstant
     public void onEvaluateBlockDisplayEvent(EvaluateDisplayEvent event, EntityRef entity, ScenarioValueBlockUriComponent comp) {
-        event.setResult(blockManager.getBlockFamily(comp.block_uri).getDisplayName());
+        event.setResult(blockManager.getBlockFamily(comp.blockUri).getDisplayName());
     }
 
     @ReceiveEvent //Trigger/Target player
@@ -190,7 +175,8 @@ public class EvaluationDisplaySystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent //Triggering Region
-    public void onEvaluateDisplayTriggeringRegionEvent(EvaluateDisplayEvent event, EntityRef entity, ScenarioValueTriggeringRegionComponent comp) {
+    public void onEvaluateDisplayTriggeringRegionEvent(EvaluateDisplayEvent event, EntityRef entity,
+                                                       ScenarioValueTriggeringRegionComponent comp) {
         event.setResult("TRIGGERING REGION");
     }
 

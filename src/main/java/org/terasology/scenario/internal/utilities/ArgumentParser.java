@@ -1,23 +1,9 @@
-/*
- * Copyright 2017 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2021 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.scenario.internal.utilities;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.gestalt.assets.management.AssetManager;
 import org.terasology.engine.entitySystem.entity.EntityManager;
 import org.terasology.engine.entitySystem.entity.EntityRef;
 import org.terasology.engine.entitySystem.prefab.Prefab;
@@ -28,6 +14,7 @@ import org.terasology.engine.registry.In;
 import org.terasology.engine.registry.Share;
 import org.terasology.engine.rendering.nui.CoreScreenLayer;
 import org.terasology.engine.world.block.BlockManager;
+import org.terasology.gestalt.assets.management.AssetManager;
 import org.terasology.nui.Color;
 import org.terasology.nui.FontColor;
 import org.terasology.nui.UIWidget;
@@ -50,7 +37,7 @@ import java.util.regex.Pattern;
 @Share(ArgumentParser.class)
 @RegisterSystem(RegisterMode.CLIENT)
 public class ArgumentParser extends BaseComponentSystem {
-    private Logger logger = LoggerFactory.getLogger(ArgumentParser.class);
+    private final Logger logger = LoggerFactory.getLogger(ArgumentParser.class);
 
     @In
     private BlockManager blockManager;
@@ -63,11 +50,11 @@ public class ArgumentParser extends BaseComponentSystem {
 
     private List<String> keys;
 
-    private Color specialColor = new Color(0, 191, 255);
+    private final Color specialColor = new Color(0, 191, 255);
 
     /**
-     * Takes in an entity with a textComponent and argumentContainerComponent and parses the arguments from the text and
-     * sets the default values in the argument container and saves the entity
+     * Takes in an entity with a textComponent and argumentContainerComponent and parses the arguments from the text and sets the default
+     * values in the argument container and saves the entity
      */
     public void parseDefaults(EntityRef entity) {
         String text = entity.getComponent(ScenarioLogicTextComponent.class).text;
@@ -85,25 +72,25 @@ public class ArgumentParser extends BaseComponentSystem {
             String type = group.substring(indexColon + 1);
             if (type.equals("Integer")) {
                 args.arguments.put(key, entityManager.create(assetManager.getAsset("scenario:scenarioConstantInt",
-                    Prefab.class).get()));
+                        Prefab.class).get()));
             } else if (type.equals("Block")) {
                 args.arguments.put(key, entityManager.create(assetManager.getAsset("scenario:scenarioConstantBlock",
-                    Prefab.class).get()));
+                        Prefab.class).get()));
             } else if (type.equals("Player")) {
                 args.arguments.put(key, entityManager.create(assetManager.getAsset("scenario:scenarioConstantPlayer",
-                    Prefab.class).get()));
+                        Prefab.class).get()));
             } else if (type.equals("String")) {
                 args.arguments.put(key, entityManager.create(assetManager.getAsset("scenario:scenarioConstantString",
-                    Prefab.class).get()));
+                        Prefab.class).get()));
             } else if (type.equals("Item")) {
                 args.arguments.put(key, entityManager.create(assetManager.getAsset("scenario" +
-                    ":scenarioConstantItemPrefab", Prefab.class).get()));
+                        ":scenarioConstantItemPrefab", Prefab.class).get()));
             } else if (type.equals("Comparator")) {
                 args.arguments.put(key, entityManager.create(assetManager.getAsset("scenario" +
-                    ":scenarioConstantComparator", Prefab.class).get()));
+                        ":scenarioConstantComparator", Prefab.class).get()));
             } else if (type.equals("Region")) {
                 args.arguments.put(key, entityManager.create(assetManager.getAsset("scenario:scenarioConstantRegion",
-                    Prefab.class).get()));
+                        Prefab.class).get()));
             } else {
                 //String parsed incorrectly, should throw some kind of exception probably
                 return;
@@ -116,8 +103,8 @@ public class ArgumentParser extends BaseComponentSystem {
     }
 
     /**
-     * Takes in an entity with a textComponent and argumentContainerComponent and parses the text along with the
-     * arguments in order to generate the text and coloring that should be used for display on a node in the UI
+     * Takes in an entity with a textComponent and argumentContainerComponent and parses the text along with the arguments in order to
+     * generate the text and coloring that should be used for display on a node in the UI
      */
     public String parseDisplayText(EntityRef entity) {
         String text = entity.getComponent(ScenarioLogicTextComponent.class).text;
@@ -150,9 +137,8 @@ public class ArgumentParser extends BaseComponentSystem {
 
 
     /**
-     * Takes in an entity with a textComponent and argumentContainerComponent and parses the arguments from the text and
-     * generates a list of widgets to allow for editing the parameters or just text on elements that do not have a
-     * parameter
+     * Takes in an entity with a textComponent and argumentContainerComponent and parses the arguments from the text and generates a list of
+     * widgets to allow for editing the parameters or just text on elements that do not have a parameter
      */
     public List<UIWidget> generateWidgets(EntityRef entity, CoreScreenLayer editScreen) {
         List<UIWidget> output = new ArrayList<>();
@@ -191,7 +177,7 @@ public class ArgumentParser extends BaseComponentSystem {
             EntityRef tempEntity = args.arguments.get(tempKey);
             button.subscribe(b -> {
                 EditParameterScreen screen = editScreen.getManager().pushScreen(EditParameterScreen.ASSET_URI,
-                    EditParameterScreen.class);
+                        EditParameterScreen.class);
                 screen.setupParameter(tempKey, tempEntity, editScreen, this);
             });
             output.add(button);

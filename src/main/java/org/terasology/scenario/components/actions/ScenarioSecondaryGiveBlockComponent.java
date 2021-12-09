@@ -8,7 +8,7 @@ import org.terasology.scenario.components.ScenarioComponent;
 
 /**
  * Secondary Indicator component for a Scenario logic entity, indicates that the entity is a give block action.
- *
+ * <p>
  * Scenario logic entities detailed in {@link ScenarioComponent}
  */
 @Replicate

@@ -9,7 +9,7 @@ import org.terasology.scenario.components.ScenarioComponent;
 
 /**
  * Creation component for a Scenario argument entity, includes the name of the region
- *
+ * <p>
  * Scenario region entities are detailed in {@link ScenarioComponent}
  */
 @Replicate

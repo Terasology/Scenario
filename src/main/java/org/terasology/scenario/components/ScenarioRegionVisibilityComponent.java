@@ -12,8 +12,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Component attached to a hubtool that includes a set of all of the region entities that should be visible to the
- * local player (visibility of the regions are ticked to true)
+ * Component attached to a hubtool that includes a set of all of the region entities that should be visible to the local player (visibility
+ * of the regions are ticked to true)
  */
 @Replicate(FieldReplicateType.SERVER_TO_OWNER)
 public class ScenarioRegionVisibilityComponent implements Component<ScenarioRegionVisibilityComponent> {

@@ -8,7 +8,7 @@ import org.terasology.scenario.components.ScenarioComponent;
 
 /**
  * Secondary component for a Scenario logic entity, indicates that the entity is an event based on the player respawning
- *
+ * <p>
  * Scenario logic entities detailed in {@link ScenarioComponent}
  */
 @Replicate

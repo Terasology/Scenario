@@ -10,7 +10,7 @@ import org.terasology.scenario.components.ScenarioComponent;
 
 /**
  * Creation component for a Scenario argument entity, includes the color of the region for display
- *
+ * <p>
  * Scenario region entities are detailed in {@link ScenarioComponent}
  */
 public class RegionColorComponent implements Component<RegionColorComponent> {

@@ -7,8 +7,9 @@ import org.terasology.gestalt.entitysystem.component.Component;
 import org.terasology.scenario.components.ScenarioComponent;
 
 /**
- * Secondary Indicator component for a Scenario logic entity, indicates that the entity is a check on if a player is in a region conditional.
- *
+ * Secondary Indicator component for a Scenario logic entity, indicates that the entity is a check on if a player is in a region
+ * conditional.
+ * <p>
  * Scenario logic entities detailed in {@link ScenarioComponent}
  */
 @Replicate

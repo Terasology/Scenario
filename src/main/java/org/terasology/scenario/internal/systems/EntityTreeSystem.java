@@ -1,18 +1,5 @@
-/*
- * Copyright 2017 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2021 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.scenario.internal.systems;
 
 import org.slf4j.Logger;
@@ -49,10 +36,11 @@ import org.terasology.scenario.internal.events.ReplaceEntityFromConstructionStri
 import org.terasology.scenario.internal.utilities.ArgumentParser;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * The system that handles all of the events for the entity version of the tree structure.
- *
+ * <p>
  * Allows for clients to make request to the entity tree that is contained on the server's side.
  */
 @RegisterSystem(RegisterMode.AUTHORITY)
@@ -88,10 +76,10 @@ public class EntityTreeSystem extends BaseComponentSystem {
     }
 
     /**
-     * Adding event, attaches to the scenarioComponent.actions in the Scenario root and then adds a new empty list for
-     * eventually adding actions to that event. Updates the hub tool's screen if it was passed with the event. Does this
-     * by indicating to all hubtools that it's logic is "dirty" and needs to be refreshed and telling the adding hubtool
-     * what entity was just added so that it can prompt open the edit screen
+     * Adding event, attaches to the scenarioComponent.actions in the Scenario root and then adds a new empty list for eventually adding
+     * actions to that event. Updates the hub tool's screen if it was passed with the event. Does this by indicating to all hubtools that
+     * it's logic is "dirty" and needs to be refreshed and telling the adding hubtool what entity was just added so that it can prompt open
+     * the edit screen
      */
     @ReceiveEvent
     public void onLogicTreeAddEventEvent(LogicTreeAddEventEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
@@ -106,8 +94,9 @@ public class EntityTreeSystem extends BaseComponentSystem {
         scenarioEntity.saveComponent(scenarioEntity.getComponent(ScenarioComponent.class));
 
         if (event.getHubScreen() != null) {
-            event.getHubScreen().getComponent(HubToolExpansionComponent.class).expandedList.add(event.getTriggerEntity());
-            event.getHubScreen().getComponent(HubToolExpansionComponent.class).expandedList.add(event.getTriggerEntity().getComponent(TriggerNameComponent.class).entityForEvent);
+            Set<EntityRef> expandedList = event.getHubScreen().getComponent(HubToolExpansionComponent.class).expandedList;
+            expandedList.add(event.getTriggerEntity());
+            expandedList.add(event.getTriggerEntity().getComponent(TriggerNameComponent.class).entityForEvent);
             event.getHubScreen().saveComponent(event.getHubScreen().getComponent(HubToolExpansionComponent.class));
             event.getHubScreen().getComponent(ScenarioHubToolUpdateComponent.class).addedEntity = newEventEntity;
             event.getHubScreen().saveComponent(event.getHubScreen().getComponent(ScenarioHubToolUpdateComponent.class));
@@ -119,9 +108,9 @@ public class EntityTreeSystem extends BaseComponentSystem {
     }
 
     /**
-     * Adding action, attaches to the ActionListComponent in the event entity. Updates the hub tool's screen if it was
-     * passed with the event. Does this by indicating to all hubtools that it's logic is "dirty" and needs to be
-     * refreshed and telling the adding hubtool what entity was just added so that it can prompt open the edit screen
+     * Adding action, attaches to the ActionListComponent in the event entity. Updates the hub tool's screen if it was passed with the
+     * event. Does this by indicating to all hubtools that it's logic is "dirty" and needs to be refreshed and telling the adding hubtool
+     * what entity was just added so that it can prompt open the edit screen
      */
     @ReceiveEvent
     public void onLogicTreeAddActionEvent(LogicTreeAddActionEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
@@ -136,8 +125,9 @@ public class EntityTreeSystem extends BaseComponentSystem {
         scenarioEntity.saveComponent(scenarioEntity.getComponent(ScenarioComponent.class));
 
         if (event.getHubScreen() != null) {
-            event.getHubScreen().getComponent(HubToolExpansionComponent.class).expandedList.add(event.getTriggerEntity());
-            event.getHubScreen().getComponent(HubToolExpansionComponent.class).expandedList.add(event.getTriggerEntity().getComponent(TriggerNameComponent.class).entityForAction);
+            Set<EntityRef> expandedList = event.getHubScreen().getComponent(HubToolExpansionComponent.class).expandedList;
+            expandedList.add(event.getTriggerEntity());
+            expandedList.add(event.getTriggerEntity().getComponent(TriggerNameComponent.class).entityForAction);
             event.getHubScreen().saveComponent(event.getHubScreen().getComponent(HubToolExpansionComponent.class));
             event.getHubScreen().getComponent(ScenarioHubToolUpdateComponent.class).addedEntity = newActionEntity;
             event.getHubScreen().saveComponent(event.getHubScreen().getComponent(ScenarioHubToolUpdateComponent.class));
@@ -150,10 +140,10 @@ public class EntityTreeSystem extends BaseComponentSystem {
 
 
     /**
-     * Adding condition, attaches to the scenarioComponent.actions in the Scenario root and then adds a new empty list
-     * for eventually adding actions to that event. Updates the hub tool's screen if it was passed with the event. Does
-     * this by indicating to all hubtools that it's logic is "dirty" and needs to be refreshed and telling the adding
-     * hubtool what entity was just added so that it can prompt open the edit screen
+     * Adding condition, attaches to the scenarioComponent.actions in the Scenario root and then adds a new empty list for eventually adding
+     * actions to that event. Updates the hub tool's screen if it was passed with the event. Does this by indicating to all hubtools that
+     * it's logic is "dirty" and needs to be refreshed and telling the adding hubtool what entity was just added so that it can prompt open
+     * the edit screen
      */
     @ReceiveEvent
     public void onLogicTreeAddConditionEvent(LogicTreeAddConditionEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
@@ -168,8 +158,9 @@ public class EntityTreeSystem extends BaseComponentSystem {
         scenarioEntity.saveComponent(scenarioEntity.getComponent(ScenarioComponent.class));
 
         if (event.getHubScreen() != null) {
-            event.getHubScreen().getComponent(HubToolExpansionComponent.class).expandedList.add(event.getTriggerEntity());
-            event.getHubScreen().getComponent(HubToolExpansionComponent.class).expandedList.add(event.getTriggerEntity().getComponent(TriggerNameComponent.class).entityForCondition);
+            Set<EntityRef> expandedList = event.getHubScreen().getComponent(HubToolExpansionComponent.class).expandedList;
+            expandedList.add(event.getTriggerEntity());
+            expandedList.add(event.getTriggerEntity().getComponent(TriggerNameComponent.class).entityForCondition);
             event.getHubScreen().saveComponent(event.getHubScreen().getComponent(HubToolExpansionComponent.class));
             event.getHubScreen().getComponent(ScenarioHubToolUpdateComponent.class).addedEntity = newCondEntity;
             event.getHubScreen().saveComponent(event.getHubScreen().getComponent(ScenarioHubToolUpdateComponent.class));
@@ -181,8 +172,8 @@ public class EntityTreeSystem extends BaseComponentSystem {
     }
 
     /**
-     * Adds a trigger entity to the trigger list of the scenario entity, tells all hubtools to redraw and adds the new
-     * entity to the expansion list of the creating hubtool
+     * Adds a trigger entity to the trigger list of the scenario entity, tells all hubtools to redraw and adds the new entity to the
+     * expansion list of the creating hubtool
      */
     @ReceiveEvent
     public void onLogicTreeAddTriggerEvent(LogicTreeAddTriggerEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
@@ -217,9 +208,9 @@ public class EntityTreeSystem extends BaseComponentSystem {
     }
 
     /**
-     * Checks if the deleted entity is an event or action and then removes and saves the correct entities. Event just
-     * needs to update scenario root, action needs to update both scenario and the event it is attached to Updates the
-     * hub tool's screen if it was passed with the event.
+     * Checks if the deleted entity is an event or action and then removes and saves the correct entities. Event just needs to update
+     * scenario root, action needs to update both scenario and the event it is attached to Updates the hub tool's screen if it was passed
+     * with the event.
      */
     @ReceiveEvent
     public void onLogicTreeDeleteEvent(LogicTreeDeleteEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
@@ -316,11 +307,13 @@ public class EntityTreeSystem extends BaseComponentSystem {
     }
 
     /**
-     * Takes the serialized list from a client and constructs it back into an entity and replaces the original entity in
-     * the logic tree. Serialised using ConvertEntitySystem and converts back into entity using ConvertIntoEntitySystem
+     * Takes the serialized list from a client and constructs it back into an entity and replaces the original entity in the logic tree.
+     * Serialised using ConvertEntitySystem and converts back into entity using ConvertIntoEntitySystem
      */
     @ReceiveEvent
-    public void onReplaceEntityWithPrefabEvent(ReplaceEntityFromConstructionStringsEvent event, EntityRef entity, ScenarioHubToolUpdateComponent component) {
+    public void onReplaceEntityWithPrefabEvent(ReplaceEntityFromConstructionStringsEvent event,
+                                               EntityRef entity,
+                                               ScenarioHubToolUpdateComponent component) {
         ConvertIntoEntityEvent conversionEvent = new ConvertIntoEntityEvent(event.getConversions());
         entity.send(conversionEvent);
         EntityRef newEntity = conversionEvent.getReturnEntity();

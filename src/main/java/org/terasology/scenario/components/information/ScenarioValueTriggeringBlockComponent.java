@@ -8,7 +8,7 @@ import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 
 /**
  * Value component for a Scenario argument entity, indicates that this argument should use the triggering block entity
- *
+ * <p>
  * Argument Entities detailed in {@link ScenarioArgumentContainerComponent}
  */
 @Replicate

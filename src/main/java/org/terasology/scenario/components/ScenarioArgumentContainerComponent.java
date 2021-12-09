@@ -14,13 +14,13 @@ import java.util.Map;
 
 /**
  * Argument Container component for a Scenario logic entity, NEEDS to be includes if the description includes argument parameters
- *
- * Argument entities include:
- *   Network Component - This is just the default network component for a terasology entity {@link NetworkComponent}
- *   Type Component - This is a component used to denote the type of variable that the entity is representing, example is {@link ScenarioTypeIntegerComponent}
- *   Value or Expression Component (Values are constant values, expressions are evaluated to obtain the value)
- *        - This is the component that holds the actual value or expression representation for the entity, example is {@link ScenarioValueStringComponent}
- *
+ * <p>
+ * Argument entities include: Network Component - This is just the default network component for a terasology entity {@link
+ * NetworkComponent} Type Component - This is a component used to denote the type of variable that the entity is representing, example is
+ * {@link ScenarioTypeIntegerComponent} Value or Expression Component (Values are constant values, expressions are evaluated to obtain the
+ * value) - This is the component that holds the actual value or expression representation for the entity, example is {@link
+ * ScenarioValueStringComponent}
+ * <p>
  * Scenario logic entities are detailed in {@link ScenarioComponent}
  */
 @Replicate

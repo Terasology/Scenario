@@ -1,18 +1,5 @@
-/*
- * Copyright 2017 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2021 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.scenario.internal.ui.LogicTree;
 
 import org.slf4j.Logger;
@@ -28,9 +15,9 @@ import org.terasology.scenario.internal.ui.HubToolScreen;
  */
 public class LogicTree extends Tree<LogicTreeValue> {
 
-    private HubToolScreen hubToolScreen;
-
     private static final Logger logger = LoggerFactory.getLogger(LogicTree.class);
+
+    private final HubToolScreen hubToolScreen;
 
     public LogicTree(HubToolScreen hubToolScreen) {
         this.hubToolScreen = hubToolScreen;
@@ -42,8 +29,8 @@ public class LogicTree extends Tree<LogicTreeValue> {
     }
 
     /**
-     * Expansion needs to be saved within an external component because the tree is constantly rebuilt and the expansion
-     * should be saved to best provide usability for a client
+     * Expansion needs to be saved within an external component because the tree is constantly rebuilt and the expansion should be saved to
+     * best provide usability for a client
      *
      * @param expanded The new expanded state of this tree.
      */
@@ -124,11 +111,12 @@ public class LogicTree extends Tree<LogicTreeValue> {
                 }
                 break;
             case TRIGGER:
-                if (child.getValue().getValueType() == LogicTreeValue.Type.EVENT_NAME || //Can't move event/cond/action names
-                    child.getValue().getValueType() == LogicTreeValue.Type.CONDITIONAL_NAME ||
-                    child.getValue().getValueType() == LogicTreeValue.Type.ACTION_NAME) {
+                if (child.getValue().getValueType() == LogicTreeValue.Type.EVENT_NAME  //Can't move event/cond/action names
+                        || child.getValue().getValueType() == LogicTreeValue.Type.CONDITIONAL_NAME
+                        || child.getValue().getValueType() == LogicTreeValue.Type.ACTION_NAME) {
                     thisReturn = true;
                 }
+                break;
             case SCENARIO:
                 if (child.getValue().getValueType() == LogicTreeValue.Type.TRIGGER) {
                     thisReturn = true;
@@ -154,15 +142,20 @@ public class LogicTree extends Tree<LogicTreeValue> {
     }
 
     /**
-     * Client is requesting a movement of entities, not a new child and therefore this must be managed by the server to
-     * re-order the entities
+     * Client is requesting a movement of entities, not a new child and therefore this must be managed by the server to re-order the
+     * entities
      *
      * @param index The index of the child to be added.
      * @param child The child to be added.
      */
     @Override
     public void addChild(int index, Tree<LogicTreeValue> child) { //Should only send if moving entities on UI view
-        hubToolScreen.getEntity().send(new LogicTreeMoveEntityEvent(this.getValue().getEntity(), child.getValue().getEntity(), child.getValue().getValueType(), index));
+        hubToolScreen.getEntity().send(
+                new LogicTreeMoveEntityEvent(
+                        this.getValue().getEntity(),
+                        child.getValue().getEntity(),
+                        child.getValue().getValueType(),
+                        index));
     }
 
     @Override

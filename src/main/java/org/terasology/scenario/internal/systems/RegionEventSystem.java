@@ -1,18 +1,5 @@
-/*
- * Copyright 2017 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2021 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.scenario.internal.systems;
 
 import org.joml.Vector3f;
@@ -37,7 +24,7 @@ import java.util.List;
 
 /**
  * System that will watch regions for all the player character entities that enter and leave regions
- *
+ * <p>
  * Will update the {@link RegionContainingEntitiesComponent} of all the scenario region entities that are being monitored
  */
 @RegisterSystem(RegisterMode.AUTHORITY)
@@ -45,13 +32,13 @@ public class RegionEventSystem extends BaseComponentSystem implements UpdateSubs
     @In
     private EntityManager entityManager;
 
-    private Logger logger = LoggerFactory.getLogger(RegionEventSystem.class);
+    private final Logger logger = LoggerFactory.getLogger(RegionEventSystem.class);
 
     private EntityRef scenario;
 
     /**
-     * Region system's update that monitors the regions and updates them with players entering and leaving regions and
-     * triggering events when the respective event occurs to pass to the scenario
+     * Region system's update that monitors the regions and updates them with players entering and leaving regions and triggering events
+     * when the respective event occurs to pass to the scenario
      *
      * @param delta The time (in seconds) since the last engine update.
      */

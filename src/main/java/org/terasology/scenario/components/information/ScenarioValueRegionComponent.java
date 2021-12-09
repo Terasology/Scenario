@@ -10,7 +10,7 @@ import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 
 /**
  * Value component for a Scenario argument entity, Contains a region entity value
- *
+ * <p>
  * Argument Entities detailed in {@link ScenarioArgumentContainerComponent}
  */
 public class ScenarioValueRegionComponent implements Component<ScenarioValueRegionComponent> {
