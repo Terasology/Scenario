@@ -3,7 +3,7 @@
 package org.terasology.scenario.components.events;
 
 import org.terasology.engine.network.Replicate;
-import org.terasology.gestalt.entitysystem.component.Component;
+import org.terasology.gestalt.entitysystem.component.EmptyComponent;
 import org.terasology.scenario.components.ScenarioComponent;
 
 /**
@@ -12,9 +12,5 @@ import org.terasology.scenario.components.ScenarioComponent;
  * Scenario logic entities detailed in {@link ScenarioComponent}
  */
 @Replicate
-public class ScenarioSecondaryLeaveRegionComponent implements Component<ScenarioSecondaryLeaveRegionComponent> {
-    @Override
-    public void copyFrom(ScenarioSecondaryLeaveRegionComponent other) {
-
-    }
+public class ScenarioSecondaryLeaveRegionComponent extends EmptyComponent<ScenarioSecondaryLeaveRegionComponent> {
 }

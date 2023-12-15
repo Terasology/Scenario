@@ -3,7 +3,7 @@
 package org.terasology.scenario.components.information;
 
 import org.terasology.engine.network.Replicate;
-import org.terasology.gestalt.entitysystem.component.Component;
+import org.terasology.gestalt.entitysystem.component.EmptyComponent;
 import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 
 /**
@@ -12,9 +12,5 @@ import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
  * Argument Entities detailed in {@link ScenarioArgumentContainerComponent}
  */
 @Replicate
-public class ScenarioExpressionPlayerNameComponent implements Component<ScenarioExpressionPlayerNameComponent> {
-    @Override
-    public void copyFrom(ScenarioExpressionPlayerNameComponent other) {
-
-    }
+public class ScenarioExpressionPlayerNameComponent extends EmptyComponent<ScenarioExpressionPlayerNameComponent> {
 }

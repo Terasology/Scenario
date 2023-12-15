@@ -3,7 +3,7 @@
 package org.terasology.scenario.components.conditionals;
 
 import org.terasology.engine.network.Replicate;
-import org.terasology.gestalt.entitysystem.component.Component;
+import org.terasology.gestalt.entitysystem.component.EmptyComponent;
 import org.terasology.scenario.components.ScenarioComponent;
 
 /**
@@ -13,9 +13,5 @@ import org.terasology.scenario.components.ScenarioComponent;
  * Scenario logic entities detailed in {@link ScenarioComponent}
  */
 @Replicate
-public class ScenarioSecondaryPlayerRegionComponent implements Component<ScenarioSecondaryPlayerRegionComponent> {
-    @Override
-    public void copyFrom(ScenarioSecondaryPlayerRegionComponent other) {
-
-    }
+public class ScenarioSecondaryPlayerRegionComponent extends EmptyComponent<ScenarioSecondaryPlayerRegionComponent> {
 }

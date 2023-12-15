@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package org.terasology.scenario.components.information;
 
-import org.terasology.gestalt.entitysystem.component.Component;
+import org.terasology.gestalt.entitysystem.component.EmptyComponent;
 import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 
 /**
@@ -10,9 +10,5 @@ import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
  * <p>
  * Argument Entities detailed in {@link ScenarioArgumentContainerComponent}
  */
-public class ScenarioValueTriggeringRegionComponent implements Component<ScenarioValueTriggeringRegionComponent> {
-    @Override
-    public void copyFrom(ScenarioValueTriggeringRegionComponent other) {
-
-    }
+public class ScenarioValueTriggeringRegionComponent extends EmptyComponent<ScenarioValueTriggeringRegionComponent> {
 }
