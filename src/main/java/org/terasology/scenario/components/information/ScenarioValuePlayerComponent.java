@@ -4,7 +4,7 @@ package org.terasology.scenario.components.information;
 
 import org.terasology.engine.network.FieldReplicateType;
 import org.terasology.engine.network.Replicate;
-import org.terasology.gestalt.entitysystem.component.Component;
+import org.terasology.gestalt.entitysystem.component.EmptyComponent;
 import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 
 /**
@@ -12,14 +12,9 @@ import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
  * <p>
  * Argument Entities detailed in {@link ScenarioArgumentContainerComponent}
  */
-public class ScenarioValuePlayerComponent implements Component<ScenarioValuePlayerComponent> {
+public class ScenarioValuePlayerComponent extends EmptyComponent<ScenarioValuePlayerComponent> {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public PlayerType type = PlayerType.TRIGGERING_PLAYER;
-
-    @Override
-    public void copyFrom(ScenarioValuePlayerComponent other) {
-
-    }
 
     public enum PlayerType {
         TRIGGERING_PLAYER,

@@ -4,7 +4,7 @@ package org.terasology.scenario.components.information;
 
 import org.terasology.engine.network.FieldReplicateType;
 import org.terasology.engine.network.Replicate;
-import org.terasology.gestalt.entitysystem.component.Component;
+import org.terasology.gestalt.entitysystem.component.EmptyComponent;
 import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 
 /**
@@ -12,12 +12,7 @@ import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
  * <p>
  * Argument Entities detailed in {@link ScenarioArgumentContainerComponent}
  */
-public class ScenarioValueBlockUriComponent implements Component<ScenarioValueBlockUriComponent> {
+public class ScenarioValueBlockUriComponent extends EmptyComponent<ScenarioValueBlockUriComponent> {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public String blockUri;
-
-    @Override
-    public void copyFrom(ScenarioValueBlockUriComponent other) {
-
-    }
 }

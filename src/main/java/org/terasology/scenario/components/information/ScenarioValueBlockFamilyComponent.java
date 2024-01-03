@@ -5,7 +5,7 @@ package org.terasology.scenario.components.information;
 import org.terasology.engine.network.FieldReplicateType;
 import org.terasology.engine.network.Replicate;
 import org.terasology.engine.world.block.family.BlockFamily;
-import org.terasology.gestalt.entitysystem.component.Component;
+import org.terasology.gestalt.entitysystem.component.EmptyComponent;
 import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
 
 /**
@@ -13,12 +13,7 @@ import org.terasology.scenario.components.ScenarioArgumentContainerComponent;
  * <p>
  * Argument Entities detailed in {@link ScenarioArgumentContainerComponent}
  */
-public class ScenarioValueBlockFamilyComponent implements Component<ScenarioValueBlockFamilyComponent> {
+public class ScenarioValueBlockFamilyComponent extends EmptyComponent<ScenarioValueBlockFamilyComponent> {
     @Replicate(FieldReplicateType.SERVER_TO_CLIENT)
     public BlockFamily value;
-
-    @Override
-    public void copyFrom(ScenarioValueBlockFamilyComponent other) {
-
-    }
 }
